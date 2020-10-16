@@ -1,0 +1,90 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "stocks": {
+      "projectType": "library",
+      "root": "projects/stocks",
+      "sourceRoot": "projects/stocks/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/stocks/tsconfig.lib.json",
+            "project": "projects/stocks/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/stocks/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/stocks/src/test.ts",
+            "tsConfig": "projects/stocks/tsconfig.spec.json",
+            "karmaConfig": "projects/stocks/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/stocks/tsconfig.lib.json",
+              "projects/stocks/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "stocks-mock": {
+      "projectType": "library",
+      "root": "projects/stocks-mock",
+      "sourceRoot": "projects/stocks-mock/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/stocks-mock/tsconfig.lib.json",
+            "project": "projects/stocks-mock/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/stocks-mock/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/stocks-mock/src/test.ts",
+            "tsConfig": "projects/stocks-mock/tsconfig.spec.json",
+            "karmaConfig": "projects/stocks-mock/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/stocks-mock/tsconfig.lib.json",
+              "projects/stocks-mock/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }},
+  "cli": {
+    "analytics": false
+  },
+  "defaultProject": "stocks"
+}
