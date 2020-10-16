@@ -7,19 +7,13 @@ import {MatSidenav} from '@angular/material/sidenav';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTableDataSource} from '@angular/material/table';
 import {ActivatedRoute, Router} from '@angular/router';
-import {EventService} from '@smartstocktz/core-libs';
+import {DeviceInfoUtil, EventService, LogService, SsmEvents, StorageService} from '@smartstocktz/core-libs';
 import {UnitsModel} from '../models/units.model';
-import {StorageService} from '@smartstocktz/core-libs';
-import {LogService} from '@smartstocktz/core-libs';
 import {SelectionModel} from '@angular/cdk/collections';
 import {DialogDeleteComponent, StockDetailsComponent} from '../components/stock.component';
-import {TransferDialogComponent} from '../components/transfer.component';
 import {StockState} from '../states/stock.state';
 import {StockModel} from '../models/stock.model';
 import {ImportsDialogComponent} from '../components/imports.component';
-import {DeviceInfoUtil} from '@smartstocktz/core-libs';
-import {SsmEvents} from '@smartstocktz/core-libs';
-import {CreateGroupProductsComponent} from '../components/create-group-products.component';
 
 
 @Component({
@@ -50,7 +44,8 @@ import {CreateGroupProductsComponent} from '../components/create-group-products.
                       </button>
                       <span class="toolbar-spacer"></span>
                       <span style="width: 8px; height: 8px"></span>
-                      <button (click)="hotReloadStocks()" [disabled]="hotReloadProgress" matTooltip="Reload from server" color="primary"
+                      <button (click)="hotReloadStocks()" [disabled]="hotReloadProgress" matTooltip="Reload from server"
+                              color="primary"
                               class="ft-button" mat-flat-button>
                         <mat-icon *ngIf="!hotReloadProgress">refresh</mat-icon>
                         <mat-progress-spinner *ngIf="hotReloadProgress" [diameter]="20"
@@ -60,7 +55,8 @@ import {CreateGroupProductsComponent} from '../components/create-group-products.
                         </mat-progress-spinner>
                       </button>
                       <span style="width: 8px; height: 8px"></span>
-                      <button (click)="exportStock()" [disabled]="exportProgress" matTooltip="Export Products To Csv" color="primary"
+                      <button (click)="exportStock()" [disabled]="exportProgress" matTooltip="Export Products To Csv"
+                              color="primary"
                               class="ft-button" mat-flat-button>
                         <mat-icon *ngIf="!exportProgress">cloud_download</mat-icon>
                         <mat-progress-spinner *ngIf="exportProgress" [diameter]="20"
@@ -70,7 +66,8 @@ import {CreateGroupProductsComponent} from '../components/create-group-products.
                         </mat-progress-spinner>
                       </button>
                       <span style="width: 8px; height: 8px"></span>
-                      <button (click)="importStocks()" matTooltip="Import Products" color="primary" class="ft-button" mat-flat-button>
+                      <button (click)="importStocks()" matTooltip="Import Products" color="primary" class="ft-button"
+                              mat-flat-button>
                         <mat-icon>cloud_upload</mat-icon>
                       </button>
 
@@ -109,12 +106,15 @@ import {CreateGroupProductsComponent} from '../components/create-group-products.
 
                       <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>
-                          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-                                        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                          <mat-checkbox (change)="$event ? masterToggle() : null"
+                                        [checked]="selection.hasValue() && isAllSelected()"
+                                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                        [aria-label]="checkboxLabel()">
                           </mat-checkbox>
                         </th>
                         <td mat-cell *matCellDef="let row">
-                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                          <mat-checkbox (click)="$event.stopPropagation()"
+                                        (change)="$event ? selection.toggle(row) : null"
                                         [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
                           </mat-checkbox>
                         </td>
@@ -190,11 +190,14 @@ import {CreateGroupProductsComponent} from '../components/create-group-products.
                               <mat-icon color="primary">more_vert</mat-icon>
                             </button>
                             <mat-menu #menu>
-                              <button mat-menu-item [matTooltip]="'change product information'" (click)="viewProduct(element)">View
+                              <button mat-menu-item [matTooltip]="'change product information'"
+                                      (click)="viewProduct(element)">View
                               </button>
-                              <button mat-menu-item [matTooltip]="'change product information'" (click)="editStock(element)">Edit
+                              <button mat-menu-item [matTooltip]="'change product information'"
+                                      (click)="editStock(element)">Edit
                               </button>
-                              <button mat-menu-item [matTooltip]="'permanent delete stock'" (click)="deleteStock(element)">Delete
+                              <button mat-menu-item [matTooltip]="'permanent delete stock'"
+                                      (click)="deleteStock(element)">Delete
                               </button>
                             </mat-menu>
                           </div>
@@ -205,7 +208,8 @@ import {CreateGroupProductsComponent} from '../components/create-group-products.
                       </ng-container>
 
                       <tr mat-header-row *matHeaderRowDef="stockColumns"></tr>
-                      <tr matTooltip="{{row.product}}" class="table-data-row" mat-row *matRowDef="let row; columns: stockColumns;"></tr>
+                      <tr matTooltip="{{row.product}}" class="table-data-row" mat-row
+                          *matRowDef="let row; columns: stockColumns;"></tr>
                       <tr mat-footer-row style="font-size: 36px" *matFooterRowDef="stockColumns"></tr>
                     </table>
                     <mat-paginator #paginator [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons></mat-paginator>
@@ -221,7 +225,7 @@ import {CreateGroupProductsComponent} from '../components/create-group-products.
 
     </mat-sidenav-container>
   `,
-  styleUrls: ['../styles/stock.style.css']
+  styleUrls: ['../styles/stock.style.scss']
 })
 export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
   selectedTab = 0;
@@ -251,7 +255,7 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
   @ViewChild('sidenav') sidenav: MatSidenav;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe(value => {
       if (value) {
         this.selectedTab = Number(value.t);
@@ -264,7 +268,7 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
   }
 
 
-  isAllSelected() {
+  isAllSelected(): boolean {
     const numSelected = this.selection.selected.length;
     const numRows = this.stockDatasource.data.length;
     return numSelected === numRows;
@@ -273,7 +277,7 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
+  masterToggle(): void {
     this.isAllSelected() ?
       this.selection.clear() :
       this.stockDatasource.data.forEach(row => this.selection.select(row));
@@ -287,36 +291,36 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
-  transferStock() {
-    if (this.selection.selected.length === 0) {
-      this.snack.open('select atleast one product', 'Ok', {duration: 2000});
-    } else {
-      this.dialog.open(TransferDialogComponent, {
-        width: '95%',
-        maxWidth: '600px',
-        disableClose: true,
-        closeOnNavigation: true,
-        data: {
-          items: this.selection.selected,
-        }
-      });
-    }
+  transferStock(): void {
+    // if (this.selection.selected.length === 0) {
+    //   this.snack.open('select atleast one product', 'Ok', {duration: 2000});
+    // } else {
+    //   this.dialog.open(TransferDialogComponent, {
+    //     width: '95%',
+    //     maxWidth: '600px',
+    //     disableClose: true,
+    //     closeOnNavigation: true,
+    //     data: {
+    //       items: this.selection.selected,
+    //     }
+    //   });
+    // }
   }
 
 
-  private showProgressBar() {
+  private showProgressBar(): void {
     this.showProgress = true;
   }
 
-  private hideProgressBar() {
+  private hideProgressBar(): void {
     this.showProgress = false;
   }
 
-  private initializeView() {
+  private initializeView(): void {
     this.getStocksFromCache();
   }
 
-  private getStocksFromCache(callback?: (error) => void) {
+  private getStocksFromCache(callback?: (error) => void): void {
     this.stockFetchProgress = true;
     this.indexDb.getStocks().then(stocks => {
       if (!stocks && !Array.isArray(stocks)) {
@@ -344,7 +348,7 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
     });
   }
 
-  hotReloadStocks() {
+  hotReloadStocks(): void {
     this.hotReloadProgress = true;
     this.stockDatabase.getAllStock().then(async stocks => {
       try {
@@ -369,12 +373,12 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
     });
   }
 
-  editStock(element: StockModel) {
+  editStock(element: StockModel): void {
     this.router.navigateByUrl('/stock/edit/' + element.id + '?stock=' + encodeURI(JSON.stringify(element)))
       .catch(reason => this.logger.e(reason));
   }
 
-  deleteStock(element: StockModel) {
+  deleteStock(element: StockModel): void {
     const matDialogRef = this.dialog.open(DialogDeleteComponent, {width: '350', data: element});
     matDialogRef.afterClosed().subscribe(value => {
       if (value === 'no') {
@@ -395,7 +399,7 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
     });
   }
 
-  viewProduct(stock: StockModel) {
+  viewProduct(stock: StockModel): void {
     this.bottomSheet.open(StockDetailsComponent, {
       data: stock,
       closeOnNavigation: true,
@@ -403,7 +407,7 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
   }
 
   // affect performance
-  handleSearch(query: string) {
+  handleSearch(query: string): void {
     this.getStocksFromCache(() => {
       // this.stockDatasource.filter = query.toString().toLowerCase();
       if (query) {
@@ -414,7 +418,7 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
     });
   }
 
-  private _removeProductFromTable(element: StockModel) {
+  private _removeProductFromTable(element: StockModel): void {
     this.stockDatasource.data = this.stockDatasource.data.filter(value => value.id !== element.id);
     this._getTotalPurchaseOfStock(this.stockDatasource.data);
     // update stocks
@@ -426,20 +430,20 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
     });
   }
 
-  private _getTotalPurchaseOfStock(stocks: StockModel[]) {
+  private _getTotalPurchaseOfStock(stocks: StockModel[]): void {
     // @ts-ignore
-    const sum = stocks.reduce(function (a, b) {
+    const sum = stocks.reduce((a, b) => {
       return {purchase: a.purchase + b.purchase}; // returns object with property x
     });
     this.totalPurchase = of(sum.purchase);
   }
 
-  reload() {
+  reload(): void {
     this.getStocksFromCache(() => {
     });
   }
 
-  exportStock() {
+  exportStock(): void {
     this.exportProgress = true;
     this.stockDatabase.exportToExcel().then(_ => {
       // const blob = new Blob([value.csv], {type: 'text/plain'});
@@ -458,7 +462,7 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
     });
   }
 
-  importStocks() {
+  importStocks(): void {
     this.dialog.open(ImportsDialogComponent, {
       closeOnNavigation: true,
     }).afterClosed().subscribe(value => {
@@ -472,24 +476,15 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
     this.eventApi.unListen(SsmEvents.STOCK_UPDATED);
   }
 
-  createGroupProduct() {
-    if (this.selection.selected.length < 2) {
-      this.snack.open('select atleast two product', 'Ok', {duration: 2000});
-    } else {
-      this.dialog.open(CreateGroupProductsComponent, {
-        width: '95%',
-        maxWidth: '600px',
-        disableClose: true,
-        closeOnNavigation: true,
-        data: {
-          items: this.selection.selected,
-        }
-      });
-    }
+  createGroupProduct(): void {
   }
 
-  productValue() {
-    return this.stockDatasource.data.filter(x => x.stockable === true).map(x => x.purchase).reduce((a, b) => a + b, 0);
+  productValue(): number {
+    return this.stockDatasource
+      .data
+      .filter(x => x.stockable === true)
+      .map(x => x.purchase)
+      .reduce((a, b) => a + b, 0);
   }
 }
 

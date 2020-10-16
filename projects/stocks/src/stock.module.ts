@@ -22,17 +22,19 @@ import {MatTableModule} from '@angular/material/table';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {ReactiveFormsModule} from '@angular/forms';
-import {ImageCropperModule} from 'ngx-image-cropper';
 import {MatListModule} from '@angular/material/list';
 import {RouterModule, Routes} from '@angular/router';
 import {ProductsPage} from './pages/products.page';
 import {StockDetailsComponent} from './components/stock.component';
-import {TransferDialogComponent} from './components/transfer.component';
 import {CreatePageComponent} from './pages/product-create.page';
 import {EditPageComponent} from './pages/edit.page';
 import {CategoriesComponent} from './components/categories.component';
 import {DialogUnitDeleteComponent, DialogUnitNewComponent, UnitsComponent} from './components/units.component';
-import {DialogSupplierDeleteComponent, DialogSupplierNewComponent, SuppliersComponent} from './components/suppliers.component';
+import {
+  DialogSupplierDeleteComponent,
+  DialogSupplierNewComponent,
+  SuppliersComponent
+} from './components/suppliers.component';
 import {ImportsDialogComponent} from './components/imports.component';
 import {CommonModule} from '@angular/common';
 import {LibModule} from '@smartstocktz/core-libs';
@@ -44,7 +46,6 @@ import {IndexPage} from './pages/index.page';
 import {UnitsPage} from './pages/units.page';
 import {SuppliersPage} from './pages/suppliers.page';
 import {CategoriesPage} from './pages/categories.page';
-import {CreateGroupProductsComponent} from './components/create-group-products.component';
 import {CatalogFormFieldComponent} from './components/catalog-form-field.component';
 import {DialogCategoryDeleteComponent} from './components/dialog-category-delete.component';
 import {DialogCategoryCreateComponent} from './components/dialog-category-create.component';
@@ -67,7 +68,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(routes),
+    RouterModule, // .forChild(routes),
     LibModule,
     MatSidenavModule,
     MatCardModule,
@@ -92,11 +93,9 @@ const routes: Routes = [
     MatRadioModule,
     MatExpansionModule,
     MatDialogModule,
-    ImageCropperModule,
     MatListModule
   ],
   declarations: [
-    CreateGroupProductsComponent,
     CatalogFormFieldComponent,
     IndexPage,
     CreatePageComponent,
@@ -112,7 +111,6 @@ const routes: Routes = [
     DialogUnitNewComponent,
     DialogSupplierDeleteComponent,
     ImportsDialogComponent,
-    TransferDialogComponent,
     DialogSupplierNewComponent,
     CategoryFormFieldComponent,
     SuppliersFormFieldComponent,
@@ -129,4 +127,7 @@ const routes: Routes = [
   ],
 })
 export class StockModule {
+  constructor() {
+    RouterModule.forChild(routes);
+  }
 }

@@ -197,7 +197,7 @@ import {StorageService} from '@smartstocktz/core-libs';
 
     </mat-sidenav-container>
   `,
-  styleUrls: ['../styles/create.style.css']
+  styleUrls: ['../styles/create.style.scss']
 })
 export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
 

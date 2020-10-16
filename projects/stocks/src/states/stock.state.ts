@@ -37,7 +37,7 @@ export class StockState {
       .post(stocks, {});
   }
 
-  addAllSupplier(suppliers: SupplierModel[], callback: (value: any) => void) {
+  addAllSupplier(suppliers: SupplierModel[], callback: (value: any) => void): void {
   }
 
   async addCategory(category: CategoryModel): Promise<any> {
@@ -97,13 +97,10 @@ export class StockState {
     return BFast.database(shop.projectId).collection('suppliers').save(supplier);
   }
 
-  deleteAllCategory(categories: CategoryModel[], callback: (value: any) => void) {
+  deleteAllCategory(categories: CategoryModel[], callback: (value: any) => void): void {
   }
 
-  deleteAllStock(stocks: StockModel[], callback?: (value: any) => void) {
-  }
-
-  deleteAllSupplier(suppliers: SupplierModel[], callback?: (value: any) => void) {
+  deleteAllStock(stocks: StockModel[], callback?: (value: any) => void): void {
   }
 
   async deleteCategory(category: CategoryModel): Promise<any> {

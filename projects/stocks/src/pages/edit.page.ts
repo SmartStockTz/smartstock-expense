@@ -10,7 +10,7 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
   template: `
     <smartstock-stock-new *ngIf="!loadStock" [isUpdateMode]="true" [initialStock]="stock"></smartstock-stock-new>
   `,
-  styleUrls: ['../styles/edit.style.css']
+  styleUrls: ['../styles/edit.style.scss']
 })
 export class EditPageComponent extends DeviceInfoUtil implements OnInit {
 

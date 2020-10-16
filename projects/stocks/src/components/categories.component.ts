@@ -109,7 +109,7 @@ import {DialogCategoryCreateComponent} from './dialog-category-create.component'
       </mat-card-content>
     </mat-card>
   `,
-  styleUrls: ['../styles/categories.style.css']
+  styleUrls: ['../styles/categories.style.scss']
 })
 export class CategoriesComponent implements OnInit {
   @ViewChild('matPaginator') matPaginator: MatPaginator;

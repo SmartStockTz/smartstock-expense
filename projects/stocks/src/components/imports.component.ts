@@ -86,7 +86,7 @@ import {StockState} from '../states/stock.state';
 
     <input #fileU style="display: none" (change)="csvUploaded($event)" type="file" accept=".csv">
   `,
-  styleUrls: ['../styles/imports.style.css']
+  styleUrls: ['../styles/imports.style.scss']
 })
 export class ImportsDialogComponent implements OnInit {
 

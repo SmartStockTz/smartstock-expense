@@ -1,6 +1,12 @@
 {
   "name": "@smartstocktz/stocks",
   "version": "0.0.1",
+  "publishConfig": {
+    "registry": "https://npm/pkg.github.com/"
+  },
+  "repository": {
+    "url": "git://github.com/smartstocktz/smartstock-core-stocks.git"
+  },
   "peerDependencies": {
     "@angular/common": "^10.1.5",
     "@angular/core": "^10.1.5",

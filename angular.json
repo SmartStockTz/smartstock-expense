@@ -44,45 +44,127 @@
       }
     },
     "stocks-mock": {
-      "projectType": "library",
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "root": "projects/stocks-mock",
       "sourceRoot": "projects/stocks-mock/src",
-      "prefix": "lib",
+      "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "tsConfig": "projects/stocks-mock/tsconfig.lib.json",
-            "project": "projects/stocks-mock/ng-package.json"
+            "outputPath": "dist/stocks-mock",
+            "index": "projects/stocks-mock/src/index.html",
+            "main": "projects/stocks-mock/src/main.ts",
+            "polyfills": "projects/stocks-mock/src/polyfills.ts",
+            "tsConfig": "projects/stocks-mock/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/stocks-mock/src/favicon.ico",
+              "projects/stocks-mock/src/assets"
+            ],
+            "styles": [
+              "projects/stocks-mock/src/styles.scss"
+            ],
+            "scripts": []
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/stocks-mock/tsconfig.lib.prod.json"
+              "fileReplacements": [
+                {
+                  "replace": "projects/stocks-mock/src/environments/environment.ts",
+                  "with": "projects/stocks-mock/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
             }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "stocks-mock:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "stocks-mock:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "stocks-mock:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "projects/stocks-mock/src/test.ts",
+            "polyfills": "projects/stocks-mock/src/polyfills.ts",
             "tsConfig": "projects/stocks-mock/tsconfig.spec.json",
-            "karmaConfig": "projects/stocks-mock/karma.conf.js"
+            "karmaConfig": "projects/stocks-mock/karma.conf.js",
+            "assets": [
+              "projects/stocks-mock/src/favicon.ico",
+              "projects/stocks-mock/src/assets"
+            ],
+            "styles": [
+              "projects/stocks-mock/src/styles.scss"
+            ],
+            "scripts": []
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/stocks-mock/tsconfig.lib.json",
-              "projects/stocks-mock/tsconfig.spec.json"
+              "projects/stocks-mock/tsconfig.app.json",
+              "projects/stocks-mock/tsconfig.spec.json",
+              "projects/stocks-mock/e2e/tsconfig.json"
             ],
             "exclude": [
               "**/node_modules/**"
             ]
           }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/stocks-mock/e2e/protractor.conf.js",
+            "devServerTarget": "stocks-mock:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "stocks-mock:serve:production"
+            }
+          }
         }
       }
-    }},
+    }
+  },
   "cli": {
     "analytics": false
   },

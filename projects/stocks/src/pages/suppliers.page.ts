@@ -32,7 +32,7 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 
     </mat-sidenav-container>
   `,
-  styleUrls: ['../styles/stock.style.css']
+  styleUrls: ['../styles/stock.style.scss']
 })
 export class SuppliersPage extends DeviceInfoUtil implements OnInit, OnDestroy {
 

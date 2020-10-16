@@ -5,12 +5,14 @@
       true,
       "attribute",
       "lib",
+      "smartstock",
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
       "lib",
+      "smartstock",
       "kebab-case"
     ]
   }

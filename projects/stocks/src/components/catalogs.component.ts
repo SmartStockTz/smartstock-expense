@@ -109,7 +109,7 @@ import {DialogCatalogCreateComponent} from './dialog-catalog-create.component';
       </mat-card-content>
     </mat-card>
   `,
-  styleUrls: ['../styles/catalogs.style.css']
+  styleUrls: ['../styles/catalogs.style.scss']
 })
 export class CatalogsComponent implements OnInit {
   @ViewChild('matPaginator') matPaginator: MatPaginator;

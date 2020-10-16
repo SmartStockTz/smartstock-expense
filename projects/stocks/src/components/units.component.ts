@@ -129,7 +129,7 @@ import {MatPaginator} from '@angular/material/paginator';
       </mat-card-content>
     </mat-card>
   `,
-  styleUrls: ['../styles/units.style.css']
+  styleUrls: ['../styles/units.style.scss']
 })
 export class UnitsComponent implements OnInit {
   @ViewChild('matPaginator') matPaginator: MatPaginator;
