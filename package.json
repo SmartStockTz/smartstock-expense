@@ -1,6 +1,9 @@
 {
   "name": "@smartstocktz/stocks",
   "version": "0.0.1",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
