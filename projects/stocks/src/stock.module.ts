@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {ANALYZE_FOR_ENTRY_COMPONENTS, NgModule} from '@angular/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatButtonModule} from '@angular/material/button';
@@ -23,9 +23,9 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatListModule} from '@angular/material/list';
-import {RouterModule, Routes} from '@angular/router';
+import {RouterModule, ROUTES, Routes} from '@angular/router';
 import {ProductsPage} from './pages/products.page';
-import {StockDetailsComponent} from './components/stock.component';
+import {DialogDeleteComponent, StockDetailsComponent} from './components/stock.component';
 import {CreatePageComponent} from './pages/product-create.page';
 import {EditPageComponent} from './pages/edit.page';
 import {CategoriesComponent} from './components/categories.component';
@@ -68,7 +68,22 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule, // .forChild(routes),
+    // RouterModule.forChild(routes),
+    {
+      ngModule: RouterModule,
+      providers: [
+        {
+          provide: ANALYZE_FOR_ENTRY_COMPONENTS,
+          multi: true,
+          useValue: routes
+        },
+        {
+          provide: ROUTES,
+          multi: true,
+          useValue: routes
+        }
+      ]
+    },
     LibModule,
     MatSidenavModule,
     MatCardModule,
@@ -96,6 +111,7 @@ const routes: Routes = [
     MatListModule
   ],
   declarations: [
+    DialogDeleteComponent,
     CatalogFormFieldComponent,
     IndexPage,
     CreatePageComponent,
@@ -128,6 +144,6 @@ const routes: Routes = [
 })
 export class StockModule {
   constructor() {
-    RouterModule.forChild(routes);
+    // RouterModule.forChild(routes);
   }
 }

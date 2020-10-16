@@ -26,16 +26,16 @@ import {StockModel} from '../models/stock.model';
   `
 })
 export class StockDetailsComponent {
-  constructor(private _bottomSheetRef: MatBottomSheetRef<StockDetailsComponent>,
+  constructor(private bottomSheetRef: MatBottomSheetRef<StockDetailsComponent>,
               @Inject(MAT_BOTTOM_SHEET_DATA) public data: StockModel) {
   }
 
   openLink(event: MouseEvent): void {
-    this._bottomSheetRef.dismiss();
+    this.bottomSheetRef.dismiss();
     event.preventDefault();
   }
 
-  getStocks() {
+  getStocks(): string[] {
     return Object.keys(this.data);
   }
 }
@@ -68,11 +68,11 @@ export class DialogDeleteComponent {
     @Inject(MAT_DIALOG_DATA) public data: StockModel) {
   }
 
-  delete(stock: StockModel) {
+  delete(stock: StockModel): void {
     this.dialogRef.close(stock);
   }
 
-  cancel() {
+  cancel(): void {
     this.dialogRef.close('no');
   }
 }
