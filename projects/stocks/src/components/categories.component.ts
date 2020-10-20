@@ -5,10 +5,10 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTableDataSource} from '@angular/material/table';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {CategoryModel} from '../models/category.model';
-import {StockState} from '../states/stock.state';
 import {MatPaginator} from '@angular/material/paginator';
 import {DialogCategoryDeleteComponent} from './dialog-category-delete.component';
 import {DialogCategoryCreateComponent} from './dialog-category-create.component';
+import {CategoryService} from '../services/category.service';
 
 @Component({
   selector: 'smartstock-categories',
@@ -113,24 +113,24 @@ import {DialogCategoryCreateComponent} from './dialog-category-create.component'
 })
 export class CategoriesComponent implements OnInit {
   @ViewChild('matPaginator') matPaginator: MatPaginator;
-  categoriesDatasource: MatTableDataSource<CategoryModel>;
+  categoriesDatasource: MatTableDataSource<CategoryModel> = new MatTableDataSource<CategoryModel>([]);
   categoriesTableColums = ['name', 'description', 'actions'];
-  categoriesArray: CategoryModel[];
+  categoriesArray: CategoryModel[] = [];
   fetchCategoriesFlag = false;
   nameFormControl = new FormControl();
   descriptionFormControl = new FormControl();
 
-  constructor(private readonly stockDatabase: StockState,
+  constructor(private readonly stockDatabase: CategoryService,
               private readonly formBuilder: FormBuilder,
               private readonly dialog: MatDialog,
               private readonly snack: MatSnackBar) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.getCategories();
   }
 
-  searchCategory(query: string) {
+  searchCategory(query: string): void {
     // if ($event && $event.query) {
     //   this.fetchCategoriesFlag = true;
     //   this.stockDatabase.searchCategory($event.query, {size: 20}).then(data => {
@@ -150,7 +150,7 @@ export class CategoriesComponent implements OnInit {
     // }
   }
 
-  getCategories() {
+  getCategories(): void {
     this.fetchCategoriesFlag = true;
     this.stockDatabase.getAllCategory({size: 100}).then(data => {
       this.categoriesArray = JSON.parse(JSON.stringify(data));
@@ -163,7 +163,7 @@ export class CategoriesComponent implements OnInit {
     });
   }
 
-  deleteCategory(element: any) {
+  deleteCategory(element: any): void {
     this.dialog.open(DialogCategoryDeleteComponent, {
       data: element,
       disableClose: true
@@ -182,7 +182,7 @@ export class CategoriesComponent implements OnInit {
     });
   }
 
-  updateCategoryName(category, matMenu: MatMenuTrigger) {
+  updateCategoryName(category, matMenu: MatMenuTrigger): void {
     matMenu.toggleMenu();
     if (category && category.value) {
       category.field = 'name';
@@ -190,7 +190,7 @@ export class CategoriesComponent implements OnInit {
     }
   }
 
-  updateCategory(category: { id: string, value: string, field: string }) {
+  updateCategory(category: { id: string, value: string, field: string }): void {
     this.snack.open('Update in progress..', 'Ok');
     this.stockDatabase.updateCategory(category).then(data => {
       const editedObjectIndex = this.categoriesArray.findIndex(value => value.id === data.id);
@@ -212,7 +212,7 @@ export class CategoriesComponent implements OnInit {
     });
   }
 
-  updateCategoryDescription(category, matMenu: MatMenuTrigger) {
+  updateCategoryDescription(category, matMenu: MatMenuTrigger): void {
     matMenu.toggleMenu();
     if (category && category.value) {
       category.field = 'description';
@@ -220,7 +220,7 @@ export class CategoriesComponent implements OnInit {
     }
   }
 
-  openAddCategoryDialog() {
+  openAddCategoryDialog(): void {
     this.dialog.open(DialogCategoryCreateComponent, {
       closeOnNavigation: true,
       hasBackdrop: true

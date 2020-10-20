@@ -5,8 +5,8 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTableDataSource} from '@angular/material/table';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {UnitsModel} from '../models/units.model';
-import {StockState} from '../states/stock.state';
 import {MatPaginator} from '@angular/material/paginator';
+import {UnitsService} from '../services/units.service';
 
 @Component({
   selector: 'smartstock-units',
@@ -133,27 +133,27 @@ import {MatPaginator} from '@angular/material/paginator';
 })
 export class UnitsComponent implements OnInit {
   @ViewChild('matPaginator') matPaginator: MatPaginator;
-  unitsDatasource: MatTableDataSource<UnitsModel>;
+  unitsDatasource: MatTableDataSource<UnitsModel> = new MatTableDataSource<UnitsModel>([]);
   unitsTableColums = ['name', 'abbreviation', 'description', 'actions'];
-  unitsArray: UnitsModel[];
+  unitsArray: UnitsModel[] = [];
   fetchUnitsFlag = false;
   nameFormControl = new FormControl();
   abbreviationFormControl = new FormControl();
   descriptionFormControl = new FormControl();
 
-  constructor(private readonly stockDatabase: StockState,
+  constructor(private readonly unitsService: UnitsService,
               private readonly formBuilder: FormBuilder,
               private readonly dialog: MatDialog,
               private readonly snack: MatSnackBar) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.getUnits();
   }
 
-  getUnits() {
+  getUnits(): void {
     this.fetchUnitsFlag = true;
-    this.stockDatabase.getAllUnit({size: 100}).then(data => {
+    this.unitsService.getAllUnit({size: 100}).then(data => {
       this.unitsArray = JSON.parse(JSON.stringify(data));
       this.unitsDatasource = new MatTableDataSource<UnitsModel>(this.unitsArray);
       this.unitsDatasource.paginator = this.matPaginator;
@@ -164,7 +164,7 @@ export class UnitsComponent implements OnInit {
     });
   }
 
-  deleteUnit(element: any) {
+  deleteUnit(element: any): void {
     this.dialog.open(DialogUnitDeleteComponent, {
       data: element,
       disableClose: true
@@ -183,7 +183,7 @@ export class UnitsComponent implements OnInit {
     });
   }
 
-  updateUnitName(unit, matMenu: MatMenuTrigger) {
+  updateUnitName(unit, matMenu: MatMenuTrigger): void {
     matMenu.toggleMenu();
     if (unit && unit.value) {
       unit.field = 'name';
@@ -191,7 +191,7 @@ export class UnitsComponent implements OnInit {
     }
   }
 
-  updateUnitAbbreviation(abbreviation, matMenu: MatMenuTrigger) {
+  updateUnitAbbreviation(abbreviation, matMenu: MatMenuTrigger): void {
     matMenu.toggleMenu();
     if (abbreviation && abbreviation.value) {
       abbreviation.field = 'abbreviation';
@@ -199,9 +199,9 @@ export class UnitsComponent implements OnInit {
     }
   }
 
-  updateUnit(unit: { id: string, value: string, field: string }) {
+  updateUnit(unit: { id: string, value: string, field: string }): void {
     this.snack.open('Update units-mobile-ui in progress..', 'Ok');
-    this.stockDatabase.updateUnit(unit).then(data => {
+    this.unitsService.updateUnit(unit).then(data => {
       const editedObjectIndex = this.unitsArray.findIndex(value => value.id === data.id);
       this.unitsArray = this.unitsArray.filter(value => value.id !== unit.id);
       if (editedObjectIndex !== -1) {
@@ -222,7 +222,7 @@ export class UnitsComponent implements OnInit {
     });
   }
 
-  updateUnitDescription(unit, matMenu: MatMenuTrigger) {
+  updateUnitDescription(unit, matMenu: MatMenuTrigger): void {
     matMenu.toggleMenu();
     if (unit && unit.value) {
       unit.field = 'description';
@@ -230,7 +230,7 @@ export class UnitsComponent implements OnInit {
     }
   }
 
-  openAddUnitDialog() {
+  openAddUnitDialog(): void {
     this.dialog.open(DialogUnitNewComponent, {
       closeOnNavigation: true,
       hasBackdrop: true
@@ -279,14 +279,14 @@ export class DialogUnitDeleteComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogUnitDeleteComponent>,
-    private readonly stockDatabase: StockState,
+    private readonly unitsService: UnitsService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
-  deleteUnit(unit: any) {
+  deleteUnit(unit: any): void {
     this.errorUnitMessage = undefined;
     this.deleteProgress = true;
-    this.stockDatabase.deleteUnit(unit).then(value => {
+    this.unitsService.deleteUnit(unit).then(value => {
       this.dialogRef.close(unit);
       this.deleteProgress = false;
     }).catch(reason => {
@@ -296,7 +296,7 @@ export class DialogUnitDeleteComponent {
     });
   }
 
-  cancel() {
+  cancel(): void {
     this.dialogRef.close(null);
   }
 }
@@ -342,7 +342,7 @@ export class DialogUnitNewComponent implements OnInit {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly snack: MatSnackBar,
-    private readonly stockDatabase: StockState,
+    private readonly unitsService: UnitsService,
     public dialogRef: MatDialogRef<DialogUnitDeleteComponent>) {
   }
 
@@ -350,14 +350,14 @@ export class DialogUnitNewComponent implements OnInit {
     this.initiateForm();
   }
 
-  initiateForm() {
+  initiateForm(): void {
     this.newUnitForm = this.formBuilder.group({
       name: ['', [Validators.nullValidator, Validators.required]],
       description: ['']
     });
   }
 
-  createUnit() {
+  createUnit(): void {
     if (!this.newUnitForm.valid) {
       this.snack.open('Please fll all details', 'Ok', {
         duration: 3000
@@ -366,7 +366,7 @@ export class DialogUnitNewComponent implements OnInit {
     }
 
     this.createUnitProgress = true;
-    this.stockDatabase.addUnit(this.newUnitForm.value).then(value => {
+    this.unitsService.addUnit(this.newUnitForm.value).then(value => {
       this.createUnitProgress = false;
       value.name = this.newUnitForm.value.name;
       value.description = this.newUnitForm.value.description;
@@ -382,7 +382,7 @@ export class DialogUnitNewComponent implements OnInit {
     });
   }
 
-  cancel($event: Event) {
+  cancel($event: Event): void {
     $event.preventDefault();
     this.dialogRef.close(null);
   }

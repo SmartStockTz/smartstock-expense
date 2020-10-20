@@ -1,6 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {StockState} from '../states/stock.state';
+import {CatalogService} from "../services/catalog.service";
 
 @Component({
   selector: 'smartstock-catalog-dialog-delete',
@@ -37,14 +38,14 @@ export class DialogCatalogDeleteComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogCatalogDeleteComponent>,
-    private readonly stockDatabase: StockState,
+    private readonly catalogService: CatalogService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
-  deleteCatalog(catalog: any) {
+  deleteCatalog(catalog: any): void {
     this.errorCatalogMessage = undefined;
     this.deleteProgress = true;
-    this.stockDatabase.deleteCatalog(catalog).then(value => {
+    this.catalogService.deleteCatalog(catalog).then(value => {
       this.dialogRef.close(catalog);
       this.deleteProgress = false;
     }).catch(reason => {
@@ -53,7 +54,7 @@ export class DialogCatalogDeleteComponent {
     });
   }
 
-  cancel() {
+  cancel(): void {
     this.dialogRef.close(null);
   }
 }

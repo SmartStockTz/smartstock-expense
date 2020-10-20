@@ -5,8 +5,8 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTableDataSource} from '@angular/material/table';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {SupplierModel} from '../models/supplier.model';
-import {StockState} from '../states/stock.state';
 import {MatPaginator} from '@angular/material/paginator';
+import {SupplierService} from '../services/supplier.service';
 
 @Component({
   selector: 'smartstock-suppliers',
@@ -163,9 +163,9 @@ import {MatPaginator} from '@angular/material/paginator';
 })
 export class SuppliersComponent implements OnInit {
   @ViewChild('matPaginator') matPaginator: MatPaginator;
-  suppliersDatasource: MatTableDataSource<SupplierModel>;
+  suppliersDatasource: MatTableDataSource<SupplierModel> = new MatTableDataSource<SupplierModel>([]);
   suppliersTableColums = ['name', 'email', 'mobile', 'address', 'actions'];
-  suppliersArray: SupplierModel[];
+  suppliersArray: SupplierModel[] = [];
   fetchSuppliersFlag = false;
   nameFormControl = new FormControl();
   descriptionFormControl = new FormControl();
@@ -173,17 +173,17 @@ export class SuppliersComponent implements OnInit {
   emailFormControl = new FormControl();
   mobileFormControl = new FormControl();
 
-  constructor(private readonly stockState: StockState,
+  constructor(private readonly supplierService: SupplierService,
               private readonly formBuilder: FormBuilder,
               private readonly dialog: MatDialog,
               private readonly snack: MatSnackBar) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.getSuppliers();
   }
 
-  searchSupplier(query: string) {
+  searchSupplier(query: string): void {
     // if ($event && $event.query) {
     //   this.fetchSuppliersFlag = true;
     //   this.stockDatabase.searchSupplier($event.query, {size: 20}).then(data => {
@@ -203,9 +203,9 @@ export class SuppliersComponent implements OnInit {
     // }
   }
 
-  getSuppliers() {
+  getSuppliers(): void {
     this.fetchSuppliersFlag = true;
-    this.stockState.getAllSupplier({size: 100}).then(data => {
+    this.supplierService.getAllSupplier({size: 100}).then(data => {
       this.suppliersArray = JSON.parse(JSON.stringify(data));
       this.suppliersDatasource = new MatTableDataSource<SupplierModel>(this.suppliersArray);
       this.suppliersDatasource.paginator = this.matPaginator;
@@ -216,7 +216,7 @@ export class SuppliersComponent implements OnInit {
     });
   }
 
-  deleteSupplier(element: any) {
+  deleteSupplier(element: any): void {
     this.dialog.open(DialogSupplierDeleteComponent, {
       data: element,
       disableClose: true
@@ -235,7 +235,7 @@ export class SuppliersComponent implements OnInit {
     });
   }
 
-  updateSupplierName(supplier, matMenu: MatMenuTrigger) {
+  updateSupplierName(supplier, matMenu: MatMenuTrigger): void {
     matMenu.toggleMenu();
     if (supplier && supplier.value) {
       supplier.field = 'name';
@@ -243,9 +243,9 @@ export class SuppliersComponent implements OnInit {
     }
   }
 
-  updateSupplier(supplier: { id: string, value: string, field: string }) {
+  updateSupplier(supplier: { id: string, value: string, field: string }): void {
     this.snack.open('Update in progress..', 'Ok');
-    this.stockState.updateSupplier(supplier).then(data => {
+    this.supplierService.updateSupplier(supplier).then(data => {
       const editedObjectIndex = this.suppliersArray.findIndex(value => value.id === data.id);
       this.suppliersArray = this.suppliersArray.filter(value => value.id !== supplier.id);
       if (editedObjectIndex !== -1) {
@@ -265,7 +265,7 @@ export class SuppliersComponent implements OnInit {
     });
   }
 
-  openAddSupplierDialog() {
+  openAddSupplierDialog(): void {
     this.dialog.open(DialogSupplierNewComponent, {
       closeOnNavigation: true,
       hasBackdrop: true
@@ -277,7 +277,7 @@ export class SuppliersComponent implements OnInit {
     });
   }
 
-  updateSupplierEmail(supplier: any, matMenu: MatMenuTrigger) {
+  updateSupplierEmail(supplier: any, matMenu: MatMenuTrigger): void {
     matMenu.toggleMenu();
     if (supplier && supplier.value) {
       supplier.field = 'email';
@@ -285,7 +285,7 @@ export class SuppliersComponent implements OnInit {
     }
   }
 
-  updateSupplierAddress(supplier: any, matMenu: MatMenuTrigger) {
+  updateSupplierAddress(supplier: any, matMenu: MatMenuTrigger): void {
     matMenu.toggleMenu();
     if (supplier && supplier.value) {
       supplier.field = 'address';
@@ -293,7 +293,7 @@ export class SuppliersComponent implements OnInit {
     }
   }
 
-  updateSupplierMobile(supplier: any, matMenu: MatMenuTrigger) {
+  updateSupplierMobile(supplier: any, matMenu: MatMenuTrigger): void {
     matMenu.toggleMenu();
     if (supplier && supplier.value) {
       supplier.field = 'number';
@@ -324,7 +324,8 @@ export class SuppliersComponent implements OnInit {
           </button>
         </div>
         <div class="alert-secondary" style="margin: 8px">
-          <button mat-dialog-close [disabled]="deleteProgress" color="primary" mat-button (click)="cancel()">Cancel</button>
+          <button mat-dialog-close [disabled]="deleteProgress" color="primary" mat-button (click)="cancel()">Cancel
+          </button>
         </div>
       </div>
       <p class="bg-danger" *ngIf="errorSupplierMessage">{{errorSupplierMessage}}</p>
@@ -337,14 +338,14 @@ export class DialogSupplierDeleteComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogSupplierDeleteComponent>,
-    private readonly stockDatabase: StockState,
+    private readonly supplierService: SupplierService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
-  deleteSupplier(supplier: SupplierModel) {
+  deleteSupplier(supplier: SupplierModel): void {
     this.errorSupplierMessage = undefined;
     this.deleteProgress = true;
-    this.stockDatabase.deleteSupplier(supplier.id).then(value => {
+    this.supplierService.deleteSupplier(supplier.id).then(value => {
       this.dialogRef.close(supplier);
       this.deleteProgress = false;
     }).catch(reason => {
@@ -353,7 +354,7 @@ export class DialogSupplierDeleteComponent {
     });
   }
 
-  cancel() {
+  cancel(): void {
     this.dialogRef.close(null);
   }
 }
@@ -417,7 +418,7 @@ export class DialogSupplierNewComponent implements OnInit {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly snack: MatSnackBar,
-    private readonly stockDatabase: StockState,
+    private readonly supplierService: SupplierService,
     public dialogRef: MatDialogRef<DialogSupplierDeleteComponent>) {
   }
 
@@ -425,7 +426,7 @@ export class DialogSupplierNewComponent implements OnInit {
     this.initiateForm();
   }
 
-  initiateForm() {
+  initiateForm(): void {
     this.newSupplierForm = this.formBuilder.group({
       name: ['', [Validators.nullValidator, Validators.required]],
       email: [''],
@@ -434,7 +435,7 @@ export class DialogSupplierNewComponent implements OnInit {
     });
   }
 
-  createSupplier() {
+  createSupplier(): void {
     if (!this.newSupplierForm.valid) {
       this.snack.open('Please fll all details', 'Ok', {
         duration: 3000
@@ -442,7 +443,7 @@ export class DialogSupplierNewComponent implements OnInit {
       return;
     }
     this.createSupplierProgress = true;
-    this.stockDatabase.addSupplier(this.newSupplierForm.value).then(value => {
+    this.supplierService.addSupplier(this.newSupplierForm.value).then(value => {
       this.createSupplierProgress = false;
       value.name = this.newSupplierForm.value.name;
       value.email = this.newSupplierForm.value.email;
@@ -462,7 +463,7 @@ export class DialogSupplierNewComponent implements OnInit {
     });
   }
 
-  cancel($event: Event) {
+  cancel($event: Event): void {
     $event.preventDefault();
     this.dialogRef.close(null);
   }

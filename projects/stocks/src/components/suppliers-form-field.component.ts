@@ -1,9 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {Observable, of} from 'rxjs';
-import {StockState} from '../states/stock.state';
 import {DialogSupplierNewComponent} from './suppliers.component';
 import {MatDialog} from '@angular/material/dialog';
+import {SupplierService} from '../services/supplier.service';
 
 @Component({
   selector: 'smartstock-suppliers-form-field',
@@ -43,7 +43,7 @@ export class SuppliersFormFieldComponent implements OnInit {
   suppliers: Observable<any[]>;
   suppliersFetching = true;
 
-  constructor(private readonly stockState: StockState,
+  constructor(private readonly supplierService: SupplierService,
               private readonly dialog: MatDialog) {
   }
 
@@ -51,9 +51,9 @@ export class SuppliersFormFieldComponent implements OnInit {
     this.getSuppliers();
   }
 
-  getSuppliers() {
+  getSuppliers(): void {
     this.suppliersFetching = true;
-    this.stockState.getAllSupplier({}).then(value => {
+    this.supplierService.getAllSupplier({}).then(value => {
       this.suppliersFetching = false;
       this.suppliers = of(JSON.parse(JSON.stringify(value)));
     }).catch(_ => {
@@ -63,7 +63,7 @@ export class SuppliersFormFieldComponent implements OnInit {
     });
   }
 
-  addNewSupplier($event: MouseEvent) {
+  addNewSupplier($event: MouseEvent): void {
     $event.preventDefault();
     $event.stopPropagation();
     this.dialog.open(DialogSupplierNewComponent, {
@@ -75,7 +75,7 @@ export class SuppliersFormFieldComponent implements OnInit {
     });
   }
 
-  refreshSuppliers($event: MouseEvent) {
+  refreshSuppliers($event: MouseEvent): void {
     $event.preventDefault();
     $event.stopPropagation();
     this.getSuppliers();

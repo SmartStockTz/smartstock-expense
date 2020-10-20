@@ -9,7 +9,8 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
         <smartstock-drawer></smartstock-drawer>
       </mat-sidenav>
       <mat-sidenav-content style="min-height: 100vh">
-        <smartstock-toolbar searchPlaceholder="Filter product" [heading]="'Stocks'" [sidenav]="sidenav"></smartstock-toolbar>
+        <smartstock-toolbar searchPlaceholder="Filter product" [heading]="'Stocks'"
+                            [sidenav]="sidenav"></smartstock-toolbar>
         <div class="container col-xl-10 col-lg-10 col-sm-9 col-md-9 col-sm-12 col-10" style="padding: 16px 0">
           <h1>Go To</h1>
           <div class="row">
@@ -22,6 +23,13 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
               </mat-card>
               <p>{{page.name}}</p>
             </div>
+          </div>
+          <h1>Short Summary</h1>
+          <div class="row">
+            <smartstock-total-products-summary
+              class="col-sm-11 col-md-6 col-lg-4 col-xl-4"></smartstock-total-products-summary>
+            <smartstock-products-value-summary
+              class="col-sm-11 col-md-6 col-lg-4 col-xl-4"></smartstock-products-value-summary>
           </div>
         </div>
       </mat-sidenav-content>

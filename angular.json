@@ -68,6 +68,7 @@
               "projects/stocks-mock/src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "projects/stocks-mock/src/styles.scss"
             ],
             "scripts": []
@@ -132,6 +133,7 @@
               "projects/stocks-mock/src/assets"
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "projects/stocks-mock/src/styles.scss"
             ],
             "scripts": []
@@ -168,5 +170,5 @@
   "cli": {
     "analytics": false
   },
-  "defaultProject": "stocks"
+  "defaultProject": "stocks-mock"
 }

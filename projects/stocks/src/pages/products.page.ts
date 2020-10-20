@@ -1,14 +1,13 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import {Observable, of, Subscription} from 'rxjs';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {MatDialog} from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSidenav} from '@angular/material/sidenav';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTableDataSource} from '@angular/material/table';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {DeviceInfoUtil, EventService, LogService, SsmEvents, StorageService} from '@smartstocktz/core-libs';
-import {UnitsModel} from '../models/units.model';
 import {SelectionModel} from '@angular/cdk/collections';
 import {DialogDeleteComponent, StockDetailsComponent} from '../components/stock.component';
 import {StockState} from '../states/stock.state';
@@ -28,7 +27,8 @@ import {ImportsDialogComponent} from '../components/imports.component';
       <mat-sidenav-content (swiperight)="openDrawer(sidenav)">
 
         <smartstock-toolbar [heading]="'Products'" [searchPlaceholder]="'Type to search'"
-                            (searchCallback)="handleSearch($event)" [sidenav]="sidenav" [showProgress]="showProgress">
+                            showSearch="true"
+                            (searchCallback)="handleSearch($event)" [sidenav]="sidenav">
         </smartstock-toolbar>
 
         <div>
@@ -44,22 +44,29 @@ import {ImportsDialogComponent} from '../components/imports.component';
                       </button>
                       <span class="toolbar-spacer"></span>
                       <span style="width: 8px; height: 8px"></span>
-                      <button (click)="hotReloadStocks()" [disabled]="hotReloadProgress" matTooltip="Reload from server"
+                      <button (click)="stockState.getStocksFromRemote()"
+                              [disabled]="(stockState.isFetchStocks | async) === true"
+                              matTooltip="Reload from server"
                               color="primary"
                               class="ft-button" mat-flat-button>
-                        <mat-icon *ngIf="!hotReloadProgress">refresh</mat-icon>
-                        <mat-progress-spinner *ngIf="hotReloadProgress" [diameter]="20"
+                        <mat-icon *ngIf="(stockState.isFetchStocks | async) === false">
+                          refresh
+                        </mat-icon>
+                        <mat-progress-spinner *ngIf="(stockState.isFetchStocks | async)===true" [diameter]="20"
                                               matTooltip="Fetch products from server"
                                               mode="indeterminate"
                                               color="primary">
                         </mat-progress-spinner>
                       </button>
                       <span style="width: 8px; height: 8px"></span>
-                      <button (click)="exportStock()" [disabled]="exportProgress" matTooltip="Export Products To Csv"
+                      <button (click)="exportStock()" [disabled]="(stockState.isExportToExcel | async)===true"
+                              matTooltip="Export Products To Csv"
                               color="primary"
                               class="ft-button" mat-flat-button>
-                        <mat-icon *ngIf="!exportProgress">cloud_download</mat-icon>
-                        <mat-progress-spinner *ngIf="exportProgress" [diameter]="20"
+                        <mat-icon *ngIf="(stockState.isExportToExcel | async) === false">
+                          cloud_download
+                        </mat-icon>
+                        <mat-progress-spinner *ngIf="(stockState.isExportToExcel | async)===true" [diameter]="20"
                                               matTooltip="Export Products InProgress.."
                                               mode="indeterminate"
                                               color="primary">
@@ -75,7 +82,9 @@ import {ImportsDialogComponent} from '../components/imports.component';
                         <mat-icon>more_vert</mat-icon>
                       </button>
                       <mat-menu #stockMenu>
-                        <button (click)="reload()" matTooltip="refresh products in table" mat-menu-item>Reload</button>
+                        <button (click)="hotReloadStocks()" matTooltip="refresh products in table" mat-menu-item>Hot
+                          Reload
+                        </button>
                       </mat-menu>
 
                     </mat-card-title>
@@ -228,10 +237,9 @@ import {ImportsDialogComponent} from '../components/imports.component';
   styleUrls: ['../styles/stock.style.scss']
 })
 export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
-  selectedTab = 0;
-  private stockFetchProgress = false;
   dataSource = new MatTableDataSource();
   selection = new SelectionModel(true, []);
+  private stockSubscription: Subscription;
 
   constructor(private readonly router: Router,
               private readonly indexDb: StorageService,
@@ -240,35 +248,26 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
               private readonly logger: LogService,
               private readonly dialog: MatDialog,
               private readonly eventApi: EventService,
-              private readonly activatedRoute: ActivatedRoute,
-              private readonly stockDatabase: StockState) {
+              public readonly stockState: StockState) {
     super();
   }
 
-  exportProgress = false;
-  showProgress = false;
-  hotReloadProgress = false;
   totalPurchase: Observable<number> = of(0);
-  units: Observable<UnitsModel[]>;
   stockDatasource: MatTableDataSource<StockModel> = new MatTableDataSource<StockModel>([]);
   stockColumns = ['select', 'product', 'quantity', 'purchase', 'retailPrice', 'wholesalePrice', 'action'];
   @ViewChild('sidenav') sidenav: MatSidenav;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit(): void {
-    this.activatedRoute.queryParams.subscribe(value => {
-      if (value) {
-        this.selectedTab = Number(value.t);
-      }
-    });
-    this.eventApi.listen(SsmEvents.STOCK_UPDATED, data => {
-      this.reload();
-    });
-    this.initializeView();
+    this.subscriptions();
+    this.stockState.getStocks();
   }
 
 
   isAllSelected(): boolean {
+    if (!this.stockDatasource.data) {
+      return false;
+    }
     const numSelected = this.selection.selected.length;
     const numRows = this.stockDatasource.data.length;
     return numSelected === numRows;
@@ -307,94 +306,30 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
     // }
   }
 
-
-  private showProgressBar(): void {
-    this.showProgress = true;
-  }
-
-  private hideProgressBar(): void {
-    this.showProgress = false;
-  }
-
-  private initializeView(): void {
-    this.getStocksFromCache();
-  }
-
-  private getStocksFromCache(callback?: (error) => void): void {
-    this.stockFetchProgress = true;
-    this.indexDb.getStocks().then(stocks => {
-      if (!stocks && !Array.isArray(stocks)) {
-        this.hotReloadStocks();
-        throw new Error('products not available locally');
-      }
-      if (stocks && Array.isArray(stocks) && stocks.length === 0) {
-        this.hotReloadStocks();
-        throw new Error('products not available locally');
-      }
-      this.stockDatasource = new MatTableDataSource(stocks);
+  private subscriptions(): void {
+    this.stockSubscription = this.stockState.stocks.subscribe(stocks => {
       this.stockDatasource.paginator = this.paginator;
+      this.stockDatasource.data = stocks;
       this._getTotalPurchaseOfStock(stocks);
-      this.stockFetchProgress = false;
-      if (callback) {
-        callback(null);
-      }
-    }).catch(error1 => {
-      this.stockFetchProgress = false;
-      this.logger.e(error1);
-      this.snack.open('Failed to get products', 'Ok', {duration: 3000});
-      if (callback) {
-        callback(error1);
-      }
     });
   }
 
   hotReloadStocks(): void {
-    this.hotReloadProgress = true;
-    this.stockDatabase.getAllStock().then(async stocks => {
-      try {
-        this.hotReloadProgress = false;
-        await this.indexDb.saveStocks(stocks);
-        this.stockDatasource = new MatTableDataSource(stocks);
-        this.stockDatasource.paginator = this.paginator;
-        this._getTotalPurchaseOfStock(stocks);
-        this.stockFetchProgress = false;
-        this.snack.open('Successful retrieve stocks from server', 'Ok', {
-          duration: 3000
-        });
-      } catch (e) {
-        throw e;
-      }
-    }).catch(reason => {
-      this.hotReloadProgress = false;
-      this.logger.e(reason);
-      this.snack.open('Fails to get stocks from server, try again', 'Ok', {
-        duration: 3000
-      });
-    });
+    this.stockState.getStocks();
   }
 
   editStock(element: StockModel): void {
-    this.router.navigateByUrl('/stock/edit/' + element.id + '?stock=' + encodeURI(JSON.stringify(element)))
-      .catch(reason => this.logger.e(reason));
+    this.stockState.selectedStock.next(element);
+    this.router.navigateByUrl('/stock/edit/' + element.id).catch(reason => this.logger.e(reason));
   }
 
   deleteStock(element: StockModel): void {
     const matDialogRef = this.dialog.open(DialogDeleteComponent, {width: '350', data: element});
     matDialogRef.afterClosed().subscribe(value => {
       if (value === 'no') {
-        this.snack.open('Deletion is cancelled', 'Ok', {duration: 3000});
+        this.snack.open('Process cancelled', 'Ok', {duration: 3000});
       } else {
-        this.showProgressBar();
-        this.stockDatabase.deleteStock(element).then(value1 => {
-          this.snack.open('Product successful deleted', 'Ok', {duration: 3000});
-          this.hideProgressBar();
-          // update table
-          this._removeProductFromTable(element);
-        }).catch(reason => {
-          this.logger.e(reason);
-          this.snack.open('Product is not deleted successful, try again', 'Ok', {duration: 3000});
-          this.hideProgressBar();
-        });
+        this.stockState.deleteStock(element);
       }
     });
   }
@@ -408,78 +343,44 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
 
   // affect performance
   handleSearch(query: string): void {
-    this.getStocksFromCache(() => {
-      // this.stockDatasource.filter = query.toString().toLowerCase();
-      if (query) {
-        this.stockDatasource.filter = query.toString().toLowerCase();
+    this.stockState.filter(query);
+  }
+
+  private _getTotalPurchaseOfStock(stocks: StockModel[] = []): void {
+    const sum = stocks.map(x => {
+      if (x.purchase && x.quantity && x.quantity >= 0 && x.purchasable === true) {
+        return x.purchase * x.quantity;
       } else {
-        this.stockDatasource.filter = '';
+        return 0;
       }
-    });
-  }
-
-  private _removeProductFromTable(element: StockModel): void {
-    this.stockDatasource.data = this.stockDatasource.data.filter(value => value.id !== element.id);
-    this._getTotalPurchaseOfStock(this.stockDatasource.data);
-    // update stocks
-    this.indexDb.getStocks().then(stocks => {
-      const updatedStock = stocks.filter(value => value.id !== element.id);
-      this.indexDb.saveStocks(updatedStock).catch(reason => this.logger.w('Fails to update stock due to deleted item'));
-    }).catch(reason => {
-      this.logger.w('fails to update stocks to to deleted item');
-    });
-  }
-
-  private _getTotalPurchaseOfStock(stocks: StockModel[]): void {
-    // @ts-ignore
-    const sum = stocks.reduce((a, b) => {
-      return {purchase: a.purchase + b.purchase}; // returns object with property x
-    });
-    this.totalPurchase = of(sum.purchase);
-  }
-
-  reload(): void {
-    this.getStocksFromCache(() => {
-    });
+    }).reduce((a, b) => a + b, 0);
+    this.totalPurchase = of(sum);
   }
 
   exportStock(): void {
-    this.exportProgress = true;
-    this.stockDatabase.exportToExcel().then(_ => {
-      // const blob = new Blob([value.csv], {type: 'text/plain'});
-      // const url = window.URL.createObjectURL(blob);
-      // window.open(url);
-      this.exportProgress = false;
-      this.snack.open('StockModel sent to your email, visit your email to download it', 'Ok', {
-        duration: 10000
-      });
-    }).catch(reason => {
-      this.logger.e(reason);
-      this.exportProgress = false;
-      this.snack.open('Request fails try again later', 'Ok', {
-        duration: 3000
-      });
-    });
+    this.stockState.exportToExcel();
   }
 
   importStocks(): void {
     this.dialog.open(ImportsDialogComponent, {
       closeOnNavigation: true,
-    }).afterClosed().subscribe(value => {
-      if (value === true) {
-        this.hotReloadStocks();
-      }
     });
   }
 
   ngOnDestroy(): void {
-    this.eventApi.unListen(SsmEvents.STOCK_UPDATED);
+    this.stockState.stocks.next([]);
+    if (this.stockSubscription) {
+      this.stockSubscription.unsubscribe();
+    }
   }
 
   createGroupProduct(): void {
   }
 
   productValue(): number {
+    if (!this.stockDatasource.data) {
+      return 0;
+    }
     return this.stockDatasource
       .data
       .filter(x => x.stockable === true)

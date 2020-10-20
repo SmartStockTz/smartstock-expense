@@ -1,9 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {Observable, of} from 'rxjs';
-import {StockState} from '../states/stock.state';
 import {MatDialog} from '@angular/material/dialog';
 import {DialogUnitNewComponent} from './units.component';
+import {UnitsService} from '../services/units.service';
 
 @Component({
   selector: 'smartstock-units-form-field',
@@ -41,7 +41,7 @@ export class UnitsFormFieldComponent implements OnInit {
   unitsFetching = true;
   @Input() stockable = false;
 
-  constructor(private readonly stockState: StockState,
+  constructor(private readonly unitsService: UnitsService,
               private readonly dialog: MatDialog) {
   }
 
@@ -49,9 +49,9 @@ export class UnitsFormFieldComponent implements OnInit {
     this.getUnits();
   }
 
-  getUnits() {
+  getUnits(): void {
     this.unitsFetching = true;
-    this.stockState.getAllUnit({}).then(unitsObjects => {
+    this.unitsService.getAllUnit({}).then(unitsObjects => {
       this.units = of(JSON.parse(JSON.stringify(unitsObjects)));
       this.unitsFetching = false;
     }).catch(reason => {
@@ -61,7 +61,7 @@ export class UnitsFormFieldComponent implements OnInit {
     });
   }
 
-  addNewUnit($event: MouseEvent) {
+  addNewUnit($event: MouseEvent): void {
     $event.preventDefault();
     $event.stopPropagation();
     this.dialog.open(DialogUnitNewComponent, {
@@ -73,7 +73,7 @@ export class UnitsFormFieldComponent implements OnInit {
     });
   }
 
-  refreshUnits($event: MouseEvent) {
+  refreshUnits($event: MouseEvent): void {
     $event.preventDefault();
     $event.stopPropagation();
     this.getUnits();

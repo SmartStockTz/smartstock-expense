@@ -41,7 +41,7 @@ export class CategoriesPage extends DeviceInfoUtil implements OnInit, OnDestroy 
     super();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
   ngOnDestroy(): void {

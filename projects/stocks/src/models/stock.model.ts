@@ -6,7 +6,8 @@ export interface StockModel {
   id?: string;
   _id?: string;
   product: string;
-  saleable: boolean | true;
+  barcode?: string;
+  saleable?: boolean | true;
   canExpire?: boolean | true;
   description?: string;
   unit: string;

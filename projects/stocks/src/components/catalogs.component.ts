@@ -9,6 +9,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {DialogCatalogDeleteComponent} from './dialog-catalog-delete.component';
 import {CatalogModel} from '../models/catalog.model';
 import {DialogCatalogCreateComponent} from './dialog-catalog-create.component';
+import {CatalogService} from '../services/catalog.service';
 
 @Component({
   selector: 'smartstock-catalogs',
@@ -113,24 +114,24 @@ import {DialogCatalogCreateComponent} from './dialog-catalog-create.component';
 })
 export class CatalogsComponent implements OnInit {
   @ViewChild('matPaginator') matPaginator: MatPaginator;
-  catalogsDatasource: MatTableDataSource<CatalogModel>;
+  catalogsDatasource: MatTableDataSource<CatalogModel> = new MatTableDataSource<CatalogModel>([]);
   catalogsTableColums = ['name', 'description', 'actions'];
-  catalogsArray: CatalogModel[];
+  catalogsArray: CatalogModel[] = [];
   fetchCategoriesFlag = false;
   nameFormControl = new FormControl();
   descriptionFormControl = new FormControl();
 
-  constructor(private readonly stockDatabase: StockState,
+  constructor(private readonly catalogService: CatalogService,
               private readonly formBuilder: FormBuilder,
               private readonly dialog: MatDialog,
               private readonly snack: MatSnackBar) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.getCatalogs();
   }
 
-  searchCatalog(query: string) {
+  searchCatalog(query: string): void {
     // if ($event && $event.query) {
     //   this.fetchCategoriesFlag = true;
     //   this.stockDatabase.searchCatalog($event.query, {size: 20}).then(data => {
@@ -150,9 +151,9 @@ export class CatalogsComponent implements OnInit {
     // }
   }
 
-  getCatalogs() {
+  getCatalogs(): void {
     this.fetchCategoriesFlag = true;
-    this.stockDatabase.getAllCatalogs({size: 100}).then(data => {
+    this.catalogService.getAllCatalogs({size: 100}).then(data => {
       this.catalogsArray = data;
       this.catalogsDatasource = new MatTableDataSource<CatalogModel>(this.catalogsArray);
       this.catalogsDatasource.paginator = this.matPaginator;
@@ -162,7 +163,7 @@ export class CatalogsComponent implements OnInit {
     });
   }
 
-  deleteCatalog(element: any) {
+  deleteCatalog(element: any): void {
     this.dialog.open(DialogCatalogDeleteComponent, {
       data: element,
       disableClose: true
@@ -181,7 +182,7 @@ export class CatalogsComponent implements OnInit {
     });
   }
 
-  updateCatalogName(catalog, matMenu: MatMenuTrigger) {
+  updateCatalogName(catalog, matMenu: MatMenuTrigger): void {
     matMenu.toggleMenu();
     if (catalog && catalog.value) {
       catalog.field = 'name';
@@ -189,9 +190,9 @@ export class CatalogsComponent implements OnInit {
     }
   }
 
-  updateCatalog(catalog: { id: string, value: string, field: string }) {
+  updateCatalog(catalog: { id: string, value: string, field: string }): void {
     this.snack.open('Update in progress..', 'Ok');
-    this.stockDatabase.updateCatalog(catalog).then(data => {
+    this.catalogService.updateCatalog(catalog).then(data => {
       const editedObjectIndex = this.catalogsArray.findIndex(value => value.id === data.id);
       this.catalogsArray = this.catalogsArray.filter(value => value.id !== catalog.id);
       if (editedObjectIndex !== -1) {
@@ -214,7 +215,7 @@ export class CatalogsComponent implements OnInit {
     });
   }
 
-  updateCatalogDescription(catalog, matMenu: MatMenuTrigger) {
+  updateCatalogDescription(catalog, matMenu: MatMenuTrigger): void {
     matMenu.toggleMenu();
     if (catalog && catalog.value) {
       catalog.field = 'description';
@@ -222,7 +223,7 @@ export class CatalogsComponent implements OnInit {
     }
   }
 
-  openAddCatalogDialog() {
+  openAddCatalogDialog(): void {
     this.dialog.open(DialogCatalogCreateComponent, {
       closeOnNavigation: true,
       hasBackdrop: true

@@ -4,6 +4,7 @@ import {Observable, of} from 'rxjs';
 import {StockState} from '../states/stock.state';
 import {MatDialog} from '@angular/material/dialog';
 import {DialogCatalogCreateComponent} from './dialog-catalog-create.component';
+import {CatalogService} from '../services/catalog.service';
 
 @Component({
   selector: 'smartstock-catalog-form-field',
@@ -40,7 +41,7 @@ export class CatalogFormFieldComponent implements OnInit {
   catalogsFetching = true;
   catalogs: Observable<any[]>;
 
-  constructor(private readonly stockState: StockState,
+  constructor(private readonly catalogService: CatalogService,
               private readonly dialog: MatDialog) {
   }
 
@@ -48,9 +49,9 @@ export class CatalogFormFieldComponent implements OnInit {
     this.getCatalogs();
   }
 
-  getCatalogs() {
+  getCatalogs(): void {
     this.catalogsFetching = true;
-    this.stockState.getAllCatalogs({size: 10000}).then(categoryObject => {
+    this.catalogService.getAllCatalogs({size: 10000}).then(categoryObject => {
       categoryObject.push({name: 'general'});
       this.catalogs = of(categoryObject);
       this.catalogsFetching = false;
@@ -60,7 +61,7 @@ export class CatalogFormFieldComponent implements OnInit {
     });
   }
 
-  addNewCatalog($event: MouseEvent) {
+  addNewCatalog($event: MouseEvent): void {
     $event.preventDefault();
     $event.stopPropagation();
     this.dialog.open(DialogCatalogCreateComponent, {
@@ -72,7 +73,7 @@ export class CatalogFormFieldComponent implements OnInit {
     });
   }
 
-  refreshCategories($event: MouseEvent) {
+  refreshCategories($event: MouseEvent): void {
     $event.preventDefault();
     $event.stopPropagation();
     this.getCatalogs();

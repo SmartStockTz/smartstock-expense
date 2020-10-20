@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {StockState} from '../states/stock.state';
 import {MatDialogRef} from '@angular/material/dialog';
 import {DialogCategoryDeleteComponent} from './dialog-category-delete.component';
+import {CategoryService} from '../services/category.service';
 
 @Component({
   selector: 'smartstock-new-category',
@@ -45,7 +45,7 @@ export class DialogCategoryCreateComponent implements OnInit {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly snack: MatSnackBar,
-    private readonly stockDatabase: StockState,
+    private readonly categoryService: CategoryService,
     public dialogRef: MatDialogRef<DialogCategoryDeleteComponent>) {
   }
 
@@ -53,14 +53,14 @@ export class DialogCategoryCreateComponent implements OnInit {
     this.initiateForm();
   }
 
-  initiateForm() {
+  initiateForm(): void {
     this.newCategoryForm = this.formBuilder.group({
       name: ['', [Validators.nullValidator, Validators.required]],
       description: ['']
     });
   }
 
-  createCategory() {
+  createCategory(): void {
     if (!this.newCategoryForm.valid) {
       this.snack.open('Please fll all details', 'Ok', {
         duration: 3000
@@ -69,7 +69,7 @@ export class DialogCategoryCreateComponent implements OnInit {
     }
 
     this.createCategoryProgress = true;
-    this.stockDatabase.addCategory(this.newCategoryForm.value).then(value => {
+    this.categoryService.addCategory(this.newCategoryForm.value).then(value => {
       this.createCategoryProgress = false;
       value.name = this.newCategoryForm.value.name;
       value.description = this.newCategoryForm.value.description;
@@ -87,7 +87,7 @@ export class DialogCategoryCreateComponent implements OnInit {
     });
   }
 
-  cancel($event: Event) {
+  cancel($event: Event): void {
     $event.preventDefault();
     this.dialogRef.close(null);
   }

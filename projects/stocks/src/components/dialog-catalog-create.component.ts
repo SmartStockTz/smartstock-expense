@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {StockState} from '../states/stock.state';
 import {MatDialogRef} from '@angular/material/dialog';
+import {CatalogService} from '../services/catalog.service';
 
 @Component({
   selector: 'smartstock-new-catalog',
@@ -44,7 +44,7 @@ export class DialogCatalogCreateComponent implements OnInit {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly snack: MatSnackBar,
-    private readonly stockDatabase: StockState,
+    private readonly catalogService: CatalogService,
     public dialogRef: MatDialogRef<DialogCatalogCreateComponent>) {
   }
 
@@ -52,14 +52,14 @@ export class DialogCatalogCreateComponent implements OnInit {
     this.initiateForm();
   }
 
-  initiateForm() {
+  initiateForm(): void {
     this.newCatalogForm = this.formBuilder.group({
       name: ['', [Validators.nullValidator, Validators.required]],
       description: ['']
     });
   }
 
-  createCatalog() {
+  createCatalog(): void {
     if (!this.newCatalogForm.valid) {
       this.snack.open('Please fll all details', 'Ok', {
         duration: 3000
@@ -68,7 +68,7 @@ export class DialogCatalogCreateComponent implements OnInit {
     }
 
     this.createCatalogProgress = true;
-    this.stockDatabase.addCatalog(this.newCatalogForm.value).then(value => {
+    this.catalogService.addCatalog(this.newCatalogForm.value).then(value => {
       this.createCatalogProgress = false;
       value.name = this.newCatalogForm.value.name;
       value.description = this.newCatalogForm.value.description;
@@ -84,7 +84,7 @@ export class DialogCatalogCreateComponent implements OnInit {
     });
   }
 
-  cancel($event: Event) {
+  cancel($event: Event): void {
     $event.preventDefault();
     this.dialogRef.close(null);
   }

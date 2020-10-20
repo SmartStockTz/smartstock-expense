@@ -40,7 +40,7 @@ export class SuppliersPage extends DeviceInfoUtil implements OnInit, OnDestroy {
     super();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
   ngOnDestroy(): void {

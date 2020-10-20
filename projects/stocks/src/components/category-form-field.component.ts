@@ -1,9 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {Observable, of} from 'rxjs';
-import {StockState} from '../states/stock.state';
 import {MatDialog} from '@angular/material/dialog';
 import {DialogCategoryCreateComponent} from './dialog-category-create.component';
+import {CategoryService} from '../services/category.service';
 
 @Component({
   selector: 'smartstock-category-form-field',
@@ -40,7 +40,7 @@ export class CategoryFormFieldComponent implements OnInit {
   categoriesFetching = true;
   categories: Observable<any[]>;
 
-  constructor(private readonly stockState: StockState,
+  constructor(private readonly categoryService: CategoryService,
               private readonly dialog: MatDialog) {
   }
 
@@ -48,9 +48,9 @@ export class CategoryFormFieldComponent implements OnInit {
     this.getCategories();
   }
 
-  getCategories() {
+  getCategories(): void {
     this.categoriesFetching = true;
-    this.stockState.getAllCategory({size: 10000}).then(categoryObject => {
+    this.categoryService.getAllCategory({size: 10000}).then(categoryObject => {
       categoryObject.push({name: 'general'});
       this.categories = of(categoryObject);
       this.categoriesFetching = false;
@@ -61,7 +61,7 @@ export class CategoryFormFieldComponent implements OnInit {
     });
   }
 
-  addNewCategory($event: MouseEvent) {
+  addNewCategory($event: MouseEvent): void {
     $event.preventDefault();
     $event.stopPropagation();
     this.dialog.open(DialogCategoryCreateComponent, {
@@ -73,7 +73,7 @@ export class CategoryFormFieldComponent implements OnInit {
     });
   }
 
-  refreshCategories($event: MouseEvent) {
+  refreshCategories($event: MouseEvent): void {
     $event.preventDefault();
     $event.stopPropagation();
     this.getCategories();

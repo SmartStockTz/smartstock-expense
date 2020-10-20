@@ -5,10 +5,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {StockModel} from '../models/stock.model';
-import {StockState} from '../states/stock.state';
-import {DeviceInfoUtil} from '@smartstocktz/core-libs';
-import {FileLibraryService} from '@smartstocktz/core-libs';
-import {StorageService} from '@smartstocktz/core-libs';
+import {DeviceInfoUtil, FileLibraryService, StorageService} from '@smartstocktz/core-libs';
+import {StockService} from '../services/stock.service';
 
 @Component({
   selector: 'smartstock-stock-new',
@@ -53,7 +51,7 @@ import {StorageService} from '@smartstocktz/core-libs';
 
           </div>
 
-          <form [formGroup]="productForm" #formElement="ngForm"
+          <form *ngIf="!isLoadinddata" [formGroup]="productForm" #formElement="ngForm"
                 (ngSubmit)="isUpdateMode?updateProduct(formElement):addProduct(formElement)">
 
             <div class="row d-flex justify-content-center align-items-center">
@@ -65,7 +63,7 @@ import {StorageService} from '@smartstocktz/core-libs';
                   [initialStock]="initialStock"
                   [downloadAble]="getDownloadAbleFormControl().value===true"
                   [saleable]="getSaleableFormControl().value === true"
-                  [formGroup]="productForm">
+                  [parentForm]="productForm">
                 </smartstock-product-short-detail-form>
 
                 <mat-expansion-panel style="margin-top: 8px">
@@ -192,6 +190,7 @@ import {StorageService} from '@smartstocktz/core-libs';
 
             </div>
           </form>
+
         </div>
       </mat-sidenav-content>
 
@@ -203,6 +202,7 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
 
   @Input() isUpdateMode = false;
   @Input() initialStock: StockModel;
+  @Input() isLoadinddata = false;
 
   croppedImage: any = '';
   productForm: FormGroup;
@@ -223,11 +223,11 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
               private readonly router: Router,
               private readonly storageService: StorageService,
               private readonly fileLibraryService: FileLibraryService,
-              private readonly stockState: StockState) {
+              private readonly stockService: StockService) {
     super();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.initializeForm(this.initialStock);
     this.metas = of([]);
   }
@@ -245,12 +245,13 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
     }
   }
 
-  initializeForm(stock?: StockModel) {
+  initializeForm(stock?: StockModel): void {
     if (stock && stock.image) {
       this.croppedImage = stock.image;
     }
     this.productForm = this.formBuilder.group({
       product: [stock && stock.product ? stock.product : '', [Validators.nullValidator, Validators.required]],
+      barcode: [stock && stock.barcode ? stock.barcode : ''],
       saleable: [stock && stock.saleable !== undefined ? stock.saleable : true],
       downloadable: [stock && stock.downloadable !== undefined ? stock.downloadable : false],
       downloads: [stock && stock.downloads ? stock.downloads : []],
@@ -274,31 +275,31 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
     });
   }
 
-  getSaleableFormControl() {
+  getSaleableFormControl(): FormControl {
     return this.productForm.get('saleable') as FormControl;
   }
 
-  getPurchasableFormControl() {
+  getPurchasableFormControl(): FormControl {
     return this.productForm.get('purchasable') as FormControl;
   }
 
-  getStockableFormControl() {
+  getStockableFormControl(): FormControl {
     return this.productForm.get('stockable') as FormControl;
   }
 
-  getDownloadAbleFormControl() {
+  getDownloadAbleFormControl(): FormControl {
     return this.productForm.get('downloadable') as FormControl;
   }
 
-  getDownloadsFormControl() {
+  getDownloadsFormControl(): FormControl {
     return this.productForm.get('downloads') as FormControl;
   }
 
-  getCanExpireFormControl() {
+  getCanExpireFormControl(): FormControl {
     return this.productForm.get('canExpire') as FormControl;
   }
 
-  addProduct(formElement: FormGroupDirective, inUpdateMode = false) {
+  addProduct(formElement: FormGroupDirective, inUpdateMode = false): void {
     this.productForm.markAsTouched();
     if (!this.productForm.valid) {
       this.snack.open('Fill all required fields', 'Ok', {
@@ -326,7 +327,7 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
     this.mainProgress = true;
     this.fileLibraryService.saveFile(this.thumbnail, percentage => {
       this.isUploadingFile = true;
-      this.uploadTag = 'Upload product image...';
+      this.uploadTag = 'Upload image...';
       this.uploadPercentage = percentage;
     }).then(async imageUrl => {
       if (imageUrl) {
@@ -335,7 +336,7 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
       if (inUpdateMode) {
         this.productForm.value.id = this.initialStock.id;
       }
-      return this.stockState.addStock(this.productForm.value, (percentage, name) => {
+      return this.stockService.addStock(this.productForm.value, (percentage, name) => {
         this.isUploadingFile = true;
         this.uploadTag = `Upload ${name}...`;
         this.uploadPercentage = percentage;
@@ -351,7 +352,7 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
             }
           });
         } else {
-          value.unshift(_);
+          value.unshift(_ as any);
         }
         return this.storageService.saveStocks(value);
       }).finally(() => {
@@ -376,11 +377,11 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
     });
   }
 
-  updateProduct(formElement: FormGroupDirective) {
+  updateProduct(formElement: FormGroupDirective): void {
     this.addProduct(formElement, true);
   }
 
-  removeImage(imageInput: HTMLInputElement) {
+  removeImage(imageInput: HTMLInputElement): void {
     imageInput.value = '';
     this.croppedImage = null;
   }

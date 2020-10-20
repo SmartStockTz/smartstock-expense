@@ -53,6 +53,8 @@ import {DialogCatalogCreateComponent} from './components/dialog-catalog-create.c
 import {CatalogsComponent} from './components/catalogs.component';
 import {DialogCatalogDeleteComponent} from './components/dialog-catalog-delete.component';
 import {CatalogsPage} from './pages/catalogs.page';
+import {TotalProductsSummaryComponent} from "./components/total-products-summary.component";
+import {ProductsValueSummaryComponent} from "./components/products-value-summary.component";
 
 const routes: Routes = [
   {path: '', component: IndexPage},
@@ -68,7 +70,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    // RouterModule.forChild(routes),
     {
       ngModule: RouterModule,
       providers: [
@@ -139,11 +140,10 @@ const routes: Routes = [
     ProductsPage,
     CatalogsComponent,
     DialogCatalogDeleteComponent,
-    CatalogsPage
+    CatalogsPage,
+    TotalProductsSummaryComponent,
+    ProductsValueSummaryComponent
   ],
 })
 export class StockModule {
-  constructor() {
-    // RouterModule.forChild(routes);
-  }
 }

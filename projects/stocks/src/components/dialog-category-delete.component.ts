@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {StockState} from '../states/stock.state';
+import {CategoryService} from '../services/category.service';
 
 @Component({
   selector: 'smartstock-dialog-delete',
@@ -37,14 +37,14 @@ export class DialogCategoryDeleteComponent {
 
   constructor(
     public dialogRef: MatDialogRef<DialogCategoryDeleteComponent>,
-    private readonly stockDatabase: StockState,
+    private readonly categoryService: CategoryService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
-  deleteCategory(category: any) {
+  deleteCategory(category: any): void {
     this.errorCategoryMessage = undefined;
     this.deleteProgress = true;
-    this.stockDatabase.deleteCategory(category).then(value => {
+    this.categoryService.deleteCategory(category).then(value => {
       this.dialogRef.close(category);
       this.deleteProgress = false;
     }).catch(reason => {
@@ -53,7 +53,7 @@ export class DialogCategoryDeleteComponent {
     });
   }
 
-  cancel() {
+  cancel(): void {
     this.dialogRef.close(null);
   }
 }

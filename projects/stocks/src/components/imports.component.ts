@@ -3,6 +3,7 @@ import {MatDialogRef} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {LogService} from '@smartstocktz/core-libs';
 import {StockState} from '../states/stock.state';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'smartstock-upload-products',
@@ -11,9 +12,12 @@ import {StockState} from '../states/stock.state';
       <div class="d-flex flex-row align-items-center" mat-dialog-title>
         Import Products
         <span style="flex-grow: 1"></span>
-        <button (click)="fileU.click()" [disabled]="importProgress" class="ft-button" color="primary" mat-flat-button>
+        <a download="stock.csv" [href]="stocksBlob">Download Sample</a>
+        <button (click)="fileU.click()" [disabled]="(stockState.isImportProducts | async)===true" class="ft-button"
+                color="primary" mat-flat-button>
           Upload Csv
-          <mat-progress-spinner *ngIf="importProgress" style="display: inline-block" diameter="30"
+          <mat-progress-spinner *ngIf="(stockState.isImportProducts | async)===true" style="display: inline-block"
+                                diameter="30"
                                 mode="indeterminate"></mat-progress-spinner>
         </button>
       </div>
@@ -93,10 +97,12 @@ export class ImportsDialogComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<ImportsDialogComponent>,
               private snack: MatSnackBar,
               private readonly logger: LogService,
-              private readonly stockApi: StockState) {
+              private domSanitizer: DomSanitizer,
+              public readonly stockState: StockState) {
   }
 
-  importProgress = false;
+  stocksBlob = this.domSanitizer.bypassSecurityTrustUrl(`data:text/csv,product,saleable,downloadable,downloads,stockable,purchasable,description,purchase,retailPrice,wholesalePrice,wholesaleQuantity,quantity,reorder,unit,expire,category,supplier
+tshirt,TRUE,FALSE,[],TRUE,TRUE,form six,8000,12000,10000,10,41,10,Pieces ,,male,gervas`);
 
   private static _sanitizeField(value: string): any {
     if (!isNaN(Number(value))) {
@@ -114,28 +120,13 @@ export class ImportsDialogComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  csvUploaded($event: Event) {
+  csvUploaded($event: Event): void {
     // @ts-ignore
     const file = $event.target.files[0];
     if (file) {
       const fileReader = new FileReader();
       fileReader.onload = (evt) => {
-        this.csvToJSON(evt.target.result, (products) => {
-          this.importProgress = true;
-          this.stockApi.importStocks(products).then(_ => {
-            this.importProgress = false;
-            this.dialogRef.close(true);
-            this.snack.open('Products imported', 'Ok', {
-              duration: 3000
-            });
-          }).catch(reason => {
-            this.logger.e(reason);
-            this.importProgress = false;
-            this.snack.open('Products not imported, try again', 'Ok', {
-              duration: 3000
-            });
-          });
-        });
+        this.stockState.importProducts(this.csvToJSON(evt.target.result), this.dialogRef);
       };
       fileReader.readAsText(file, 'UTF-8');
     } else {
@@ -145,11 +136,11 @@ export class ImportsDialogComponent implements OnInit {
     }
   }
 
-  csvToJSON(csv, callback) {
+  csvToJSON(csv): any[] {
     const lines = csv.split('\n');
     const result = [];
     const headers = lines[0].split(',');
-    for (let i = 1; i < lines.length - 1; i++) {
+    for (let i = 1; i < lines.length; i++) {
       const obj = {};
       const currentline = lines[i].split(',');
       for (let j = 0; j < headers.length; j++) {
@@ -167,9 +158,6 @@ export class ImportsDialogComponent implements OnInit {
         obj[headers[j].toString().trim().split('"').join('')] = value;
       }
       result.push(obj);
-    }
-    if (callback && (typeof callback === 'function')) {
-      return callback(result);
     }
     return result;
   }

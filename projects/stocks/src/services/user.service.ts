@@ -28,28 +28,28 @@ export class UserService {
     }
   }
 
-  async getShops(): Promise<ShopModel[]> {
-    try {
-      const user = await this.storageService.getActiveUser();
-      const shops = [];
-      user.shops.forEach(element => {
-        shops.push(element);
-      });
-      shops.push({
-        businessName: user.businessName,
-        projectId: user.projectId,
-        applicationId: user.applicationId,
-        projectUrlId: user.projectUrlId,
-        settings: user.settings,
-        street: user.street,
-        country: user.country,
-        region: user.region
-      });
-      return shops;
-    } catch (e) {
-      throw e;
-    }
-  }
+  // async getShops(): Promise<ShopModel[]> {
+  //   try {
+  //     const user = await this.storageService.getActiveUser();
+  //     const shops = [];
+  //     user.shops.forEach(element => {
+  //       shops.push(element);
+  //     });
+  //     shops.push({
+  //       businessName: user.businessName,
+  //       projectId: user.projectId,
+  //       applicationId: user.applicationId,
+  //       projectUrlId: user.projectUrlId,
+  //       settings: user.settings,
+  //       street: user.street,
+  //       country: user.country,
+  //       region: user.region
+  //     });
+  //     return shops;
+  //   } catch (e) {
+  //     throw e;
+  //   }
+  // }
 
   async getCurrentShop(): Promise<ShopModel> {
     try {
