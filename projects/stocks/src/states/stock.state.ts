@@ -4,6 +4,7 @@ import {StockModel} from '../models/stock.model';
 import {StockService} from '../services/stock.service';
 import {MessageService, StorageService} from '@smartstocktz/core-libs';
 import {MatDialogRef} from '@angular/material/dialog';
+import {SelectionModel} from "@angular/cdk/collections";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class StockState {
   isFetchStocks: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isExportToExcel: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isImportProducts: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  isAddSock: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  isDeleteStocks: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(private readonly stockService: StockService,
               private readonly messageService: MessageService,
@@ -112,6 +113,20 @@ export class StockState {
       } else {
         this.getStocks();
       }
+    });
+  }
+
+  deleteManyStocks(selectionModel: SelectionModel<StockModel>): void {
+    this.isDeleteStocks.next(true);
+    this.stockService.deleteMany(selectionModel.selected.map(x => x.id)).then(_ => {
+      this.messageService.showMobileInfoMessage('Products deleted', 2000, 'bottom');
+      this.stocks.next(this.stocks.value.filter(x => selectionModel.selected.findIndex(y => y.id === x.id) === -1));
+      selectionModel.clear();
+    }).catch(reason => {
+      this.messageService.showMobileInfoMessage(
+        reason && reason.message ? reason.message : reason, 2000, 'bottom');
+    }).finally(() => {
+      this.isDeleteStocks.next(false);
     });
   }
 }

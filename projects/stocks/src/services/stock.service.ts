@@ -80,6 +80,24 @@ export class StockService {
     return stocks;
   }
 
+  async deleteMany(stocksId: string[]): Promise<any> {
+    const activeShop = await this.storageService.getActiveShop();
+    return BFast.database(activeShop.projectId)
+      .transaction()
+      .delete('stocks', {
+        query: {
+          filter: {
+            $or: stocksId.map(x => {
+              return {
+                _id: x
+              };
+            })
+          }
+        }
+      })
+      .commit();
+  }
+
   // async updateStock(stock: StockModel, progress: (d) => void): Promise<StockModel> {
   //   const shop = await this._storage.getActiveShop();
   //   const stockId = stock._id ? stock._id : stock.id;

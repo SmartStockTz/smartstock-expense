@@ -51,7 +51,7 @@ import {StockService} from '../services/stock.service';
 
           </div>
 
-          <form *ngIf="!isLoadinddata" [formGroup]="productForm" #formElement="ngForm"
+          <form *ngIf="!isLoadingData" [formGroup]="productForm" #formElement="ngForm"
                 (ngSubmit)="isUpdateMode?updateProduct(formElement):addProduct(formElement)">
 
             <div class="row d-flex justify-content-center align-items-center">
@@ -202,7 +202,7 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
 
   @Input() isUpdateMode = false;
   @Input() initialStock: StockModel;
-  @Input() isLoadinddata = false;
+  @Input() isLoadingData = false;
 
   croppedImage: any = '';
   productForm: FormGroup;

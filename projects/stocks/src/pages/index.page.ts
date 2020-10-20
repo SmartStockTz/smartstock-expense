@@ -24,7 +24,7 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
               <p>{{page.name}}</p>
             </div>
           </div>
-          <h1>Short Summary</h1>
+          <h1>Summary</h1>
           <div class="row">
             <smartstock-total-products-summary
               class="col-sm-11 col-md-6 col-lg-4 col-xl-4"></smartstock-total-products-summary>

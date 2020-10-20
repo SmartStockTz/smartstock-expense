@@ -126,7 +126,24 @@ tshirt,TRUE,FALSE,[],TRUE,TRUE,form six,8000,12000,10000,10,41,10,Pieces ,,male,
     if (file) {
       const fileReader = new FileReader();
       fileReader.onload = (evt) => {
-        this.stockState.importProducts(this.csvToJSON(evt.target.result), this.dialogRef);
+        this.stockState.importProducts(this.csvToJSON(evt.target.result).map((x) => {
+          if (x.canExpire && typeof x.canExpire !== 'boolean') {
+            x.canExpire = (x.canExpire.toString().toLowerCase() === 'true');
+          }
+          if (x.downloadable && typeof x.downloadable !== 'boolean') {
+            x.downloadable = (x.downloadable.toString().toLowerCase() === 'true');
+          }
+          if (x.saleable && typeof x.saleable !== 'boolean') {
+            x.saleable = (x.saleable.toString().toLowerCase() === 'true');
+          }
+          if (x.purchasable && typeof x.purchasable !== 'boolean') {
+            x.purchasable = (x.purchasable.toString().toLowerCase() === 'true');
+          }
+          if (x.stockable && typeof x.stockable !== 'boolean') {
+            x.stockable = (x.stockable.toString() !== 'true');
+          }
+          return x;
+        }), this.dialogRef);
       };
       fileReader.readAsText(file, 'UTF-8');
     } else {

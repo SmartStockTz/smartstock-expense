@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable, of, Subscription} from 'rxjs';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {MatDialog} from '@angular/material/dialog';
@@ -7,7 +7,7 @@ import {MatSidenav} from '@angular/material/sidenav';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTableDataSource} from '@angular/material/table';
 import {Router} from '@angular/router';
-import {DeviceInfoUtil, EventService, LogService, SsmEvents, StorageService} from '@smartstocktz/core-libs';
+import {DeviceInfoUtil, LogService, MessageService, StorageService} from '@smartstocktz/core-libs';
 import {SelectionModel} from '@angular/cdk/collections';
 import {DialogDeleteComponent, StockDetailsComponent} from '../components/stock.component';
 import {StockState} from '../states/stock.state';
@@ -89,9 +89,21 @@ import {ImportsDialogComponent} from '../components/imports.component';
 
                     </mat-card-title>
                     <mat-card-subtitle>
-                      <!--                      <button mat-stroked-button mat-button color="primary" class="stockbtn" (click)="createGroupProduct()">-->
+                      <button [disabled]="(stockState.isDeleteStocks | async)===true" mat-stroked-button mat-button
+                              color="primary" class="stockbtn"
+                              (click)="deleteMany()">
+                        <mat-icon>cached</mat-icon>
+                        Delete
+                        <mat-progress-spinner *ngIf="(stockState.isDeleteStocks | async)===true"
+                                              mode="indeterminate"
+                                              color="primary"
+                                              diameter="20px"
+                                              style="display: inline-block">
+                        </mat-progress-spinner>
+                      </button>
+                      <!--                      <button mat-stroked-button mat-button color="primary" class="stockbtn" (click)="transferStock()">-->
                       <!--                        <mat-icon>cached</mat-icon>-->
-                      <!--                        Create Group Product-->
+                      <!--                        Stock Transfer-->
                       <!--                      </button>-->
                       <!--                      <button mat-stroked-button mat-button color="primary" class="stockbtn" (click)="transferStock()">-->
                       <!--                        <mat-icon>cached</mat-icon>-->
@@ -236,7 +248,7 @@ import {ImportsDialogComponent} from '../components/imports.component';
   `,
   styleUrls: ['../styles/stock.style.scss']
 })
-export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
+export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy, AfterViewInit {
   dataSource = new MatTableDataSource();
   selection = new SelectionModel(true, []);
   private stockSubscription: Subscription;
@@ -247,7 +259,7 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
               private readonly snack: MatSnackBar,
               private readonly logger: LogService,
               private readonly dialog: MatDialog,
-              private readonly eventApi: EventService,
+              private readonly messageService: MessageService,
               public readonly stockState: StockState) {
     super();
   }
@@ -275,14 +287,12 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
     // return numSelected;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle(): void {
     this.isAllSelected() ?
       this.selection.clear() :
       this.stockDatasource.data.forEach(row => this.selection.select(row));
   }
 
-  /** The label for the checkbox on the passed row */
   checkboxLabel(row?): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
@@ -381,11 +391,26 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
     if (!this.stockDatasource.data) {
       return 0;
     }
-    return this.stockDatasource
-      .data
+    return this.stockState.stocks.value
       .filter(x => x.stockable === true)
       .map(x => x.purchase)
       .reduce((a, b) => a + b, 0);
+  }
+
+  ngAfterViewInit(): void {
+    this.stockDatasource.paginator = this.paginator;
+  }
+
+  deleteMany(): void {
+    if (this.selection.isEmpty()) {
+      this.messageService.showMobileInfoMessage(
+        'Please select at least one item',
+        1000,
+        'bottom'
+      );
+    } else {
+      this.stockState.deleteManyStocks(this.selection);
+    }
   }
 }
 

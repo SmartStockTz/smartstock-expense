@@ -8,7 +8,8 @@ import {StockState} from '../states/stock.state';
 @Component({
   selector: 'smartstock-stock-edit',
   template: `
-    <smartstock-stock-new [isLoadinddata]="loadStock" [isUpdateMode]="true" [initialStock]="stock"></smartstock-stock-new>
+    <smartstock-stock-new [isLoadingData]="loadStock" [isUpdateMode]="true"
+                          [initialStock]="stock"></smartstock-stock-new>
   `,
   styleUrls: ['../styles/edit.style.scss']
 })
@@ -37,6 +38,6 @@ export class EditPageComponent extends DeviceInfoUtil implements OnInit {
       });
       this.router.navigateByUrl('/stock').catch();
     }
-    setTimeout(()=>this.loadStock = false, 200);
+    this.loadStock = false;
   }
 }

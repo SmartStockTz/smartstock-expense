@@ -1,24 +1,35 @@
-# Stocks
+# Smartstock Core Stocks
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.5.
+Angular2 library that provides stock module to be used across smartstock
 
-## Code scaffolding
 
-Run `ng generate component component-name --project stocks` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project stocks`.
-> Note: Don't forget to add `--project stocks` or else it will be added to the default project in your `angular.json` file. 
+## Peer Dependencies
 
-## Build
+Please refer to `package.json>peerDependencies` to see a list of the dependecies
+you need to install in your project
 
-Run `ng build stocks` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Installation
 
-## Publishing
+Install the latest dependencies from npm `npm install --save @smartstocktz/stocks --registry=https://npm.pkg.github.com`
 
-After building your library with `ng build stocks`, go to the dist folder `cd dist/stocks` and run `npm publish`.
+## Usages
 
-## Running unit tests
+To use this library include it at `imports` section of your angular module. Example
 
-Run `ng test stocks` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```typescript
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+// imports
+import {StockModule} from '@smartstocktz/stocks';
+
+@NgModule({
+// ....
+  imports: [
+    StockModule
+  ],
+// ....
+})
+export class AppModule { }
+
+```
+
