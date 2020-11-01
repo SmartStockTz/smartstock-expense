@@ -4,14 +4,16 @@ import {StockModel} from '../models/stock.model';
 import {StockService} from '../services/stock.service';
 import {MessageService, StorageService} from '@smartstocktz/core-libs';
 import {MatDialogRef} from '@angular/material/dialog';
-import {SelectionModel} from "@angular/cdk/collections";
+import {SelectionModel} from '@angular/cdk/collections';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class StockState {
 
   stocks: BehaviorSubject<StockModel[]> = new BehaviorSubject<StockModel[]>([]);
+  // stocksDatasource: BehaviorSubject<MatTableDataSource<StockModel[]>>
+  //   = new BehaviorSubject(new MatTableDataSource<StockModel[]>([]));
   selectedStock: BehaviorSubject<StockModel> = new BehaviorSubject<StockModel>(null);
   isFetchStocks: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isExportToExcel: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);

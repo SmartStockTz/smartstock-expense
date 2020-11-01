@@ -6,7 +6,7 @@ import {BFast} from 'bfastjs';
 import {StockModel} from '../models/stock.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class StockService {
   constructor(private readonly httpClient: HttpClient,

@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Observable, of, Subscription} from 'rxjs';
+import {Observable, of, Subject, Subscription} from 'rxjs';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {MatDialog} from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
@@ -13,6 +13,8 @@ import {DialogDeleteComponent, StockDetailsComponent} from '../components/stock.
 import {StockState} from '../states/stock.state';
 import {StockModel} from '../models/stock.model';
 import {ImportsDialogComponent} from '../components/imports.component';
+import {MatSort} from '@angular/material/sort';
+import {takeUntil} from 'rxjs/operators';
 
 
 @Component({
@@ -38,8 +40,9 @@ import {ImportsDialogComponent} from '../components/imports.component';
               <div class="full-width col-12">
                 <div>
                   <mat-card class="mat-elevation-z3">
+
                     <mat-card-title class="d-flex flex-row">
-                      <button routerLink="/stock/create" color="primary" class="ft-button" mat-flat-button>
+                      <button routerLink="/stock/products/create" color="primary" class="ft-button" mat-flat-button>
                         Add Product
                       </button>
                       <span class="toolbar-spacer"></span>
@@ -88,6 +91,7 @@ import {ImportsDialogComponent} from '../components/imports.component';
                       </mat-menu>
 
                     </mat-card-title>
+
                     <mat-card-subtitle>
                       <button [disabled]="(stockState.isDeleteStocks | async)===true" mat-stroked-button mat-button
                               color="primary" class="stockbtn"
@@ -122,21 +126,21 @@ import {ImportsDialogComponent} from '../components/imports.component';
                       <!--                        Dispose Stock-->
                       <!--                      </button>-->
                     </mat-card-subtitle>
-                    <table mat-table [dataSource]="stockDatasource">
+
+                    <table mat-table matSort [dataSource]="stockDatasource">
 
 
                       <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>
                           <mat-checkbox (change)="$event ? masterToggle() : null"
                                         [checked]="selection.hasValue() && isAllSelected()"
-                                        [indeterminate]="selection.hasValue() && !isAllSelected()"
-                                        [aria-label]="checkboxLabel()">
+                                        [indeterminate]="selection.hasValue() && !isAllSelected()">
                           </mat-checkbox>
                         </th>
                         <td mat-cell *matCellDef="let row">
                           <mat-checkbox (click)="$event.stopPropagation()"
                                         (change)="$event ? selection.toggle(row) : null"
-                                        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                                        [checked]="selection.isSelected(row)">
                           </mat-checkbox>
                         </td>
                         <td mat-footer-cell *matFooterCellDef>
@@ -146,26 +150,22 @@ import {ImportsDialogComponent} from '../components/imports.component';
 
 
                       <ng-container matColumnDef="product">
-                        <th mat-header-cell *matHeaderCellDef>Product</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
                         <td mat-cell *matCellDef="let element">{{element.product}}</td>
-                        <td mat-footer-cell *matFooterCellDef>
-
-                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
                       </ng-container>
 
 
                       <ng-container matColumnDef="quantity">
-                        <th mat-header-cell *matHeaderCellDef>Quantity</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
                         <td mat-cell *matCellDef="let element">
                           {{element.stockable ? (element.quantity | number) : 'N/A'}}
                         </td>
-                        <td mat-footer-cell *matFooterCellDef>
-
-                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
                       </ng-container>
 
                       <ng-container matColumnDef="purchase">
-                        <th mat-header-cell *matHeaderCellDef>Purchase Price</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Purchase Price</th>
                         <td mat-cell *matCellDef="let element">
                           {{element.purchasable ? (element.purchase | number) : 'N/A'}}
                         </td>
@@ -175,29 +175,20 @@ import {ImportsDialogComponent} from '../components/imports.component';
                       </ng-container>
 
                       <ng-container matColumnDef="retailPrice">
-                        <th mat-header-cell *matHeaderCellDef>Sale Pice</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Sale Pice</th>
                         <td matRipple mat-cell *matCellDef="let element">
                           {{element.saleable ? (element.retailPrice | number) : 'N/A'}}
                         </td>
-                        <td mat-footer-cell *matFooterCellDef>
-
-                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
                       </ng-container>
 
                       <ng-container matColumnDef="wholesalePrice">
-                        <th mat-header-cell *matHeaderCellDef>WholeSale Price</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>WholeSale Price</th>
                         <td mat-cell *matCellDef="let element">
                           {{element.saleable ? (element.wholesalePrice | number) : 'N/A'}}
                         </td>
-                        <td mat-footer-cell *matFooterCellDef>
-
-                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
                       </ng-container>
-
-                      <!--                      <ng-container matColumnDef="expire">-->
-                      <!--                        <th mat-header-cell *matHeaderCellDef>Expire</th>-->
-                      <!--                        <td mat-cell *matCellDef="let element">{{element.expire | date}}</td>-->
-                      <!--                      </ng-container>-->
 
                       <ng-container matColumnDef="action">
                         <th mat-header-cell *matHeaderCellDef>
@@ -223,17 +214,17 @@ import {ImportsDialogComponent} from '../components/imports.component';
                             </mat-menu>
                           </div>
                         </td>
-                        <td mat-footer-cell *matFooterCellDef>
-
-                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
                       </ng-container>
 
                       <tr mat-header-row *matHeaderRowDef="stockColumns"></tr>
-                      <tr matTooltip="{{row.product}}" class="table-data-row" mat-row
-                          *matRowDef="let row; columns: stockColumns;"></tr>
+                      <tr matTooltip="{{row.product}}" class="table-data-row"
+                          mat-row *matRowDef="let row; columns: stockColumns;">
+                      </tr>
                       <tr mat-footer-row style="font-size: 36px" *matFooterRowDef="stockColumns"></tr>
                     </table>
-                    <mat-paginator #paginator [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons></mat-paginator>
+                    <mat-paginator #paginator pageSize="10" [pageSizeOptions]="[5,10, 20, 100]"
+                                   showFirstLastButtons></mat-paginator>
                   </mat-card>
                 </div>
               </div>
@@ -252,6 +243,7 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy, A
   dataSource = new MatTableDataSource();
   selection = new SelectionModel(true, []);
   private stockSubscription: Subscription;
+  private readonly onDestroy = new Subject<void>();
 
   constructor(private readonly router: Router,
               private readonly indexDb: StorageService,
@@ -262,6 +254,10 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy, A
               private readonly messageService: MessageService,
               public readonly stockState: StockState) {
     super();
+    this.stockState.stocks.pipe(takeUntil(this.onDestroy)).subscribe(stocks => {
+      this.stockDatasource.data = stocks;
+      this._getTotalPurchaseOfStock(stocks);
+    });
   }
 
   totalPurchase: Observable<number> = of(0);
@@ -269,9 +265,9 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy, A
   stockColumns = ['select', 'product', 'quantity', 'purchase', 'retailPrice', 'wholesalePrice', 'action'];
   @ViewChild('sidenav') sidenav: MatSidenav;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) matSort: MatSort;
 
   ngOnInit(): void {
-    this.subscriptions();
     this.stockState.getStocks();
   }
 
@@ -300,41 +296,17 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy, A
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
-  transferStock(): void {
-    // if (this.selection.selected.length === 0) {
-    //   this.snack.open('select atleast one product', 'Ok', {duration: 2000});
-    // } else {
-    //   this.dialog.open(TransferDialogComponent, {
-    //     width: '95%',
-    //     maxWidth: '600px',
-    //     disableClose: true,
-    //     closeOnNavigation: true,
-    //     data: {
-    //       items: this.selection.selected,
-    //     }
-    //   });
-    // }
-  }
-
-  private subscriptions(): void {
-    this.stockSubscription = this.stockState.stocks.subscribe(stocks => {
-      this.stockDatasource.paginator = this.paginator;
-      this.stockDatasource.data = stocks;
-      this._getTotalPurchaseOfStock(stocks);
-    });
-  }
-
   hotReloadStocks(): void {
     this.stockState.getStocks();
   }
 
   editStock(element: StockModel): void {
     this.stockState.selectedStock.next(element);
-    this.router.navigateByUrl('/stock/edit/' + element.id).catch(reason => this.logger.e(reason));
+    this.router.navigateByUrl('/stock/products/edit/' + element.id).catch(reason => this.logger.e(reason));
   }
 
   deleteStock(element: StockModel): void {
-    const matDialogRef = this.dialog.open(DialogDeleteComponent, {width: '350', data: element});
+    const matDialogRef = this.dialog.open(DialogDeleteComponent, {width: '350', data: {title: element.product}});
     matDialogRef.afterClosed().subscribe(value => {
       if (value === 'no') {
         this.snack.open('Process cancelled', 'Ok', {duration: 3000});
@@ -351,7 +323,6 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy, A
     });
   }
 
-  // affect performance
   handleSearch(query: string): void {
     this.stockState.filter(query);
   }
@@ -379,9 +350,7 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy, A
 
   ngOnDestroy(): void {
     this.stockState.stocks.next([]);
-    if (this.stockSubscription) {
-      this.stockSubscription.unsubscribe();
-    }
+    this.onDestroy.next();
   }
 
   createGroupProduct(): void {
@@ -392,13 +361,14 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy, A
       return 0;
     }
     return this.stockState.stocks.value
-      .filter(x => x.stockable === true)
-      .map(x => x.purchase)
+      .filter(x => x.stockable === true && x.quantity > 0)
+      .map(x => x.purchase * x.quantity)
       .reduce((a, b) => a + b, 0);
   }
 
   ngAfterViewInit(): void {
     this.stockDatasource.paginator = this.paginator;
+    this.stockDatasource.sort = this.matSort;
   }
 
   deleteMany(): void {
@@ -409,7 +379,17 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit, OnDestroy, A
         'bottom'
       );
     } else {
-      this.stockState.deleteManyStocks(this.selection);
+      this.dialog.open(DialogDeleteComponent, {
+        width: '350',
+        data: {title: 'Products'}
+      }).afterClosed()
+        .subscribe(value => {
+          if (value === 'yes') {
+            this.stockState.deleteManyStocks(this.selection);
+          } else {
+            this.snack.open('Process cancelled', 'Ok', {duration: 3000});
+          }
+        });
     }
   }
 }

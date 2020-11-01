@@ -53,18 +53,21 @@ import {DialogCatalogCreateComponent} from './components/dialog-catalog-create.c
 import {CatalogsComponent} from './components/catalogs.component';
 import {DialogCatalogDeleteComponent} from './components/dialog-catalog-delete.component';
 import {CatalogsPage} from './pages/catalogs.page';
-import {TotalProductsSummaryComponent} from "./components/total-products-summary.component";
-import {ProductsValueSummaryComponent} from "./components/products-value-summary.component";
+import {TotalProductsSummaryComponent} from './components/total-products-summary.component';
+import {ProductsValueSummaryComponent} from './components/products-value-summary.component';
+import {TransferPage} from './pages/transfer.page';
+import {MatSortModule} from "@angular/material/sort";
 
 const routes: Routes = [
   {path: '', component: IndexPage},
   {path: 'products', component: ProductsPage},
+  {path: 'products/create', component: CreatePageComponent},
+  {path: 'products/edit/:id', component: EditPageComponent},
   {path: 'categories', component: CategoriesPage},
   {path: 'catalogs', component: CatalogsPage},
   {path: 'units', component: UnitsPage},
   {path: 'suppliers', component: SuppliersPage},
-  {path: 'create', component: CreatePageComponent},
-  {path: 'edit/:id', component: EditPageComponent}
+  {path: 'transfers', component: TransferPage},
 ];
 
 @NgModule({
@@ -109,7 +112,8 @@ const routes: Routes = [
     MatRadioModule,
     MatExpansionModule,
     MatDialogModule,
-    MatListModule
+    MatListModule,
+    MatSortModule
   ],
   declarations: [
     DialogDeleteComponent,
@@ -142,7 +146,8 @@ const routes: Routes = [
     DialogCatalogDeleteComponent,
     CatalogsPage,
     TotalProductsSummaryComponent,
-    ProductsValueSummaryComponent
+    ProductsValueSummaryComponent,
+    TransferPage
   ],
 })
 export class StockModule {

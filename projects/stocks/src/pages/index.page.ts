@@ -8,7 +8,7 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
       <mat-sidenav class="match-parent-side" #sidenav [mode]="enoughWidth()?'side': 'over'" [opened]="enoughWidth()">
         <smartstock-drawer></smartstock-drawer>
       </mat-sidenav>
-      <mat-sidenav-content style="min-height: 100vh">
+      <mat-sidenav-content style="height: 100vh">
         <smartstock-toolbar searchPlaceholder="Filter product" [heading]="'Stocks'"
                             [sidenav]="sidenav"></smartstock-toolbar>
         <div class="container col-xl-10 col-lg-10 col-sm-9 col-md-9 col-sm-12 col-10" style="padding: 16px 0">
@@ -63,6 +63,11 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
       name: 'Suppliers',
       path: '/stock/suppliers',
       icon: 'airport_shuttle'
+    },
+    {
+      name: 'Transfers',
+      path: '/stock/transfers',
+      icon: 'transfer'
     }
   ];
 

@@ -47,13 +47,13 @@ export class StockDetailsComponent {
       <div class="row">
         <div class="col-12">
           <mat-panel-title class="text-center">
-            Your about to delete :  <b>{{' '+ data.product}}</b>
+            Your about to delete : <b>{{' ' + data.title}}</b>
           </mat-panel-title>
         </div>
       </div>
       <div class="d-flex justify-content-center">
         <div class="align-self-center" style="margin: 8px">
-          <button color="primary"  mat-button (click)="delete(data)">Delete</button>
+          <button color="primary" mat-button (click)="delete()">Delete</button>
         </div>
         <div class="alert-secondary" style="margin: 8px">
           <button color="primary" mat-button (click)="cancel()">Cancel</button>
@@ -65,11 +65,11 @@ export class StockDetailsComponent {
 export class DialogDeleteComponent {
   constructor(
     public dialogRef: MatDialogRef<DialogDeleteComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: StockModel) {
+    @Inject(MAT_DIALOG_DATA) public data: { title: string }) {
   }
 
-  delete(stock: StockModel): void {
-    this.dialogRef.close(stock);
+  delete(): void {
+    this.dialogRef.close('yes');
   }
 
   cancel(): void {
