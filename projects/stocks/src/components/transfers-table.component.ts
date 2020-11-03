@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
-import {TransactionModel} from 'bfastjs/dist/models/TransactionModel';
 import {TransferState} from '../states/transfer.state';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {TransferModel} from '../models/transfer.model';
 
 @Component({
   selector: 'smartstock-stock-transfers-table',
@@ -39,7 +39,7 @@ import {takeUntil} from 'rxjs/operators';
 export class TransfersTableComponent implements OnInit, OnDestroy {
   onDestroy: Subject<any> = new Subject<any>();
   transfersTableColumn = ['date', 'to', 'user', 'amount', 'note'];
-  transfersDatasource: MatTableDataSource<TransactionModel> = new MatTableDataSource<TransactionModel>([]);
+  transfersDatasource: MatTableDataSource<TransferModel> = new MatTableDataSource<TransferModel>([]);
 
   constructor(public readonly transferState: TransferState) {
     transferState.transfers.pipe(

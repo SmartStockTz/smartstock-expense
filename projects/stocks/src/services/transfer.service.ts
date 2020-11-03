@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BFast} from 'bfastjs';
 import {StorageService} from '@smartstocktz/core-libs';
-import {TransactionModel} from 'bfastjs/dist/models/TransactionModel';
+import {TransferModel} from '../models/transfer.model';
 
 @Injectable({
   providedIn: 'any'
@@ -13,14 +13,14 @@ export class TransferService {
   constructor(private readonly storage: StorageService) {
   }
 
-  async save(transfer: TransactionModel): Promise<TransactionModel> {
+  async save(transfer: TransferModel): Promise<TransferModel> {
     const activeShop = await this.storage.getActiveShop();
     return BFast.database(activeShop.projectId)
       .collection(this.COLLECTION)
-      .save<TransactionModel>(transfer);
+      .save<TransferModel>(transfer);
   }
 
-  async fetch(pagination: { size?: number, skip?: number } = {size: 20, skip: 0}): Promise<TransactionModel[]> {
+  async fetch(pagination: { size?: number, skip?: number } = {size: 20, skip: 0}): Promise<TransferModel[]> {
     const activeShop = await this.storage.getActiveShop();
     return BFast.database(activeShop.projectId)
       .collection(this.COLLECTION)
@@ -30,7 +30,7 @@ export class TransferService {
       .find();
   }
 
-  async searchByDate(date: string): Promise<TransactionModel[]> {
+  async searchByDate(date: string): Promise<TransferModel[]> {
     const activeShop = await this.storage.getActiveShop();
     return BFast.database()
       .collection(this.COLLECTION)

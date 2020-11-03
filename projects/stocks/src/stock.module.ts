@@ -63,7 +63,9 @@ import {ProductsTableActionsComponent} from './components/products-table-actions
 import {ProductsTableSubActionsComponent} from './components/products-table-sub-actions.component';
 import {TransfersTableComponent} from './components/transfers-table.component';
 import {TransfersTableActionsComponent} from './components/transfers-table-actions.component';
-import {TransferCreateComponent} from "./pages/transfer-create.component";
+import {TransferCreateComponent} from './pages/transfer-create.component';
+import {TransferCreateFormComponent} from "./components/transfer-create-form.component";
+import {ManyShopsGuard} from "./guards/many-shops.guard";
 
 const routes: Routes = [
   {path: '', component: IndexPage},
@@ -74,7 +76,8 @@ const routes: Routes = [
   {path: 'catalogs', component: CatalogsPage},
   {path: 'units', component: UnitsPage},
   {path: 'suppliers', component: SuppliersPage},
-  {path: 'transfers', component: TransferPage},
+  {path: 'transfers', canActivate: [ManyShopsGuard], component: TransferPage},
+  {path: 'transfers/create', canActivate: [ManyShopsGuard], component: TransferCreateComponent},
 ];
 
 @NgModule({
@@ -124,6 +127,7 @@ const routes: Routes = [
     CdkTableModule
   ],
   declarations: [
+    TransferCreateFormComponent,
     TransfersTableComponent,
     TransfersTableActionsComponent,
     ProductsTableActionsComponent,
