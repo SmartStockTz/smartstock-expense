@@ -21,15 +21,34 @@ import {MatTableDataSource} from "@angular/material/table";
                                [leftDrawerOpened]="enoughWidth()"
                                [heading]="'Transfer'">
       <ng-template #leftDrawer>
-        <smartstock-drawer></smartstock-drawer>
+        <div class="match-parent">
+          <smartstock-drawer></smartstock-drawer>
+        </div>
       </ng-template>
       <ng-template #body>
-        <div class="container col-xl-10 col-lg-10 col-sm-9 col-md-9 col-sm-12 col-10" style="padding: 16px 0">
-          <div style="margin-top: 24px">
-            <smartstock-stock-transfers-table-actions></smartstock-stock-transfers-table-actions>
-            <mat-card class="mat-elevation-z2">
-              <smartstock-stock-transfers-table></smartstock-stock-transfers-table>
-            </mat-card>
+        <div style="height: 100vh">
+          <div class="container col-xl-10 col-lg-10 col-sm-9 col-md-9 col-sm-12 col-10" style="padding: 16px 0">
+            <div style="margin-top: 24px">
+              <smartstock-stock-transfers-table-actions></smartstock-stock-transfers-table-actions>
+              <mat-card class="mat-elevation-z2">
+                <smartstock-stock-transfers-table></smartstock-stock-transfers-table>
+                <!--              <smartstock-stock-transfers-table></smartstock-stock-transfers-table>-->
+                <!--              <smartstock-stock-transfers-table></smartstock-stock-transfers-table>-->
+                <!--              <smartstock-stock-transfers-table></smartstock-stock-transfers-table>-->
+                <!--              <smartstock-stock-transfers-table></smartstock-stock-transfers-table>-->
+                <!--              <smartstock-stock-transfers-table></smartstock-stock-transfers-table>-->
+                <!--              <smartstock-stock-transfers-table></smartstock-stock-transfers-table>-->
+                <!--              <smartstock-stock-transfers-table></smartstock-stock-transfers-table>-->
+                <!--              <smartstock-stock-transfers-table></smartstock-stock-transfers-table>-->
+                <!--              <smartstock-stock-transfers-table></smartstock-stock-transfers-table>-->
+                <!--              <smartstock-stock-transfers-table></smartstock-stock-transfers-table>-->
+                <!--              <smartstock-stock-transfers-table></smartstock-stock-transfers-table>-->
+                <!--              <smartstock-stock-transfers-table></smartstock-stock-transfers-table>-->
+                <!--              <smartstock-stock-transfers-table></smartstock-stock-transfers-table>-->
+                <!--              <smartstock-stock-transfers-table></smartstock-stock-transfers-table>-->
+                <!--              <smartstock-stock-transfers-table></smartstock-stock-transfers-table>-->
+              </mat-card>
+            </div>
           </div>
         </div>
       </ng-template>
