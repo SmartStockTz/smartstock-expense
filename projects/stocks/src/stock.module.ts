@@ -56,7 +56,11 @@ import {CatalogsPage} from './pages/catalogs.page';
 import {TotalProductsSummaryComponent} from './components/total-products-summary.component';
 import {ProductsValueSummaryComponent} from './components/products-value-summary.component';
 import {TransferPage} from './pages/transfer.page';
-import {MatSortModule} from "@angular/material/sort";
+import {MatSortModule} from '@angular/material/sort';
+import {CdkTableModule} from '@angular/cdk/table';
+import {ProductsTableComponent} from './components/products-table.component';
+import {ProductsTableActionsComponent} from './components/products-table-actions.component';
+import {ProductsTableSubActionsComponent} from './components/products-table-sub-actions.component';
 
 const routes: Routes = [
   {path: '', component: IndexPage},
@@ -113,9 +117,12 @@ const routes: Routes = [
     MatExpansionModule,
     MatDialogModule,
     MatListModule,
-    MatSortModule
+    MatSortModule,
+    CdkTableModule
   ],
   declarations: [
+    ProductsTableActionsComponent,
+    ProductsTableComponent,
     DialogDeleteComponent,
     CatalogFormFieldComponent,
     IndexPage,
@@ -147,7 +154,8 @@ const routes: Routes = [
     CatalogsPage,
     TotalProductsSummaryComponent,
     ProductsValueSummaryComponent,
-    TransferPage
+    TransferPage,
+    ProductsTableSubActionsComponent
   ],
 })
 export class StockModule {

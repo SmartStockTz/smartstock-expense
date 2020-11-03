@@ -20,6 +20,8 @@ export class StockState {
   isImportProducts: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isDeleteStocks: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
+  selection = new SelectionModel(true, []);
+
   constructor(private readonly stockService: StockService,
               private readonly messageService: MessageService,
               private readonly storageService: StorageService) {
