@@ -23,8 +23,8 @@ import {StockState} from '../states/stock.state';
           <div class="row" style="margin: 40px 0">
             <div class="full-width col-12">
               <div>
+                <smartstock-stock-products-table-actions></smartstock-stock-products-table-actions>
                 <mat-card class="mat-elevation-z3">
-                  <smartstock-stock-products-table-actions></smartstock-stock-products-table-actions>
                   <smartstock-stock-products-table-sub-actions></smartstock-stock-products-table-sub-actions>
                   <smartstock-stock-products-table></smartstock-stock-products-table>
                 </mat-card>

@@ -61,6 +61,9 @@ import {CdkTableModule} from '@angular/cdk/table';
 import {ProductsTableComponent} from './components/products-table.component';
 import {ProductsTableActionsComponent} from './components/products-table-actions.component';
 import {ProductsTableSubActionsComponent} from './components/products-table-sub-actions.component';
+import {TransfersTableComponent} from './components/transfers-table.component';
+import {TransfersTableActionsComponent} from './components/transfers-table-actions.component';
+import {TransferCreateComponent} from "./pages/transfer-create.component";
 
 const routes: Routes = [
   {path: '', component: IndexPage},
@@ -121,6 +124,8 @@ const routes: Routes = [
     CdkTableModule
   ],
   declarations: [
+    TransfersTableComponent,
+    TransfersTableActionsComponent,
     ProductsTableActionsComponent,
     ProductsTableComponent,
     DialogDeleteComponent,
@@ -155,7 +160,8 @@ const routes: Routes = [
     TotalProductsSummaryComponent,
     ProductsValueSummaryComponent,
     TransferPage,
-    ProductsTableSubActionsComponent
+    ProductsTableSubActionsComponent,
+    TransferCreateComponent
   ],
 })
 export class StockModule {

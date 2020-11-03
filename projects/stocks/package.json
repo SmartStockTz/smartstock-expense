@@ -1,6 +1,6 @@
 {
   "name": "@smartstocktz/stocks",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/smartstocktz"
   },
@@ -8,11 +8,11 @@
     "url": "git://github.com/smartstocktz/smartstock-stocks.git"
   },
   "peerDependencies": {
-    "@angular/common": "^10.1.5",
-    "@angular/core": "^10.1.5",
-    "@smartstocktz/core-libs": "^0.0.5",
-    "@angular/cdk": "^10.2.4",
-    "@angular/material": "^10.2.4",
+    "@angular/common": "^10.2.1",
+    "@angular/core": "^10.2.1",
+    "@smartstocktz/core-libs": "^0.0.6",
+    "@angular/cdk": "^10.2.7",
+    "@angular/material": "^10.2.7",
     "bfastjs": "^4.0.0-beta.25"
   },
   "dependencies": {
