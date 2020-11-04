@@ -8,16 +8,16 @@ export interface TransferModel {
   note?: string;
   from_shop?: {
     name: string;
-    id: string;
-    appId: string;
+    projectId: string;
+    applicationId: string;
   };
   to_shop?: {
     name: string;
-    id: string;
-    appId: string;
+    projectId: string;
+    applicationId: string;
   };
   transferred_by?: {
-    name: string;
+    username: string;
   };
   amount?: number;
   items?: {

@@ -3,6 +3,7 @@ import {BehaviorSubject} from 'rxjs';
 import {TransferService} from '../services/transfer.service';
 import {MessageService} from '@smartstocktz/core-libs';
 import {TransferModel} from '../models/transfer.model';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'any'
@@ -10,6 +11,7 @@ import {TransferModel} from '../models/transfer.model';
 
 export class TransferState {
   constructor(private readonly transferService: TransferService,
+              private readonly router: Router,
               private readonly messageService: MessageService) {
   }
 
@@ -34,7 +36,8 @@ export class TransferState {
   save(transfer: TransferModel): void {
     this.isSaveTransfers.next(true);
     this.transferService.save(transfer).then(value => {
-      this.transfers.value.unshift(value);
+      this.transfers.value.unshift(transfer);
+      this.router.navigateByUrl('/stock/transfers').catch();
     }).catch(reason => {
       this.messageService.showMobileInfoMessage(reason && reason.message ? reason.message : reason.toString(),
         2000, 'bottom');

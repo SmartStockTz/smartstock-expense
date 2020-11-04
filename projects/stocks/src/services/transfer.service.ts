@@ -16,8 +16,25 @@ export class TransferService {
   async save(transfer: TransferModel): Promise<TransferModel> {
     const activeShop = await this.storage.getActiveShop();
     return BFast.database(activeShop.projectId)
-      .collection(this.COLLECTION)
-      .save<TransferModel>(transfer);
+      .transaction()
+      .create(this.COLLECTION, transfer)
+      .update('stocks', transfer.items
+        .filter(x => x.product.stockable === true)
+        .map(y => {
+          return {
+            query: {
+              id: y.product.id
+            },
+            update: {
+              $inc: {
+                quantity: -y.quantity
+              }
+            }
+          };
+        }))
+      .commit();
+    // .collection(this.COLLECTION)
+    // .save<TransferModel>(transfer);
   }
 
   async fetch(pagination: { size?: number, skip?: number } = {size: 20, skip: 0}): Promise<TransferModel[]> {
@@ -25,6 +42,7 @@ export class TransferService {
     return BFast.database(activeShop.projectId)
       .collection(this.COLLECTION)
       .query()
+      .orderBy('_created_at', -1)
       .size(pagination.size)
       .skip(pagination.skip)
       .find();

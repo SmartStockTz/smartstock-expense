@@ -21,7 +21,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatTableModule} from '@angular/material/table';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatListModule} from '@angular/material/list';
 import {RouterModule, ROUTES, Routes} from '@angular/router';
 import {ProductsPage} from './pages/products.page';
@@ -68,6 +68,7 @@ import {TransferCreateFormComponent} from './components/transfer-create-form.com
 import {ManyShopsGuard} from './guards/many-shops.guard';
 import {ProductSearchDialogComponent} from './components/product-search-dialog.component';
 import {ScrollingModule} from "@angular/cdk/scrolling";
+import {InfoDialogComponent} from "./components/info-dialog.component";
 
 const routes: Routes = [
   {path: '', component: IndexPage},
@@ -127,9 +128,11 @@ const routes: Routes = [
     MatListModule,
     MatSortModule,
     CdkTableModule,
-    ScrollingModule
+    ScrollingModule,
+    FormsModule
   ],
   declarations: [
+    InfoDialogComponent,
     TransferCreateFormComponent,
     TransfersTableComponent,
     TransfersTableActionsComponent,
