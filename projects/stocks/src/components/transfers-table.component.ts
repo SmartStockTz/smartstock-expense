@@ -4,6 +4,9 @@ import {TransferState} from '../states/transfer.state';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {TransferModel} from '../models/transfer.model';
+import {PageEvent} from "@angular/material/paginator";
+import {MatBottomSheet} from "@angular/material/bottom-sheet";
+import {TransfersItemsViewComponent} from "./transfers-items-view.component";
 
 @Component({
   selector: 'smartstock-stock-transfers-table',
@@ -34,15 +37,30 @@ import {TransferModel} from '../models/transfer.model';
         <td mat-cell *cdkCellDef="let element">{{element.note}}</td>
       </ng-container>
       <ng-container cdkColumnDef="action">
-        <th mat-header-cell *cdkHeaderCellDef>Action</th>
+        <th mat-header-cell *cdkHeaderCellDef>Items</th>
         <td mat-cell *cdkCellDef="let element">
+
+          <button [matTooltip]="'View items'" (click)="viewItems(element)" color="primary" mat-icon-button>
+            <mat-icon>visibility</mat-icon>
+          </button>
+
+          <button [matTooltip]="'Print items'" mat-icon-button (click)="printTransfer(element)" color="primary">
+            <mat-icon>print</mat-icon>
+          </button>
 
         </td>
       </ng-container>
       <tr mat-header-row *cdkHeaderRowDef="transfersTableColumn"></tr>
       <tr mat-row *matRowDef="let row; columns transfersTableColumn"></tr>
     </table>
-    <mat-paginator #paginator [pageSizeOptions]="[5,10,25,50]"></mat-paginator>
+    <mat-paginator #paginator
+                   [disabled]="(transferState.isFetchTransfers | async ) === true"
+                   [showFirstLastButtons]="true"
+                   [length]="transferState.totalTransfersItems | async"
+                   [pageSize]="20"
+                   (page)="loadPage($event)"
+                   [pageSizeOptions]="[20]">
+    </mat-paginator>
   `
 })
 
@@ -51,7 +69,8 @@ export class TransfersTableComponent implements OnInit, OnDestroy {
   transfersTableColumn = ['date', 'from', 'to', 'user', 'amount', 'note', 'action'];
   transfersDatasource: MatTableDataSource<TransferModel> = new MatTableDataSource<TransferModel>([]);
 
-  constructor(public readonly transferState: TransferState) {
+  constructor(public readonly transferState: TransferState,
+              private readonly bottomSheet: MatBottomSheet) {
     transferState.transfers.pipe(
       takeUntil(this.onDestroy)
     ).subscribe(value => {
@@ -60,11 +79,29 @@ export class TransfersTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.transferState.fetch();
+    this.transferState.fetch(20, 0);
+    this.transferState.countAll();
   }
 
   ngOnDestroy(): void {
     this.onDestroy.next();
   }
 
+  loadPage($event: PageEvent): void {
+    const skip = (($event.pageIndex + 1) * $event.pageSize);
+    const size = $event.pageSize;
+    this.transferState.fetch(size, skip);
+  }
+
+  viewItems(element: TransferModel): void {
+    this.bottomSheet.open(TransfersItemsViewComponent, {
+      data: {
+        transfer: element
+      }
+    });
+  }
+
+  printTransfer(element: TransferModel): void {
+
+  }
 }

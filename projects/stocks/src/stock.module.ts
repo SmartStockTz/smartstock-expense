@@ -69,6 +69,7 @@ import {ManyShopsGuard} from './guards/many-shops.guard';
 import {ProductSearchDialogComponent} from './components/product-search-dialog.component';
 import {ScrollingModule} from "@angular/cdk/scrolling";
 import {InfoDialogComponent} from "./components/info-dialog.component";
+import {TransfersItemsViewComponent} from "./components/transfers-items-view.component";
 
 const routes: Routes = [
   {path: '', component: IndexPage},
@@ -132,6 +133,7 @@ const routes: Routes = [
     FormsModule
   ],
   declarations: [
+    TransfersItemsViewComponent,
     InfoDialogComponent,
     TransferCreateFormComponent,
     TransfersTableComponent,

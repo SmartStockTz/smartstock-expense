@@ -15,9 +15,18 @@ export class TransferState {
               private readonly messageService: MessageService) {
   }
 
+  totalTransfersItems: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   transfers: BehaviorSubject<TransferModel[]> = new BehaviorSubject<TransferModel[]>([]);
   isFetchTransfers: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isSaveTransfers: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  countAll(): void {
+    this.transferService.countAll().then(value => {
+      this.totalTransfersItems.next(value);
+    }).catch(_ => {
+
+    });
+  }
 
   fetch(size = 20, skip = 0): void {
     this.isFetchTransfers.next(true);

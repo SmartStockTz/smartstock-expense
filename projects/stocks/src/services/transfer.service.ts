@@ -13,6 +13,15 @@ export class TransferService {
   constructor(private readonly storage: StorageService) {
   }
 
+  async countAll(): Promise<number> {
+    const activeShop = await this.storage.getActiveShop();
+    return BFast.database(activeShop.projectId)
+      .collection(this.COLLECTION)
+      .query()
+      .count(true)
+      .find();
+  }
+
   async save(transfer: TransferModel): Promise<TransferModel> {
     const activeShop = await this.storage.getActiveShop();
     return BFast.database(activeShop.projectId)
