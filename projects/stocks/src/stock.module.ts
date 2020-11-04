@@ -64,8 +64,10 @@ import {ProductsTableSubActionsComponent} from './components/products-table-sub-
 import {TransfersTableComponent} from './components/transfers-table.component';
 import {TransfersTableActionsComponent} from './components/transfers-table-actions.component';
 import {TransferCreateComponent} from './pages/transfer-create.component';
-import {TransferCreateFormComponent} from "./components/transfer-create-form.component";
-import {ManyShopsGuard} from "./guards/many-shops.guard";
+import {TransferCreateFormComponent} from './components/transfer-create-form.component';
+import {ManyShopsGuard} from './guards/many-shops.guard';
+import {ProductSearchDialogComponent} from './components/product-search-dialog.component';
+import {ScrollingModule} from "@angular/cdk/scrolling";
 
 const routes: Routes = [
   {path: '', component: IndexPage},
@@ -124,7 +126,8 @@ const routes: Routes = [
     MatDialogModule,
     MatListModule,
     MatSortModule,
-    CdkTableModule
+    CdkTableModule,
+    ScrollingModule
   ],
   declarations: [
     TransferCreateFormComponent,
@@ -165,7 +168,8 @@ const routes: Routes = [
     ProductsValueSummaryComponent,
     TransferPage,
     ProductsTableSubActionsComponent,
-    TransferCreateComponent
+    TransferCreateComponent,
+    ProductSearchDialogComponent
   ],
 })
 export class StockModule {

@@ -20,5 +20,8 @@ export interface TransferModel {
     name: string;
   };
   amount?: number;
-  items?: StockModel[];
+  items?: {
+    quantity: number;
+    product: StockModel
+  }[];
 }
