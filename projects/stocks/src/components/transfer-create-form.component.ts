@@ -159,13 +159,13 @@ export class TransferCreateFormComponent implements OnInit {
     }
     const currentShop = await this.userService.getCurrentShop();
     const user = await this.userService.currentUser();
-    if (this.transferFormGroup.value.to_shop) {
-      this.transferFormGroup.get('to_shop').setValue({
-        projectId: this.transferFormGroup.value.to_shop.projectId,
-        name: this.transferFormGroup.value.to_shop.businessName,
-        applicationId: this.transferFormGroup.value.to_shop.applicationId
-      });
-    }
+    // if (this.transferFormGroup.value.to_shop) {
+    //   this.transferFormGroup.get('to_shop').setValue({
+    //     projectId: this.transferFormGroup.value.to_shop.projectId,
+    //     name: this.transferFormGroup.value.to_shop.businessName,
+    //     applicationId: this.transferFormGroup.value.to_shop.applicationId
+    //   });
+    // }
     this.transferFormGroup.get('amount').setValue(this.totalCost);
     this.transferFormGroup.get('from_shop').setValue({
       projectId: currentShop.projectId,
@@ -189,6 +189,13 @@ export class TransferCreateFormComponent implements OnInit {
         }
       }).afterClosed().subscribe(value => {
         if (value === true) {
+          if (this.transferFormGroup.value.to_shop) {
+            this.transferFormGroup.value.to_shop = {
+              projectId: this.transferFormGroup.value.to_shop.projectId,
+              name: this.transferFormGroup.value.to_shop.businessName,
+              applicationId: this.transferFormGroup.value.to_shop.applicationId
+            };
+          }
           this.transferState.save(this.transferFormGroup.value);
         }
       });
