@@ -70,6 +70,7 @@ import {ProductSearchDialogComponent} from './components/product-search-dialog.c
 import {ScrollingModule} from "@angular/cdk/scrolling";
 import {InfoDialogComponent} from "./components/info-dialog.component";
 import {TransfersItemsViewComponent} from "./components/transfers-items-view.component";
+import {TransfersExportOptionsComponent} from "./components/transfers-export-options.component";
 
 const routes: Routes = [
   {path: '', component: IndexPage},
@@ -134,6 +135,7 @@ const routes: Routes = [
   ],
   declarations: [
     TransfersItemsViewComponent,
+    TransfersExportOptionsComponent,
     InfoDialogComponent,
     TransferCreateFormComponent,
     TransfersTableComponent,
@@ -178,4 +180,7 @@ const routes: Routes = [
   ],
 })
 export class StockModule {
+  constructor() {
+    LibModule.start();
+  }
 }

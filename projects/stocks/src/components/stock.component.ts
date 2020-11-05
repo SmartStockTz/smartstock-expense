@@ -3,6 +3,7 @@ import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef} from '@angular/material/bottom
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {StockModel} from '../models/stock.model';
 
+// @dynamic
 @Component({
   selector: 'smartstock-stock-details',
   template: `
@@ -40,6 +41,7 @@ export class StockDetailsComponent {
   }
 }
 
+// @dynamic
 @Component({
   selector: 'smartstock-dialog-delete',
   template: `

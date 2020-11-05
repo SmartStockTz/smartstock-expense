@@ -7,6 +7,7 @@ import {TransferModel} from '../models/transfer.model';
 import {PageEvent} from "@angular/material/paginator";
 import {MatBottomSheet} from "@angular/material/bottom-sheet";
 import {TransfersItemsViewComponent} from "./transfers-items-view.component";
+import {TransfersExportOptionsComponent} from "./transfers-export-options.component";
 
 @Component({
   selector: 'smartstock-stock-transfers-table',
@@ -102,6 +103,10 @@ export class TransfersTableComponent implements OnInit, OnDestroy {
   }
 
   printTransfer(element: TransferModel): void {
-
+    this.bottomSheet.open(TransfersExportOptionsComponent, {
+      data: {
+        transfer: element
+      }
+    });
   }
 }
