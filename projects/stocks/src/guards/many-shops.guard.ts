@@ -15,7 +15,8 @@ export class ManyShopsGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot)
     : Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     return new Promise(async (resolve, reject) => {
-      const shops = await this.userService.getShops();
+      const user = await this.userService.currentUser();
+      const shops = await this.userService.getShops(user as any);
       if (shops.length > 1) {
         resolve(true);
       } else {

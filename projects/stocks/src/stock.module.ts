@@ -1,4 +1,4 @@
-import {ANALYZE_FOR_ENTRY_COMPONENTS, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatButtonModule} from '@angular/material/button';
@@ -67,10 +67,11 @@ import {TransferCreateComponent} from './pages/transfer-create.component';
 import {TransferCreateFormComponent} from './components/transfer-create-form.component';
 import {ManyShopsGuard} from './guards/many-shops.guard';
 import {ProductSearchDialogComponent} from './components/product-search-dialog.component';
-import {ScrollingModule} from "@angular/cdk/scrolling";
-import {InfoDialogComponent} from "./components/info-dialog.component";
-import {TransfersItemsViewComponent} from "./components/transfers-items-view.component";
-import {TransfersExportOptionsComponent} from "./components/transfers-export-options.component";
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import {InfoDialogComponent} from './components/info-dialog.component';
+import {TransfersItemsViewComponent} from './components/transfers-items-view.component';
+import {TransfersExportOptionsComponent} from './components/transfers-export-options.component';
+import {DownloadableComponent} from "./components/downloadable.component";
 
 const routes: Routes = [
   {path: '', component: IndexPage},
@@ -91,11 +92,6 @@ const routes: Routes = [
     {
       ngModule: RouterModule,
       providers: [
-        {
-          provide: ANALYZE_FOR_ENTRY_COMPONENTS,
-          multi: true,
-          useValue: routes
-        },
         {
           provide: ROUTES,
           multi: true,
@@ -134,6 +130,7 @@ const routes: Routes = [
     FormsModule
   ],
   declarations: [
+    DownloadableComponent,
     TransfersItemsViewComponent,
     TransfersExportOptionsComponent,
     InfoDialogComponent,

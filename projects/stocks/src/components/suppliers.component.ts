@@ -11,19 +11,19 @@ import {SupplierService} from '../services/supplier.service';
 @Component({
   selector: 'smartstock-suppliers',
   template: `
+    <mat-card-title class="d-flex flex-row">
+      <button (click)="openAddSupplierDialog()" color="primary" class="ft-button" mat-flat-button>
+        Add Supplier
+      </button>
+      <span class="toolbar-spacer"></span>
+      <button [matMenuTriggerFor]="menuSuppliers" mat-icon-button>
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menuSuppliers>
+        <button (click)="getSuppliers()" mat-menu-item>Reload Suppliers</button>
+      </mat-menu>
+    </mat-card-title>
     <mat-card class="mat-elevation-z3">
-      <mat-card-title class="d-flex flex-row">
-        <button (click)="openAddSupplierDialog()" color="primary" class="ft-button" mat-flat-button>
-          Add Supplier
-        </button>
-        <span class="toolbar-spacer"></span>
-        <button [matMenuTriggerFor]="menuSuppliers" mat-icon-button>
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #menuSuppliers>
-          <button (click)="getSuppliers()" mat-menu-item>Reload Suppliers</button>
-        </mat-menu>
-      </mat-card-title>
       <mat-card-content>
         <table style="margin-top: 16px" class="my-input"
                *ngIf="!fetchSuppliersFlag && suppliersArray && suppliersArray.length > 0"

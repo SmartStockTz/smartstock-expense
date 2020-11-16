@@ -31,18 +31,8 @@ export class StockService {
       .commit();
   }
 
-  async addStock(stock: StockModel, progress: (d: any, name: string) => void, inUpdateMode = false)
-    : Promise<StockModel> {
+  async addStock(stock: StockModel, inUpdateMode = false): Promise<StockModel> {
     const shop = await this.storageService.getActiveShop();
-    if (stock.downloads && stock.downloads.length > 0) {
-      for (const value of stock.downloads) {
-        if (value && value.url instanceof File) {
-          value.url = await BFast.storage(shop?.projectId).save(value.url as any, progress1 => {
-            progress((Number(progress1.loaded) / Number(progress1.total) * 100), value.name);
-          });
-        }
-      }
-    }
     if (inUpdateMode) {
       const stockId = stock._id ? stock._id : stock.id;
       delete stock.id;

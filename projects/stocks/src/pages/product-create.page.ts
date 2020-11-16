@@ -5,7 +5,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {StockModel} from '../models/stock.model';
-import {DeviceInfoUtil, FileLibraryService, StorageService} from '@smartstocktz/core-libs';
+import {DeviceInfoUtil, FileBrowserDialogComponent, StorageService} from '@smartstocktz/core-libs';
 import {StockService} from '../services/stock.service';
 
 @Component({
@@ -29,34 +29,22 @@ import {StockService} from '../services/stock.service';
         </smartstock-toolbar>
 
         <div class="container stock-new-wrapper">
-
-          <div style="padding: 16px" class="row d-flex flex-column justify-content-center align-items-center">
-
-            <h5 style="padding: 0" class="col-12 col-xl-9 col-lg-9">
-              Image
-            </h5>
-
-            <mat-card matRipple (click)="imageInput.click()"
-                      class="col-12 col-xl-9 col-lg-9 d-flex flex-column justify-content-center align-items-center"
-                      style="width: 100%; min-height: 100px; border-radius: 4px; background-color: #f5f5f5">
-              <img matCardImageLarge style="width: 100%; height: auto; margin-top: 4px" [src]="croppedImage" alt=""/>
-              <button *ngIf="!croppedImage" mat-button color="primary">Upload Image</button>
-            </mat-card>
-
-            <div *ngIf="croppedImage" style="padding: 0"
-                 class="col-12 col-xl-9 col-lg-9 d-flex justify-content-center align-items-center">
-              <button color="warn" (click)="removeImage(imageInput)" mat-button>Remove Image</button>
-            </div>
-            <input (change)="fileChangeEvent($event)" #imageInput style="display: none" accept="image/*" type="file">
-
-          </div>
-
           <form *ngIf="!isLoadingData" [formGroup]="productForm" #formElement="ngForm"
                 (ngSubmit)="isUpdateMode?updateProduct(formElement):addProduct(formElement)">
 
             <div class="row d-flex justify-content-center align-items-center">
 
               <div style="margin-bottom: 16px" class="col-12 col-xl-9 col-lg-9">
+
+                <h2 style="padding: 0" class="col-12 col-xl-9 col-lg-9">
+                  Image
+                </h2>
+                <mat-card>
+                  <img mat-card-image [src]="productForm.value.image" alt="Product Image">
+                  <mat-card-actions>
+                    <button mat-button (click)="browserMedia($event,'image')" color="primary">Upload</button>
+                  </mat-card-actions>
+                </mat-card>
 
                 <smartstock-product-short-detail-form
                   [isUpdateMode]="isUpdateMode"
@@ -66,13 +54,13 @@ import {StockService} from '../services/stock.service';
                   [parentForm]="productForm">
                 </smartstock-product-short-detail-form>
 
-                <mat-expansion-panel style="margin-top: 8px">
+                <mat-expansion-panel [expanded]="true" style="margin-top: 8px">
                   <mat-expansion-panel-header>
                     Advance Details
                   </mat-expansion-panel-header>
-                  <h5>
+                  <h2>
                     Status
-                  </h5>
+                  </h2>
                   <mat-card class="card-wrapper mat-elevation-z0">
                     <mat-list>
                       <mat-list-item>
@@ -93,9 +81,9 @@ import {StockService} from '../services/stock.service';
                     <mat-label>Description</mat-label>
                     <textarea placeholder="optional" matInput type="text" formControlName="description"></textarea>
                   </mat-form-field>
-                  <h5>
+                  <h2>
                     Inventory
-                  </h5>
+                  </h2>
                   <mat-card class="card-wrapper mat-elevation-z0">
                     <mat-card-content class="card-content">
                       <mat-form-field *ngIf="getPurchasableFormControl().value === true" appearance="fill"
@@ -181,11 +169,6 @@ import {StockService} from '../services/stock.service';
                     </button>
                   </div>
                 </div>
-                <smartstock-upload-file-progress [uploadPercentage]="uploadPercentage"
-                                                 [onUploadFlag]="isUploadingFile"
-                                                 [name]="uploadTag">
-                </smartstock-upload-file-progress>
-
               </div>
 
             </div>
@@ -203,8 +186,6 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
   @Input() isUpdateMode = false;
   @Input() initialStock: StockModel;
   @Input() isLoadingData = false;
-
-  croppedImage: any = '';
   productForm: FormGroup;
   metas: Observable<{
     type: string;
@@ -212,9 +193,7 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
     controlName: string;
   }[]>;
   mainProgress = false;
-  private thumbnail: File;
   uploadPercentage = 0;
-  isUploadingFile = false;
   uploadTag = '';
 
   constructor(private readonly formBuilder: FormBuilder,
@@ -222,7 +201,6 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
               private readonly dialog: MatDialog,
               private readonly router: Router,
               private readonly storageService: StorageService,
-              private readonly fileLibraryService: FileLibraryService,
               private readonly stockService: StockService) {
     super();
   }
@@ -232,24 +210,9 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
     this.metas = of([]);
   }
 
-  fileChangeEvent(event: Event): void {
-    if (event) {
-      // @ts-ignore
-      this.thumbnail = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = ev => {
-        this.croppedImage = ev.target.result;
-      };
-      // @ts-ignore
-      reader.readAsDataURL(event.target.files[0]);
-    }
-  }
-
   initializeForm(stock?: StockModel): void {
-    if (stock && stock.image) {
-      this.croppedImage = stock.image;
-    }
     this.productForm = this.formBuilder.group({
+      image: [stock && stock.image ? stock.image : ''],
       product: [stock && stock.product ? stock.product : '', [Validators.nullValidator, Validators.required]],
       barcode: [stock && stock.barcode ? stock.barcode : ''],
       saleable: [stock && stock.saleable !== undefined ? stock.saleable : true],
@@ -325,26 +288,13 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
     }
 
     this.mainProgress = true;
-    this.fileLibraryService.saveFile(this.thumbnail, percentage => {
-      this.isUploadingFile = true;
-      this.uploadTag = 'Upload image...';
-      this.uploadPercentage = percentage;
-    }).then(async imageUrl => {
-      if (imageUrl) {
-        this.productForm.value.image = imageUrl;
-      }
-      if (inUpdateMode) {
-        this.productForm.value.id = this.initialStock.id;
-      }
-      return this.stockService.addStock(this.productForm.value, (percentage, name) => {
-        this.isUploadingFile = true;
-        this.uploadTag = `Upload ${name}...`;
-        this.uploadPercentage = percentage;
-      }, inUpdateMode);
-    }).then(_ => {
+    if (inUpdateMode) {
+      this.productForm.value.id = this.initialStock.id;
+    }
+    this.stockService.addStock(this.productForm.value, inUpdateMode).then(_ => {
       this.storageService.getStocks().then(value => {
         if (inUpdateMode) {
-          value.map(value1 => {
+          value = value.map(value1 => {
             if (value1.id === _.id) {
               return Object.assign(value1, _);
             } else {
@@ -355,25 +305,21 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
           value.unshift(_ as any);
         }
         return this.storageService.saveStocks(value);
+      }).catch(reason => {
       }).finally(() => {
         this.mainProgress = false;
         this.snack.open('Product added', 'Ok', {
           duration: 3000
         });
-        this.croppedImage = null;
         this.productForm.reset();
         formElement.resetForm();
         this.router.navigateByUrl('/stock/products').catch(console.log);
       });
     }).catch(reason => {
-      // console.log(reason);
       this.mainProgress = false;
       this.snack.open(reason.message ? reason.message : 'Unknown', 'Ok', {
         duration: 3000
       });
-    }).finally(() => {
-      this.isUploadingFile = false;
-      this.uploadPercentage = 0;
     });
   }
 
@@ -383,6 +329,22 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
 
   removeImage(imageInput: HTMLInputElement): void {
     imageInput.value = '';
-    this.croppedImage = null;
+  }
+
+  async browserMedia($event: MouseEvent, control: string): Promise<void> {
+    $event.preventDefault();
+    const shop = await this.storageService.getActiveShop();
+    this.dialog.open(FileBrowserDialogComponent, {
+      closeOnNavigation: false,
+      disableClose: true,
+      data: {
+        shop
+      }
+    }).afterClosed().subscribe(value => {
+      if (value && value.url) {
+        this.productForm.get(control).setValue(value.url);
+      } else {
+      }
+    });
   }
 }

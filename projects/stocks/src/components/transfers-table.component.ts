@@ -4,10 +4,10 @@ import {TransferState} from '../states/transfer.state';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {TransferModel} from '../models/transfer.model';
-import {PageEvent} from "@angular/material/paginator";
-import {MatBottomSheet} from "@angular/material/bottom-sheet";
-import {TransfersItemsViewComponent} from "./transfers-items-view.component";
-import {TransfersExportOptionsComponent} from "./transfers-export-options.component";
+import {PageEvent} from '@angular/material/paginator';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {TransfersItemsViewComponent} from './transfers-items-view.component';
+import {TransfersExportOptionsComponent} from './transfers-export-options.component';
 
 @Component({
   selector: 'smartstock-stock-transfers-table',

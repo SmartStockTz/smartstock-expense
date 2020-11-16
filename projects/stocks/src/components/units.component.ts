@@ -11,17 +11,17 @@ import {UnitsService} from '../services/units.service';
 @Component({
   selector: 'smartstock-units',
   template: `
+    <mat-card-title class="d-flex flex-row">
+      <button (click)="openAddUnitDialog()" color="primary" class="ft-button" mat-flat-button>Add Unit</button>
+      <span class="toolbar-spacer"></span>
+      <button mat-icon-button color="primary" [matMenuTriggerFor]="unitsMenu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #unitsMenu>
+        <button (click)="getUnits()" mat-menu-item>Reload Units</button>
+      </mat-menu>
+    </mat-card-title>
     <mat-card class="mat-elevation-z3">
-      <mat-card-title class="d-flex flex-row">
-        <button (click)="openAddUnitDialog()" color="primary" class="ft-button" mat-flat-button>Add Unit</button>
-        <span class="toolbar-spacer"></span>
-        <button mat-icon-button color="primary" [matMenuTriggerFor]="unitsMenu">
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #unitsMenu>
-          <button (click)="getUnits()" mat-menu-item>Reload Units</button>
-        </mat-menu>
-      </mat-card-title>
       <mat-card-content>
         <table style="margin-top: 16px" class="my-input"
                *ngIf="!fetchUnitsFlag && unitsArray && unitsArray.length > 0"

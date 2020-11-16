@@ -8,11 +8,11 @@
     "url": "git://github.com/smartstocktz/smartstock-stocks.git"
   },
   "peerDependencies": {
-    "@angular/common": "^10.2.1",
-    "@angular/core": "^10.2.1",
-    "@smartstocktz/core-libs": "^0.0.19",
-    "@angular/cdk": "^10.2.7",
-    "@angular/material": "^10.2.7",
+    "@angular/common": "^11.0.0",
+    "@angular/core": "^11.0.0",
+    "@smartstocktz/core-libs": "^0.0.20",
+    "@angular/cdk": "^11.0.0",
+    "@angular/material": "^11.0.0",
     "bfastjs": "^4.0.0-beta.25"
   },
   "dependencies": {

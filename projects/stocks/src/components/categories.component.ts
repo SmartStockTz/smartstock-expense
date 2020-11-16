@@ -13,19 +13,19 @@ import {CategoryService} from '../services/category.service';
 @Component({
   selector: 'smartstock-categories',
   template: `
+    <mat-card-title class="d-flex flex-row">
+      <button (click)="openAddCategoryDialog()" color="primary" class="ft-button" mat-flat-button>
+        Add Category
+      </button>
+      <span class="toolbar-spacer"></span>
+      <button [matMenuTriggerFor]="menuCategories" mat-icon-button>
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menuCategories>
+        <button (click)="getCategories()" mat-menu-item>Reload Categories</button>
+      </mat-menu>
+    </mat-card-title>
     <mat-card class="mat-elevation-z3">
-      <mat-card-title class="d-flex flex-row">
-        <button (click)="openAddCategoryDialog()" color="primary" class="ft-button" mat-flat-button>
-          Add Category
-        </button>
-        <span class="toolbar-spacer"></span>
-        <button [matMenuTriggerFor]="menuCategories" mat-icon-button>
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #menuCategories>
-          <button (click)="getCategories()" mat-menu-item>Reload Categories</button>
-        </mat-menu>
-      </mat-card-title>
       <mat-card-content>
         <table style="margin-top: 16px" class="my-input"
                *ngIf="!fetchCategoriesFlag && categoriesArray && categoriesArray.length > 0"

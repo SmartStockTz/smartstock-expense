@@ -59,7 +59,7 @@ import {InfoDialogComponent} from './info-dialog.component';
               <th mat-header-cell *cdkHeaderCellDef>Product</th>
               <td mat-cell *cdkCellDef="let element">{{element.product.product}}</td>
               <td mat-footer-cell *cdkFooterCellDef>
-                <h1 style="margin: 0; padding: 5px">TOTAL</h1>
+                <h2 style="margin: 0; padding: 5px">TOTAL</h2>
               </td>
             </ng-container>
             <ng-container cdkColumnDef="quantity">
@@ -135,7 +135,8 @@ export class TransferCreateFormComponent implements OnInit {
   private async getOtherShops(): Promise<void> {
     try {
       const cShop = await this.userService.getCurrentShop();
-      const allShops = await this.userService.getShops();
+      const user = await this.userService.currentUser();
+      const allShops = await this.userService.getShops(user);
       this.shops = allShops.filter(x => x.projectId !== cShop.projectId);
     } catch (e) {
       this.shops = [];

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { StockEditComponent } from './stock-edit.component';
 
@@ -6,7 +6,7 @@ describe('EditPage', () => {
   let component: StockEditComponent;
   let fixture: ComponentFixture<StockEditComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ StockEditComponent ]
     })

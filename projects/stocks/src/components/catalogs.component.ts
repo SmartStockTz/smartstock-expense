@@ -14,19 +14,19 @@ import {CatalogService} from '../services/catalog.service';
 @Component({
   selector: 'smartstock-catalogs',
   template: `
+    <mat-card-title class="d-flex flex-row">
+      <button (click)="openAddCatalogDialog()" color="primary" class="ft-button" mat-flat-button>
+        Add Catalog
+      </button>
+      <span class="toolbar-spacer"></span>
+      <button [matMenuTriggerFor]="menuCategories" mat-icon-button>
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menuCategories>
+        <button (click)="getCatalogs()" mat-menu-item>Reload Catalogs</button>
+      </mat-menu>
+    </mat-card-title>
     <mat-card class="mat-elevation-z3">
-      <mat-card-title class="d-flex flex-row">
-        <button (click)="openAddCatalogDialog()" color="primary" class="ft-button" mat-flat-button>
-          Add Catalog
-        </button>
-        <span class="toolbar-spacer"></span>
-        <button [matMenuTriggerFor]="menuCategories" mat-icon-button>
-          <mat-icon>more_vert</mat-icon>
-        </button>
-        <mat-menu #menuCategories>
-          <button (click)="getCatalogs()" mat-menu-item>Reload Catalogs</button>
-        </mat-menu>
-      </mat-card-title>
       <mat-card-content>
         <table style="margin-top: 16px" class="my-input"
                *ngIf="!fetchCategoriesFlag && catalogsArray && catalogsArray.length > 0"

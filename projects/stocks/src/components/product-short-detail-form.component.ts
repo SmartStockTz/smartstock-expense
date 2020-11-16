@@ -6,9 +6,9 @@ import {StockModel} from '../models/stock.model';
   selector: 'smartstock-product-short-detail-form',
   template: `
     <form [formGroup]="parentForm">
-      <h5>
+      <h2>
         Product
-      </h5>
+      </h2>
       <mat-card class="card-wrapper">
         <mat-card-content class="card-content">
           <mat-form-field appearance="fill" class="my-input">
@@ -19,7 +19,7 @@ import {StockModel} from '../models/stock.model';
           <mat-form-field appearance="fill" class="my-input">
             <mat-label>Barcode</mat-label>
             <input matInput type="text" formControlName="barcode">
-<!--            <mat-error>barcode required</mat-error>-->
+            <!--            <mat-error>barcode required</mat-error>-->
           </mat-form-field>
           <mat-form-field *ngIf="saleable === true" appearance="fill" class="my-input">
             <mat-label>Sale Price</mat-label>
@@ -34,9 +34,8 @@ import {StockModel} from '../models/stock.model';
             <p style="margin: 0">Can be downloaded</p>
           </div>
           <div *ngIf="downloadAble" class="card-wrapper">
-            <smartstock-upload-files [files]="isUpdateMode?initialStock.downloads:[]"
-                                     [uploadFileFormControl]="downloadsFormControl()">
-            </smartstock-upload-files>
+            <smartstock-stock-downloadable [files]="isUpdateMode?initialStock.downloads:[]">
+            </smartstock-stock-downloadable>
           </div>
         </mat-card-content>
       </mat-card>
