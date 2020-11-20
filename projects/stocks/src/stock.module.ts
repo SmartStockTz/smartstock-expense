@@ -30,11 +30,7 @@ import {CreatePageComponent} from './pages/product-create.page';
 import {EditPageComponent} from './pages/edit.page';
 import {CategoriesComponent} from './components/categories.component';
 import {DialogUnitDeleteComponent, DialogUnitNewComponent, UnitsComponent} from './components/units.component';
-import {
-  DialogSupplierDeleteComponent,
-  DialogSupplierNewComponent,
-  SuppliersComponent
-} from './components/suppliers.component';
+import {DialogSupplierDeleteComponent, SuppliersComponent} from './components/suppliers.component';
 import {ImportsDialogComponent} from './components/imports.component';
 import {CommonModule} from '@angular/common';
 import {LibModule} from '@smartstocktz/core-libs';
@@ -71,7 +67,13 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 import {InfoDialogComponent} from './components/info-dialog.component';
 import {TransfersItemsViewComponent} from './components/transfers-items-view.component';
 import {TransfersExportOptionsComponent} from './components/transfers-export-options.component';
-import {DownloadableComponent} from "./components/downloadable.component";
+import {DownloadableComponent} from './components/downloadable.component';
+import {SuppliersCreatePage} from './pages/suppliers-create.page';
+import {SupplierCreateFormComponent} from './components/supplier-create-form.component';
+import {MetasFormFieldComponent} from './components/metas-form-field.component';
+import {GeneratedFormFieldComponent} from './components/generated-form-field.component';
+import {SuppliersEditPage} from './pages/suppliers-edit.page';
+import {SupplierCreateFormBottomSheetComponent} from "./components/supplier-create-form-bottom-sheet.component";
 
 const routes: Routes = [
   {path: '', component: IndexPage},
@@ -82,6 +84,8 @@ const routes: Routes = [
   {path: 'catalogs', component: CatalogsPage},
   {path: 'units', component: UnitsPage},
   {path: 'suppliers', component: SuppliersPage},
+  {path: 'suppliers/create', component: SuppliersCreatePage},
+  {path: 'suppliers/edit/:id', component: SuppliersEditPage},
   {path: 'transfers', canActivate: [ManyShopsGuard], component: TransferPage},
   {path: 'transfers/create', canActivate: [ManyShopsGuard], component: TransferCreateComponent},
 ];
@@ -130,6 +134,12 @@ const routes: Routes = [
     FormsModule
   ],
   declarations: [
+    SupplierCreateFormComponent,
+    SuppliersEditPage,
+    SupplierCreateFormBottomSheetComponent,
+    MetasFormFieldComponent,
+    GeneratedFormFieldComponent,
+    SuppliersCreatePage,
     DownloadableComponent,
     TransfersItemsViewComponent,
     TransfersExportOptionsComponent,
@@ -155,7 +165,6 @@ const routes: Routes = [
     DialogUnitNewComponent,
     DialogSupplierDeleteComponent,
     ImportsDialogComponent,
-    DialogSupplierNewComponent,
     CategoryFormFieldComponent,
     SuppliersFormFieldComponent,
     UnitsFormFieldComponent,

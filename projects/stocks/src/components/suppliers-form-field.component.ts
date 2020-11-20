@@ -1,9 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {Observable, of} from 'rxjs';
-import {DialogSupplierNewComponent} from './suppliers.component';
 import {MatDialog} from '@angular/material/dialog';
 import {SupplierService} from '../services/supplier.service';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {SupplierCreateFormBottomSheetComponent} from './supplier-create-form-bottom-sheet.component';
 
 @Component({
   selector: 'smartstock-suppliers-form-field',
@@ -44,6 +45,7 @@ export class SuppliersFormFieldComponent implements OnInit {
   suppliersFetching = true;
 
   constructor(private readonly supplierService: SupplierService,
+              private readonly bottomSheet: MatBottomSheet,
               private readonly dialog: MatDialog) {
   }
 
@@ -57,7 +59,6 @@ export class SuppliersFormFieldComponent implements OnInit {
       this.suppliersFetching = false;
       this.suppliers = of(JSON.parse(JSON.stringify(value)));
     }).catch(_ => {
-      // console.log(_);
       this.suppliersFetching = false;
       this.suppliers = of([{name: 'Default'}]);
     });
@@ -66,13 +67,20 @@ export class SuppliersFormFieldComponent implements OnInit {
   addNewSupplier($event: MouseEvent): void {
     $event.preventDefault();
     $event.stopPropagation();
-    this.dialog.open(DialogSupplierNewComponent, {
-      closeOnNavigation: true
-    }).afterClosed().subscribe(value => {
-      if (value) {
-        this.getSuppliers();
+    this.bottomSheet.open(SupplierCreateFormBottomSheetComponent, {
+      data: {
+        supplier: null
       }
+    }).afterDismissed().subscribe(value => {
+      this.getSuppliers();
     });
+    // this.dialog.open(SupplierCreateFormComponent, {
+    //   closeOnNavigation: true
+    // }).afterClosed().subscribe(value => {
+    //   if (value) {
+    //     this.getSuppliers();
+    //   }
+    // });
   }
 
   refreshSuppliers($event: MouseEvent): void {

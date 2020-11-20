@@ -10,10 +10,10 @@
   "peerDependencies": {
     "@angular/common": "^11.0.0",
     "@angular/core": "^11.0.0",
-    "@smartstocktz/core-libs": "^0.0.20",
+    "@smartstocktz/core-libs": "^0.0.21",
     "@angular/cdk": "^11.0.0",
     "@angular/material": "^11.0.0",
-    "bfastjs": "^4.0.0-beta.25"
+    "bfastjs": "^4.0.0"
   },
   "dependencies": {
     "tslib": "^2.0.0"

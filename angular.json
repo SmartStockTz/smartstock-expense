@@ -32,6 +32,7 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
+            "fix": true,
             "tsConfig": [
               "projects/stocks/tsconfig.lib.json",
               "projects/stocks/tsconfig.spec.json"

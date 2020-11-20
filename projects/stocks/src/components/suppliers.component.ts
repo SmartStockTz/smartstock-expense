@@ -1,18 +1,19 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {MatMenuTrigger} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTableDataSource} from '@angular/material/table';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import {SupplierModel} from '../models/supplier.model';
 import {MatPaginator} from '@angular/material/paginator';
 import {SupplierService} from '../services/supplier.service';
+import {SupplierState} from '../states/supplier.state';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'smartstock-suppliers',
   template: `
     <mat-card-title class="d-flex flex-row">
-      <button (click)="openAddSupplierDialog()" color="primary" class="ft-button" mat-flat-button>
+      <button routerLink="/stock/suppliers/create" color="primary" class="ft-button" mat-flat-button>
         Add Supplier
       </button>
       <span class="toolbar-spacer"></span>
@@ -32,96 +33,31 @@ import {SupplierService} from '../services/supplier.service';
 
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Name</th>
-            <td class="editable" [matMenuTriggerFor]="nameMenu"
-                #nameMenuTrigger="matMenuTrigger"
-                [matMenuTriggerData]="{id: element.id, data: element.name}" matRipple mat-cell
-                *matCellDef="let element">{{element.name}}
-              <mat-menu #nameMenu>
-                <ng-template matMenuContent let-id="id" let-data="data">
-                  <div (click)="$event.stopPropagation()" style="padding: 16px">
-                    <mat-form-field class="my-input" appearance="outline">
-                      <mat-label>Name</mat-label>
-                      <input [value]="data" [formControl]="nameFormControl" matInput>
-                    </mat-form-field>
-                    <button
-                      (click)="updateSupplierName({id: id, value: nameFormControl.value}, nameMenuTrigger)"
-                      mat-button>Update
-                    </button>
-                  </div>
-                </ng-template>
-              </mat-menu>
+            <td mat-cell *matCellDef="let element">
+              {{element.name}}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="mobile">
             <th mat-header-cell *matHeaderCellDef>Mobile</th>
-            <td class="editable" [matMenuTriggerFor]="mobileMenu"
-                #mobileMenuTrigger="matMenuTrigger"
-                [matMenuTriggerData]="{id: element.id, data: element.number}" matRipple mat-cell
-                *matCellDef="let element">{{element.number}}
-              <mat-menu #mobileMenu>
-                <ng-template style="padding: 16px" matMenuContent let-id="id" let-data="data">
-                  <div (click)="$event.stopPropagation()" style="padding: 16px">
-                    <mat-form-field class="my-input" appearance="outline">
-                      <mat-label>Mobile</mat-label>
-                      <textarea [value]="data" [formControl]="mobileFormControl" matInput></textarea>
-                    </mat-form-field>
-                    <button
-                      (click)="updateSupplierMobile({id: id, value: mobileFormControl.value},
-                     mobileMenuTrigger)"
-                      mat-button>Update
-                    </button>
-                  </div>
-                </ng-template>
-              </mat-menu>
+            <td mat-cell *matCellDef="let element">
+              {{element.number}}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="email">
             <th mat-header-cell *matHeaderCellDef>Email</th>
-            <td class="editable" [matMenuTriggerFor]="emailMenu"
-                #emailMenuTrigger="matMenuTrigger"
-                [matMenuTriggerData]="{id: element.id, data: element.email}" matRipple mat-cell
-                *matCellDef="let element">{{element.email}}
-              <mat-menu #emailMenu>
-                <ng-template style="padding: 16px" matMenuContent let-id="id" let-data="data">
-                  <div (click)="$event.stopPropagation()" style="padding: 16px">
-                    <mat-form-field class="my-input" appearance="outline">
-                      <mat-label>Email</mat-label>
-                      <textarea [value]="data" [formControl]="emailFormControl" matInput></textarea>
-                    </mat-form-field>
-                    <button
-                      (click)="updateSupplierEmail({id: id, value: emailFormControl.value},
-                     emailMenuTrigger)"
-                      mat-button>Update
-                    </button>
-                  </div>
-                </ng-template>
-              </mat-menu>
+            <td mat-cell
+                *matCellDef="let element">
+              {{element.email}}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="address">
             <th mat-header-cell *matHeaderCellDef>Address</th>
-            <td class="editable" [matMenuTriggerFor]="addressMenu"
-                #addressMenuTrigger="matMenuTrigger"
-                [matMenuTriggerData]="{id: element.id, data: element.address}" matRipple mat-cell
-                *matCellDef="let element">{{element.address}}
-              <mat-menu #addressMenu>
-                <ng-template style="padding: 16px" matMenuContent let-id="id" let-data="data">
-                  <div (click)="$event.stopPropagation()" style="padding: 16px">
-                    <mat-form-field class="my-input" appearance="outline">
-                      <mat-label>Address</mat-label>
-                      <textarea [value]="data" [formControl]="addressFormControl" matInput></textarea>
-                    </mat-form-field>
-                    <button
-                      (click)="updateSupplierAddress({id: id, value: addressFormControl.value},
-                     addressMenuTrigger)"
-                      mat-button>Update
-                    </button>
-                  </div>
-                </ng-template>
-              </mat-menu>
+            <td mat-cell
+                *matCellDef="let element">
+              {{element.address}}
             </td>
           </ng-container>
 
@@ -133,20 +69,31 @@ import {SupplierService} from '../services/supplier.service';
             </th>
             <td mat-cell *matCellDef="let element">
               <div class="d-flex justify-content-end align-items-end">
-                <button [matMenuTriggerFor]="opts" color="primary" mat-icon-button>
+                <button color="primary" mat-icon-button>
                   <mat-icon>more_vert</mat-icon>
                 </button>
-                <mat-menu #opts>
-                  <button (click)="deleteSupplier(element)" mat-menu-item>
-                    Delete
-                  </button>
-                </mat-menu>
               </div>
             </td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="suppliersTableColums"></tr>
-          <tr mat-row class="table-data-row" *matRowDef="let row; columns: suppliersTableColums;"></tr>
+          <tr mat-row [matMenuTriggerFor]="opts" class="table-data-row"
+              *matRowDef="let element; columns: suppliersTableColums;">
+            <div style="display: flex;">
+              <div style="flex-grow: 1"></div>
+              <mat-menu #opts [xPosition]="'after'">
+                <!--                  <button (click)="viewSupplier(element)" mat-menu-item>-->
+                <!--                    View-->
+                <!--                  </button>-->
+                <button (click)="editSupplier(element)" mat-menu-item>
+                  Edit
+                </button>
+                <button (click)="deleteSupplier(element)" mat-menu-item>
+                  Delete
+                </button>
+              </mat-menu>
+            </div>
+          </tr>
 
         </table>
         <div *ngIf="fetchSuppliersFlag">
@@ -167,15 +114,12 @@ export class SuppliersComponent implements OnInit {
   suppliersTableColums = ['name', 'email', 'mobile', 'address', 'actions'];
   suppliersArray: SupplierModel[] = [];
   fetchSuppliersFlag = false;
-  nameFormControl = new FormControl();
-  descriptionFormControl = new FormControl();
-  addressFormControl = new FormControl();
-  emailFormControl = new FormControl();
-  mobileFormControl = new FormControl();
 
   constructor(private readonly supplierService: SupplierService,
               private readonly formBuilder: FormBuilder,
               private readonly dialog: MatDialog,
+              private readonly router: Router,
+              private readonly supplierState: SupplierState,
               private readonly snack: MatSnackBar) {
   }
 
@@ -210,8 +154,7 @@ export class SuppliersComponent implements OnInit {
       this.suppliersDatasource = new MatTableDataSource<SupplierModel>(this.suppliersArray);
       this.suppliersDatasource.paginator = this.matPaginator;
       this.fetchSuppliersFlag = false;
-    }).catch(reason => {
-      // console.log(reason);
+    }).catch(_ => {
       this.fetchSuppliersFlag = false;
     });
   }
@@ -235,70 +178,10 @@ export class SuppliersComponent implements OnInit {
     });
   }
 
-  updateSupplierName(supplier, matMenu: MatMenuTrigger): void {
-    matMenu.toggleMenu();
-    if (supplier && supplier.value) {
-      supplier.field = 'name';
-      this.updateSupplier(supplier);
-    }
-  }
-
-  updateSupplier(supplier: { id: string, value: string, field: string }): void {
-    this.snack.open('Update in progress..', 'Ok');
-    this.supplierService.updateSupplier(supplier).then(data => {
-      const editedObjectIndex = this.suppliersArray.findIndex(value => value.id === data.id);
-      this.suppliersArray = this.suppliersArray.filter(value => value.id !== supplier.id);
-      if (editedObjectIndex !== -1) {
-        const updatedObject = this.suppliersArray[editedObjectIndex];
-        updatedObject[supplier.field] = supplier.value;
-        this.suppliersDatasource.data[editedObjectIndex] = updatedObject;
-      } else {
-        console.warn('fails to update supplier table');
-      }
-      this.snack.open('Supplier updated', 'Ok', {
-        duration: 3000
-      });
-    }).catch(reason => {
-      this.snack.open('Fail to update supplier', 'Ok', {
-        duration: 3000
-      });
+  editSupplier(element: SupplierModel): void {
+    this.supplierState.selectedForEdit.next(element);
+    this.router.navigateByUrl('/stock/suppliers/edit/' + element.id).catch(_ => {
     });
-  }
-
-  openAddSupplierDialog(): void {
-    this.dialog.open(DialogSupplierNewComponent, {
-      closeOnNavigation: true,
-      hasBackdrop: true
-    }).afterClosed().subscribe(value => {
-      if (value) {
-        this.suppliersArray.push(value);
-        this.suppliersDatasource.data = this.suppliersArray;
-      }
-    });
-  }
-
-  updateSupplierEmail(supplier: any, matMenu: MatMenuTrigger): void {
-    matMenu.toggleMenu();
-    if (supplier && supplier.value) {
-      supplier.field = 'email';
-      this.updateSupplier(supplier);
-    }
-  }
-
-  updateSupplierAddress(supplier: any, matMenu: MatMenuTrigger): void {
-    matMenu.toggleMenu();
-    if (supplier && supplier.value) {
-      supplier.field = 'address';
-      this.updateSupplier(supplier);
-    }
-  }
-
-  updateSupplierMobile(supplier: any, matMenu: MatMenuTrigger): void {
-    matMenu.toggleMenu();
-    if (supplier && supplier.value) {
-      supplier.field = 'number';
-      this.updateSupplier(supplier);
-    }
   }
 }
 
@@ -358,114 +241,3 @@ export class DialogSupplierDeleteComponent {
     this.dialogRef.close(null);
   }
 }
-
-
-@Component({
-  selector: 'smartstock-new-supplier',
-  template: `
-    <div style="min-width: 300px">
-      <div mat-dialog-title>Create Supplier</div>
-      <div mat-dialog-content>
-        <form class="d-flex flex-column" [formGroup]="newSupplierForm" (ngSubmit)="createSupplier()">
-
-          <mat-form-field appearance="outline">
-            <mat-label>Name</mat-label>
-            <input matInput type="text" formControlName="name" required>
-            <mat-error>Name required</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Email</mat-label>
-            <input matInput formControlName="email">
-            <mat-error>Email required</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Mobile</mat-label>
-            <input matInput formControlName="number">
-            <mat-error>Mobile required</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Address</mat-label>
-            <textarea matInput formControlName="address" rows="2"></textarea>
-            <mat-error>Address required</mat-error>
-          </mat-form-field>
-
-          <button color="primary" [disabled]="createSupplierProgress" mat-flat-button class="ft-button">
-            Save
-            <mat-progress-spinner style="display: inline-block"
-                                  *ngIf="createSupplierProgress"
-                                  [diameter]="20"
-                                  mode="indeterminate">
-            </mat-progress-spinner>
-          </button>
-          <button mat-dialog-close="" class="btn-block" mat-button color="warn">Close</button>
-
-          <span style="margin-bottom: 8px"></span>
-          <!--      <button color="warn" mat-flat-button (click)="cancel($event)">-->
-          <!--        Close-->
-          <!--      </button>-->
-        </form>
-      </div>
-    </div>
-  `
-})
-export class DialogSupplierNewComponent implements OnInit {
-  newSupplierForm: FormGroup;
-  createSupplierProgress = false;
-
-  constructor(
-    private readonly formBuilder: FormBuilder,
-    private readonly snack: MatSnackBar,
-    private readonly supplierService: SupplierService,
-    public dialogRef: MatDialogRef<DialogSupplierDeleteComponent>) {
-  }
-
-  ngOnInit(): void {
-    this.initiateForm();
-  }
-
-  initiateForm(): void {
-    this.newSupplierForm = this.formBuilder.group({
-      name: ['', [Validators.nullValidator, Validators.required]],
-      email: [''],
-      number: [''],
-      address: ['']
-    });
-  }
-
-  createSupplier(): void {
-    if (!this.newSupplierForm.valid) {
-      this.snack.open('Please fll all details', 'Ok', {
-        duration: 3000
-      });
-      return;
-    }
-    this.createSupplierProgress = true;
-    this.supplierService.addSupplier(this.newSupplierForm.value).then(value => {
-      this.createSupplierProgress = false;
-      value.name = this.newSupplierForm.value.name;
-      value.email = this.newSupplierForm.value.email;
-      value.mobile = this.newSupplierForm.value.mobile;
-      value.address = this.newSupplierForm.value.address;
-      this.dialogRef.close(value);
-      this.snack.open('Supplier created', 'Ok', {
-        duration: 3000
-      });
-    }).catch(reason => {
-      // console.log(reason);
-      this.createSupplierProgress = false;
-      //  this.dialogRef.close(null);
-      this.snack.open('Supplier not created, try again', 'Ok', {
-        duration: 3000
-      });
-    });
-  }
-
-  cancel($event: Event): void {
-    $event.preventDefault();
-    this.dialogRef.close(null);
-  }
-}
-

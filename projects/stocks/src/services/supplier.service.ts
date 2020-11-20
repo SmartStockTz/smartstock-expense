@@ -9,18 +9,27 @@ import {BFast} from 'bfastjs';
   providedIn: 'root'
 })
 
-export class SupplierService{
+export class SupplierService {
   constructor(private readonly httpClient: HttpClient,
               private readonly userService: UserService,
               private readonly storageService: StorageService) {
   }
 
-  addAllSupplier(suppliers: SupplierModel[], callback: (value: any) => void): void {
-  }
-
-  async addSupplier(supplier: SupplierModel): Promise<any> {
+  async addSupplier(supplier: SupplierModel, id: string): Promise<any> {
     const shop = await this.storageService.getActiveShop();
-    return BFast.database(shop.projectId).collection('suppliers').save(supplier);
+    if (id) {
+      return BFast.database(shop.projectId)
+        .collection('suppliers')
+        .query()
+        .byId(id)
+        .updateBuilder()
+        .doc(supplier)
+        .update();
+    } else {
+      return BFast.database(shop.projectId)
+        .collection('suppliers')
+        .save(supplier);
+    }
   }
 
   async deleteSupplier(id: string): Promise<any> {
