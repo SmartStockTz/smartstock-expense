@@ -1,5 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {StockState} from '../states/stock.state';
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'smartstock-total-products-summary',
@@ -10,27 +12,33 @@ import {StockState} from '../states/stock.state';
       <ng-template #content>
         <div
           style="display: flex; height: 100%; flex-direction: column; justify-content: center; align-items: center">
-          <h1 *ngIf="!totalLoad" style="font-size: 34px">
+          <h1 *ngIf="(stockState.isFetchStocks | async)===false" style="font-size: 34px">
             {{total | number}}
           </h1>
-          <mat-progress-spinner *ngIf="totalLoad" mode="indeterminate" diameter="20"
+          <mat-progress-spinner *ngIf="(stockState.isFetchStocks | async)===true" mode="indeterminate" diameter="20"
                                 color="primary"></mat-progress-spinner>
         </div>
       </ng-template>
     </smartstock-dash-card>
   `
 })
-export class TotalProductsSummaryComponent implements OnInit {
-  totalLoad = false;
+export class TotalProductsSummaryComponent implements OnInit, OnDestroy {
   total = 0;
+  destroyer: Subject<any> = new Subject<any>();
 
-  constructor(private readonly stockState: StockState) {
+  constructor(public readonly stockState: StockState) {
+    this.stockState.stocks.pipe(
+      takeUntil(this.destroyer)
+    ).subscribe(value => {
+      this.total = value.length;
+    });
   }
 
   ngOnInit(): void {
-    this.stockState.stocks.subscribe(value => {
-      this.total = value.length;
-    });
     this.stockState.getStocks();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyer.next();
   }
 }

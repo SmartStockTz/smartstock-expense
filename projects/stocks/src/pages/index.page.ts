@@ -11,9 +11,9 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
       <mat-sidenav-content style="height: 100vh">
         <smartstock-toolbar searchPlaceholder="Filter product" [heading]="'Stocks'"
                             [sidenav]="sidenav"></smartstock-toolbar>
-        <div class="container col-xl-10 col-lg-10 col-sm-9 col-md-9 col-sm-12 col-10" style="padding: 16px 0">
-          <h1>Go To</h1>
-          <div class="row">
+        <div class="container col-xl-10 col-lg-10 col-sm-9 col-md-9 col-sm-12 col-10" style="">
+          <h1 style="margin-top: 16px">Go To</h1>
+          <div class="d-flex flex-row flex-wrap">
             <div *ngFor="let page of pages" routerLink="{{page.path}}" style="margin: 5px; cursor: pointer">
               <mat-card matRipple
                         style="width: 150px; height: 150px; display: flex; justify-content: center; align-items: center; flex-direction: column">
@@ -25,11 +25,15 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
             </div>
           </div>
           <h1>Summary</h1>
-          <div class="row">
-            <smartstock-total-products-summary
-              class="col-sm-11 col-md-6 col-lg-4 col-xl-4"></smartstock-total-products-summary>
-            <smartstock-products-value-summary
-              class="col-sm-11 col-md-6 col-lg-4 col-xl-4"></smartstock-products-value-summary>
+          <div class="d-flex flex-row flex-wrap">
+<!--            <div class="container-fluid row" style="width: 100%">-->
+              <smartstock-total-products-summary style="margin: 5px 0;"
+                                                 class="col-sm-11 col-md-6 col-lg-6 col-xl-6">
+              </smartstock-total-products-summary>
+              <smartstock-products-value-summary style="margin: 5px 0;"
+                                                 class="col-sm-11 col-md-6 col-lg-6 col-xl-6">
+              </smartstock-products-value-summary>
+<!--            </div>-->
           </div>
         </div>
       </mat-sidenav-content>
