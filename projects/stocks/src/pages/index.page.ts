@@ -24,13 +24,13 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
               <p>{{page.name}}</p>
             </div>
           </div>
-<!--          <h1>Summary</h1>-->
-<!--          <div class="row">-->
-<!--            <smartstock-total-products-summary-->
-<!--              class="col-sm-11 col-md-6 col-lg-4 col-xl-4"></smartstock-total-products-summary>-->
-<!--            <smartstock-products-value-summary-->
-<!--              class="col-sm-11 col-md-6 col-lg-4 col-xl-4"></smartstock-products-value-summary>-->
-<!--          </div>-->
+          <h1>Summary</h1>
+          <div class="row">
+            <smartstock-total-products-summary
+              class="col-sm-11 col-md-6 col-lg-4 col-xl-4"></smartstock-total-products-summary>
+            <smartstock-products-value-summary
+              class="col-sm-11 col-md-6 col-lg-4 col-xl-4"></smartstock-products-value-summary>
+          </div>
         </div>
       </mat-sidenav-content>
     </mat-sidenav-container>
