@@ -4,4 +4,6 @@ export interface CategoryModel {
   description?: string;
   createdAt?: any;
   updatedAt?: any;
+  metas?: { [key: string]: any };
+  image?: string;
 }

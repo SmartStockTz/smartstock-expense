@@ -13,7 +13,7 @@ import {takeUntil} from 'rxjs/operators';
         <div
           style="display: flex; height: 100%; flex-direction: column; justify-content: center; align-items: center">
           <h1 *ngIf="(stockState.isFetchStocks | async)=== false" style="font-size: 34px">
-            {{total | number}}
+            {{stockState.totalValueOfStocks.value | number}}
           </h1>
           <mat-progress-spinner *ngIf="(stockState.isFetchStocks | async)=== true" mode="indeterminate" diameter="20"
                                 color="primary"></mat-progress-spinner>
@@ -28,24 +28,24 @@ export class ProductsValueSummaryComponent implements OnInit, OnDestroy {
   destroyer: Subject<any> = new Subject<any>();
 
   constructor(public readonly stockState: StockState) {
-    this.stockState.stocks.pipe(
-      takeUntil(this.destroyer)
-    ).subscribe(value => {
-      this.total = value.map(x => {
-        if (x.quantity > 0) {
-          return x.quantity * x.purchase;
-        } else {
-          return 0;
-        }
-      }).reduce((a, b) => a + b, 0);
-    });
+    // this.stockState.stocks.pipe(
+    //   takeUntil(this.destroyer)
+    // ).subscribe(value => {
+    //   this.total = value.map(x => {
+    //     if (x.quantity > 0) {
+    //       return x.quantity * x.purchase;
+    //     } else {
+    //       return 0;
+    //     }
+    //   }).reduce((a, b) => a + b, 0);
+    // });
   }
 
   ngOnDestroy(): void {
-    this.destroyer.next();
+    // this.destroyer.next();
   }
 
   ngOnInit(): void {
-    this.stockState.getStocks();
+    // this.stockState.getStocks();
   }
 }

@@ -19,6 +19,8 @@ export class StockState {
   isExportToExcel: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isImportProducts: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isDeleteStocks: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  totalValidStocks: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  totalValueOfStocks: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
   selection = new SelectionModel(true, []);
 
@@ -38,6 +40,50 @@ export class StockState {
     }).then(remoteStocks => {
       if (remoteStocks && Array.isArray(remoteStocks) && remoteStocks.length > 0) {
         this.stocks.next(remoteStocks);
+        return this.storageService.saveStock(remoteStocks as any);
+      }
+    }).catch(reason => {
+      this.messageService.showMobileInfoMessage(
+        reason && reason.message
+          ? reason.message : reason, 2000, 'bottom');
+    }).finally(() => {
+      this.isFetchStocks.next(false);
+    });
+  }
+
+  private _updateTotalAvailableStocks(total: number): void {
+    this.totalValidStocks.next(total);
+  }
+
+  private _updateStocksValue(total: number): void {
+    this.totalValueOfStocks.next(total);
+  }
+
+  getStocksSummary(): void {
+    this.isFetchStocks.next(true);
+    this.storageService.getStocks().then(localStocks => {
+      if (localStocks && Array.isArray(localStocks) && localStocks.length > 0) {
+        this._updateTotalAvailableStocks(localStocks.length);
+        this._updateStocksValue(localStocks.map(x => {
+          if (x.quantity > 0) {
+            return x.quantity * x.purchase;
+          } else {
+            return 0;
+          }
+        }).reduce((a, b) => a + b, 0));
+      } else {
+        return this.stockService.getAllStock();
+      }
+    }).then(remoteStocks => {
+      if (remoteStocks && Array.isArray(remoteStocks) && remoteStocks.length > 0) {
+        this._updateTotalAvailableStocks(remoteStocks.length);
+        this._updateStocksValue(remoteStocks.map(x => {
+          if (x.quantity > 0) {
+            return x.quantity * x.purchase;
+          } else {
+            return 0;
+          }
+        }).reduce((a, b) => a + b, 0));
         return this.storageService.saveStock(remoteStocks as any);
       }
     }).catch(reason => {

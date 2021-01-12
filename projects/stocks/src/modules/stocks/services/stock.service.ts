@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
 import {UserService} from './user.service';
 import {StorageService} from '@smartstocktz/core-libs';
 import {BFast} from 'bfastjs';
@@ -9,9 +8,7 @@ import {StockModel} from '../models/stock.model';
   providedIn: 'any'
 })
 export class StockService {
-  constructor(private readonly httpClient: HttpClient,
-              private readonly userService: UserService,
-              private readonly storageService: StorageService) {
+  constructor(private readonly userService: UserService, private readonly storageService: StorageService) {
   }
 
   async exportToExcel(): Promise<any> {
@@ -50,7 +47,7 @@ export class StockService {
     }
   }
 
-  deleteAllStock(stocks: StockModel[], callback?: (value: any) => void): void {
+  async deleteAllStock(stocks: StockModel[], callback?: (value: any) => void): Promise<void> {
   }
 
   async deleteStock(stock: StockModel): Promise<any> {

@@ -73,7 +73,11 @@ import {SupplierCreateFormComponent} from './components/supplier-create-form.com
 import {MetasFormFieldComponent} from './components/metas-form-field.component';
 import {GeneratedFormFieldComponent} from './components/generated-form-field.component';
 import {SuppliersEditPage} from './pages/suppliers-edit.page';
-import {SupplierCreateFormBottomSheetComponent} from "./components/supplier-create-form-bottom-sheet.component";
+import {SupplierCreateFormBottomSheetComponent} from './components/supplier-create-form-bottom-sheet.component';
+import {CategoryCreatePage} from './pages/category-create.page';
+import {CategoryCreateFormComponent} from './components/category-create-form.component';
+import {CategoriesEditPage} from './pages/categories-edit.page';
+import {CategoryCreateFormBottomSheetComponent} from './components/category-create-form-bottom-sheet.component';
 
 const routes: Routes = [
   {path: '', component: IndexPage},
@@ -81,6 +85,8 @@ const routes: Routes = [
   {path: 'products/create', component: CreatePageComponent},
   {path: 'products/edit/:id', component: EditPageComponent},
   {path: 'categories', component: CategoriesPage},
+  {path: 'categories/create', component: CategoryCreatePage},
+  {path: 'categories/edit/:id', component: CategoriesEditPage},
   {path: 'catalogs', component: CatalogsPage},
   {path: 'units', component: UnitsPage},
   {path: 'suppliers', component: SuppliersPage},
@@ -135,6 +141,10 @@ const routes: Routes = [
   ],
   declarations: [
     SupplierCreateFormComponent,
+    CategoriesEditPage,
+    CategoryCreateFormBottomSheetComponent,
+    CategoryCreatePage,
+    SuppliersCreatePage,
     SuppliersEditPage,
     SupplierCreateFormBottomSheetComponent,
     MetasFormFieldComponent,
@@ -182,10 +192,11 @@ const routes: Routes = [
     TransferPage,
     ProductsTableSubActionsComponent,
     TransferCreateComponent,
-    ProductSearchDialogComponent
+    ProductSearchDialogComponent,
+    CategoryCreateFormComponent
   ],
 })
-export class StockModule {
+export class StocksModule {
   constructor() {
     LibModule.start();
   }

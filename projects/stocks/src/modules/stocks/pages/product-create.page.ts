@@ -1,12 +1,13 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, FormGroupDirective, Validators} from '@angular/forms';
-import {Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {StockModel} from '../models/stock.model';
 import {DeviceInfoUtil, FileBrowserDialogComponent, StorageService} from '@smartstocktz/core-libs';
 import {StockService} from '../services/stock.service';
+import {MetasModel} from '../models/metas.model';
 
 @Component({
   selector: 'smartstock-stock-new',
@@ -56,7 +57,7 @@ import {StockService} from '../services/stock.service';
 
                 <mat-expansion-panel [expanded]="true" style="margin-top: 8px">
                   <mat-expansion-panel-header>
-                    Advance Details
+                    <h2 style="margin: 0">Advance Details</h2>
                   </mat-expansion-panel-header>
                   <h2>
                     Status
@@ -152,7 +153,18 @@ import {StockService} from '../services/stock.service';
                   </mat-card>
                 </mat-expansion-panel>
 
+                <mat-expansion-panel [expanded]="false" style="margin-top: 8px">
+                  <mat-expansion-panel-header>
+                    <h2 style="margin: 0">Other Attributes</h2>
+                  </mat-expansion-panel-header>
+                  <smartstock-stock-metas-form-field [flat]="true" *ngIf="productForm" [formGroup]="productForm"
+                                                     [metas]="metasModel"></smartstock-stock-metas-form-field>
+                  <div style="height: 24px"></div>
+                </mat-expansion-panel>
+
+
               </div>
+
 
               <div class="col-12 col-xl-9 col-lg-9" style="padding-bottom: 100px">
 
@@ -186,6 +198,7 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
   @Input() isUpdateMode = false;
   @Input() initialStock: StockModel;
   @Input() isLoadingData = false;
+  metasModel: BehaviorSubject<MetasModel[]> = new BehaviorSubject([]);
   productForm: FormGroup;
   metas: Observable<{
     type: string;
@@ -211,6 +224,15 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
   }
 
   initializeForm(stock?: StockModel): void {
+    if (stock && stock.metas) {
+      this.metasModel.next(Object.keys(stock.metas).map<MetasModel>(x => {
+        return {
+          name: x,
+          value: stock.metas[x],
+          type: typeof stock.metas[x]
+        };
+      }));
+    }
     this.productForm = this.formBuilder.group({
       image: [stock && stock.image ? stock.image : ''],
       product: [stock && stock.product ? stock.product : '', [Validators.nullValidator, Validators.required]],
@@ -218,8 +240,8 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
       saleable: [stock && stock.saleable !== undefined ? stock.saleable : true],
       downloadable: [stock && stock.downloadable !== undefined ? stock.downloadable : false],
       downloads: [stock && stock.downloads ? stock.downloads : []],
-      stockable: [stock && stock.stockable !== undefined ? stock.stockable : false],
-      purchasable: [stock && stock.purchasable !== undefined ? stock.purchasable : false],
+      stockable: [stock && stock.stockable !== undefined ? stock.stockable : true],
+      purchasable: [stock && stock.purchasable !== undefined ? stock.purchasable : true],
       description: [stock && stock.description ? stock.description : ''],
       purchase: [stock && stock.purchase ? stock.purchase : 0, [Validators.nullValidator, Validators.required]],
       retailPrice: [stock && stock.retailPrice ? stock.retailPrice : 0, [Validators.nullValidator, Validators.required]],
@@ -235,7 +257,18 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
         ? stock.catalog
         : ['general'], [Validators.required, Validators.nullValidator]],
       supplier: [stock && stock.supplier ? stock.supplier : 'general', [Validators.required, Validators.nullValidator]],
+      metas: stock && stock.metas
+        ? this.getMetaFormGroup(stock.metas)
+        : this.formBuilder.group({})
     });
+  }
+
+  private getMetaFormGroup(metas: { [p: string]: any }): FormGroup {
+    const fg = this.formBuilder.group({});
+    Object.keys(metas).forEach(key => {
+      fg.setControl(key, this.formBuilder.control(metas[key]));
+    });
+    return fg;
   }
 
   getSaleableFormControl(): FormControl {

@@ -4,6 +4,9 @@ import {Observable, of} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {DialogCategoryCreateComponent} from './dialog-category-create.component';
 import {CategoryService} from '../services/category.service';
+import {SupplierCreateFormBottomSheetComponent} from "./supplier-create-form-bottom-sheet.component";
+import {CategoryCreateFormBottomSheetComponent} from "./category-create-form-bottom-sheet.component";
+import {MatBottomSheet} from "@angular/material/bottom-sheet";
 
 @Component({
   selector: 'smartstock-category-form-field',
@@ -41,6 +44,7 @@ export class CategoryFormFieldComponent implements OnInit {
   categories: Observable<any[]>;
 
   constructor(private readonly categoryService: CategoryService,
+              private readonly bottomSheet: MatBottomSheet,
               private readonly dialog: MatDialog) {
   }
 
@@ -64,13 +68,20 @@ export class CategoryFormFieldComponent implements OnInit {
   addNewCategory($event: MouseEvent): void {
     $event.preventDefault();
     $event.stopPropagation();
-    this.dialog.open(DialogCategoryCreateComponent, {
-      closeOnNavigation: true
-    }).afterClosed().subscribe(value => {
-      if (value) {
-        this.getCategories();
+    this.bottomSheet.open(CategoryCreateFormBottomSheetComponent, {
+      data: {
+        category: null
       }
+    }).afterDismissed().subscribe(_ => {
+      this.getCategories();
     });
+    // this.dialog.open(DialogCategoryCreateComponent, {
+    //   closeOnNavigation: true
+    // }).afterClosed().subscribe(value => {
+    //   if (value) {
+    //     this.getCategories();
+    //   }
+    // });
   }
 
   refreshCategories($event: MouseEvent): void {

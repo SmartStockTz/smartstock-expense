@@ -1,7 +1,7 @@
 import {BrowserModule, HammerModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
-import {StockModule} from '../../../stocks/src/public-api';
+import {StocksModule} from '../../../stocks/src/public-api';
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {BFast} from 'bfastjs';
@@ -25,7 +25,7 @@ const routes: Routes = [
   {
     path: 'stock',
     canActivate: [AuthGuard],
-    loadChildren: () => import('../../../stocks/src/public-api').then(mod => mod.StockModule)
+    loadChildren: () => import('../../../stocks/src/public-api').then(mod => mod.StocksModule)
   },
   // {
   //   path: 'account/shop',
@@ -45,7 +45,7 @@ const routes: Routes = [
     BrowserAnimationsModule,
     HttpClientModule,
     MatSnackBarModule,
-    StockModule,
+    StocksModule,
     HttpClientModule,
     MatSnackBarModule,
     RouterModule,

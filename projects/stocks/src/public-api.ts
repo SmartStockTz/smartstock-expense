@@ -2,4 +2,4 @@
  * Public API Surface of stocks
  */
 
-export * from './stock.module';
+export * from './modules/stocks/stocks.module';

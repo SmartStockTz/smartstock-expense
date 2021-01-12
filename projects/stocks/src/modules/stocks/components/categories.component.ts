@@ -9,6 +9,9 @@ import {MatPaginator} from '@angular/material/paginator';
 import {DialogCategoryDeleteComponent} from './dialog-category-delete.component';
 import {DialogCategoryCreateComponent} from './dialog-category-create.component';
 import {CategoryService} from '../services/category.service';
+import {SupplierModel} from "../models/supplier.model";
+import {Router} from "@angular/router";
+import {CategoryState} from "../states/category.state";
 
 @Component({
   selector: 'smartstock-categories',
@@ -90,6 +93,9 @@ import {CategoryService} from '../services/category.service';
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #opts>
+                  <button (click)="editCategory(element)" mat-menu-item>
+                    Edit
+                  </button>
                   <button (click)="deleteCategory(element)" mat-menu-item>
                     Delete
                   </button>
@@ -123,6 +129,8 @@ export class CategoriesComponent implements OnInit {
   constructor(private readonly stockDatabase: CategoryService,
               private readonly formBuilder: FormBuilder,
               private readonly dialog: MatDialog,
+              private readonly categoryState: CategoryState,
+              private readonly router: Router,
               private readonly snack: MatSnackBar) {
   }
 
@@ -160,6 +168,12 @@ export class CategoriesComponent implements OnInit {
     }).catch(reason => {
       console.log(reason);
       this.fetchCategoriesFlag = false;
+    });
+  }
+
+  editCategory(element: CategoryModel): void {
+    this.categoryState.selectedForEdit.next(element);
+    this.router.navigateByUrl('/stock/categories/edit/' + element.id).catch(_ => {
     });
   }
 

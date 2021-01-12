@@ -17,9 +17,19 @@ export class CategoryService {
   addAllCategory(categories: CategoryModel[], callback?: (value: any) => void): void {
   }
 
-  async addCategory(category: CategoryModel): Promise<any> {
+  async addCategory(category: CategoryModel, id = null): Promise<any> {
     const shop = await this.storageService.getActiveShop();
-    return BFast.database(shop.projectId).collection<CategoryModel>('categories').save(category);
+    if (id) {
+      return BFast.database(shop.projectId)
+        .collection('categories')
+        .query()
+        .byId(id)
+        .updateBuilder()
+        .doc(category)
+        .update();
+    } else {
+      return BFast.database(shop.projectId).collection<CategoryModel>('categories').save(category);
+    }
   }
 
   deleteAllCategory(categories: CategoryModel[], callback: (value: any) => void): void {

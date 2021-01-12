@@ -6,7 +6,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 @Component({
   selector: 'smartstock-stock-metas-form-field',
   template: `
-    <mat-card [formGroup]="formGroup">
+    <mat-card [formGroup]="formGroup" class="{{flat?'mat-elevation-z0':''}}">
       <mat-card-content formGroupName="metas">
         <div *ngFor="let i = index; let meta of metas | async">
           <div style="display: flex; flex-wrap: nowrap">
@@ -56,6 +56,7 @@ export class MetasFormFieldComponent {
   @Input() metas: BehaviorSubject<MetasModel[]>;
   addMetaTypeFormControl = new FormControl('text', [Validators.nullValidator, Validators.required]);
   addMetaNameFormControl = new FormControl('', [Validators.nullValidator, Validators.required]);
+  @Input() flat = false;
 
   constructor(private readonly formBuilder: FormBuilder) {
   }
