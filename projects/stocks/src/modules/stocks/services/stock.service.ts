@@ -26,8 +26,8 @@ export class StockService {
       'expire',
       'supplier'
     ];
-    const total = await bfast.database().table('stocks').query().count(true).find<number>();
-    const stocks = await bfast.database().table('stocks').query()
+    const total = await bfast.database(activeShop.projectId).table('stocks').query().count(true).find<number>();
+    const stocks = await bfast.database(activeShop.projectId).table('stocks').query()
       .skip(0)
       .size(total)
       .orderBy('product', 1)
@@ -90,7 +90,7 @@ export class StockService {
 
   async getAllStock(): Promise<StockModel[]> {
     const shop = await this.storageService.getActiveShop();
-    const total = await bfast.database().table('stocks').query().count(true).find<number>();
+    const total = await bfast.database(shop.projectId).table('stocks').query().count(true).find<number>();
     const stocks: StockModel[] = await BFast.database(shop.projectId)
       .collection<StockModel>('stocks')
       .query()

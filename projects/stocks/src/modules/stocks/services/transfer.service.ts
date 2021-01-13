@@ -59,7 +59,7 @@ export class TransferService {
 
   async searchByDate(date: string): Promise<TransferModel[]> {
     const activeShop = await this.storage.getActiveShop();
-    return BFast.database()
+    return BFast.database(activeShop.projectId)
       .collection(this.COLLECTION)
       .query()
       .searchByRegex('date', date)
