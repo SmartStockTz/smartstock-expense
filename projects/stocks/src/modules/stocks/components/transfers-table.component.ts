@@ -58,9 +58,9 @@ import {TransfersExportOptionsComponent} from './transfers-export-options.compon
                    [disabled]="(transferState.isFetchTransfers | async ) === true"
                    [showFirstLastButtons]="true"
                    [length]="transferState.totalTransfersItems | async"
-                   [pageSize]="20"
+                   [pageSize]="10"
                    (page)="loadPage($event)"
-                   [pageSizeOptions]="[20]">
+                   [pageSizeOptions]="[10]">
     </mat-paginator>
   `
 })
@@ -80,7 +80,7 @@ export class TransfersTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.transferState.fetch(20, 0);
+    this.transferState.fetch(10, 0);
     this.transferState.countAll();
   }
 

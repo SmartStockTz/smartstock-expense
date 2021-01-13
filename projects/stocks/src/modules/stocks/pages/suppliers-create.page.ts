@@ -9,10 +9,11 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
                                [leftDrawerOpened]="enoughWidth()">
       <ng-template #drawer>
         <smartstock-drawer></smartstock-drawer>
-      </ng-template>z
+      </ng-template>
+
       <ng-template #body>
         <div class="container">
-          <div class="container-fluid col-xl-9 col-lg-9 col-md-10 col-sm-11">
+          <div class="container col-lg-9 col-xl-9 col-sm-11 col-md-10 col-11">
             <smartstock-stock-supplier-create-form></smartstock-stock-supplier-create-form>
           </div>
         </div>

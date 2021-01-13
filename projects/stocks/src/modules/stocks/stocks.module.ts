@@ -78,6 +78,9 @@ import {CategoryCreatePage} from './pages/category-create.page';
 import {CategoryCreateFormComponent} from './components/category-create-form.component';
 import {CategoriesEditPage} from './pages/categories-edit.page';
 import {CategoryCreateFormBottomSheetComponent} from './components/category-create-form-bottom-sheet.component';
+import {CatalogCreatePage} from './pages/catalog-create.page';
+import {CatalogCreateFormComponent} from './components/catalog-create-form.component';
+import {CatalogEditPage} from './pages/catalog-edit.page';
 
 const routes: Routes = [
   {path: '', component: IndexPage},
@@ -88,6 +91,8 @@ const routes: Routes = [
   {path: 'categories/create', component: CategoryCreatePage},
   {path: 'categories/edit/:id', component: CategoriesEditPage},
   {path: 'catalogs', component: CatalogsPage},
+  {path: 'catalogs/create', component: CatalogCreatePage},
+  {path: 'catalogs/edit/:id', component: CatalogEditPage},
   {path: 'units', component: UnitsPage},
   {path: 'suppliers', component: SuppliersPage},
   {path: 'suppliers/create', component: SuppliersCreatePage},
@@ -141,6 +146,8 @@ const routes: Routes = [
   ],
   declarations: [
     SupplierCreateFormComponent,
+    CatalogCreateFormComponent,
+    CatalogEditPage,
     CategoriesEditPage,
     CategoryCreateFormBottomSheetComponent,
     CategoryCreatePage,
@@ -193,7 +200,8 @@ const routes: Routes = [
     ProductsTableSubActionsComponent,
     TransferCreateComponent,
     ProductSearchDialogComponent,
-    CategoryCreateFormComponent
+    CategoryCreateFormComponent,
+    CatalogCreatePage
   ],
 })
 export class StocksModule {

@@ -22,7 +22,7 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 
           <div class="container">
             <div class="row" style="margin: 40px 0">
-              <div class="full-width col-12">
+              <div class="container col-lg-9 col-xl-9 col-sm-11 col-md-10 col-11">
                 <smartstock-categories></smartstock-categories>
               </div>
             </div>

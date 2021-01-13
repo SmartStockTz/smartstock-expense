@@ -111,6 +111,7 @@ export class StockState {
 
   exportToExcel(): void {
     this.isExportToExcel.next(true);
+
     this.stockService.exportToExcel().then(value => {
       this.messageService.showMobileInfoMessage(
         'Stocks sent to your email, visit your email to download it', 1000, 'bottom');

@@ -5,7 +5,7 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
   selector: 'smartstock-stock-category-create',
   template: `
     <smartstock-layout-sidenav [leftDrawer]="drawer" [body]="body" [leftDrawerMode]="enoughWidth()?'side':'over'"
-                               heading="Create Category"
+                               heading="Create Catalog"
                                [leftDrawerOpened]="enoughWidth()">
       <ng-template #drawer>
         <smartstock-drawer></smartstock-drawer>
@@ -13,13 +13,13 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
       <ng-template #body>
         <div class="container">
           <div class="container col-lg-9 col-xl-9 col-sm-11 col-md-10 col-11">
-            <smartstock-stock-category-create-form></smartstock-stock-category-create-form>
+            <smartstock-stock-catalog-create-form></smartstock-stock-catalog-create-form>
           </div>
         </div>
       </ng-template>
     </smartstock-layout-sidenav>
   `
 })
-export class CategoryCreatePage extends DeviceInfoUtil {
+export class CatalogCreatePage extends DeviceInfoUtil {
 
 }

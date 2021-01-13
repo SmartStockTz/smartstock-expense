@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {Observable, of} from 'rxjs';
-import {StockState} from '../states/stock.state';
 import {MatDialog} from '@angular/material/dialog';
 import {DialogCatalogCreateComponent} from './dialog-catalog-create.component';
 import {CatalogService} from '../services/catalog.service';
@@ -11,23 +10,23 @@ import {CatalogService} from '../services/catalog.service';
   template: `
     <div [formGroup]="formGroup">
       <mat-form-field appearance="outline" class="my-input">
-        <mat-label>Catalogs</mat-label>
-        <mat-select [multiple]="true" formControlName="catalog">
-          <mat-option *ngFor="let category of catalogs | async" [value]="category.name">
-            {{category.name}}
+        <mat-label>{{label}}</mat-label>
+        <mat-select [multiple]="true" formControlName="{{name}}" >
+          <mat-option *ngFor="let catalog of catalogs | async" [value]="catalog">
+            {{catalog.name}}
           </mat-option>
         </mat-select>
-        <mat-progress-spinner matTooltip="Fetching units"
+        <mat-progress-spinner matTooltip="Fetching catalogs"
                               *ngIf="catalogsFetching" matSuffix color="accent"
                               mode="indeterminate"
                               [diameter]="20"></mat-progress-spinner>
-        <mat-error>Category required</mat-error>
+        <mat-error>Catalog required</mat-error>
         <div matSuffix class="d-flex flex-row">
-          <button (click)="refreshCategories($event)" mat-icon-button matTooltip="refresh categories"
+          <button (click)="refreshCategories($event)" mat-icon-button matTooltip="Refresh catalogs"
                   *ngIf="!catalogsFetching">
             <mat-icon>refresh</mat-icon>
           </button>
-          <button (click)="addNewCatalog($event)" mat-icon-button matTooltip="add new category"
+          <button (click)="addNewCatalog($event)" mat-icon-button matTooltip="Add new catalog"
                   *ngIf="!catalogsFetching">
             <mat-icon>add</mat-icon>
           </button>
@@ -40,6 +39,9 @@ export class CatalogFormFieldComponent implements OnInit {
   @Input() formGroup: FormGroup;
   catalogsFetching = true;
   catalogs: Observable<any[]>;
+  @Input() name = 'catalog';
+  @Input() label = 'Catalogs';
+  @Input() onlyParent = false;
 
   constructor(private readonly catalogService: CatalogService,
               private readonly dialog: MatDialog) {
@@ -51,9 +53,14 @@ export class CatalogFormFieldComponent implements OnInit {
 
   getCatalogs(): void {
     this.catalogsFetching = true;
-    this.catalogService.getAllCatalogs({size: 10000}).then(categoryObject => {
-      categoryObject.push({name: 'general'});
-      this.catalogs = of(categoryObject);
+    this.catalogService.getAllCatalogs({size: 10000}).then(catalogObject => {
+      if (this.onlyParent === true) {
+        catalogObject = catalogObject.filter(x => {
+          return x.child === false;
+        });
+      }
+      catalogObject.push({name: 'general'});
+      this.catalogs = of(catalogObject);
       this.catalogsFetching = false;
     }).catch(_ => {
       this.catalogs = of([{name: 'general'}]);

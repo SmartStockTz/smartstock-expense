@@ -18,12 +18,12 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
                             [sidenav]="sidenav" [showProgress]="false">
         </smartstock-toolbar>
 
-        <div>
-          <div class="container">
-            <div class="row" style="margin: 40px 0">
-              <div class="full-width col-12">
-                <smartstock-suppliers></smartstock-suppliers>
-              </div>
+        <div class="container">
+          <div class="container col-lg-9 col-xl-9 col-sm-11 col-md-10 col-11">
+            <div class="" style="margin: 40px 0">
+              <!--              <div >-->
+              <smartstock-suppliers></smartstock-suppliers>
+              <!--              </div>-->
             </div>
           </div>
         </div>

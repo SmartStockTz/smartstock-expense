@@ -4,21 +4,33 @@ import {UserService} from './user.service';
 import {StorageService} from '@smartstocktz/core-libs';
 import {CatalogModel} from '../models/catalog.model';
 import {BFast} from 'bfastjs';
-import {CategoryModel} from '../models/category.model';
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class CatalogService{
+export class CatalogService {
   constructor(private readonly httpClient: HttpClient,
               private readonly userService: UserService,
               private readonly storageService: StorageService) {
   }
 
-  async addCatalog(catalogModel: CatalogModel): Promise<any> {
+  async addCatalog(catalogModel: CatalogModel, inUpdateMode = null): Promise<any> {
     const shop = await this.storageService.getActiveShop();
-    return BFast.database(shop.projectId).collection<CategoryModel>('catalogs').save(catalogModel);
+    if (inUpdateMode) {
+      delete catalogModel.id;
+      delete catalogModel._id;
+      delete catalogModel.updatedAt;
+      delete catalogModel.createdAt;
+      return BFast.database(shop.projectId).collection('catalogs')
+        .query()
+        .byId(inUpdateMode)
+        .updateBuilder()
+        .doc(catalogModel)
+        .update();
+    } else {
+      return BFast.database(shop.projectId).collection<CatalogModel>('catalogs').save(catalogModel);
+    }
   }
 
   async deleteCatalog(catalog: CatalogModel): Promise<any> {
@@ -26,7 +38,7 @@ export class CatalogService{
     return BFast.database(shop.projectId).collection('catalogs').query().byId(catalog.id).delete();
   }
 
-  async getAllCatalogs(pagination: { size?: number, skip?: number }): Promise<CategoryModel[]> {
+  async getAllCatalogs(pagination: { size?: number, skip?: number }): Promise<CatalogModel[]> {
     const shop = await this.storageService.getActiveShop();
     return BFast.database(shop.projectId).collection('catalogs').getAll(null);
   }

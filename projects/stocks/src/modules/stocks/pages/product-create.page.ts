@@ -35,9 +35,9 @@ import {MetasModel} from '../models/metas.model';
 
             <div class="row d-flex justify-content-center align-items-center">
 
-              <div style="margin-bottom: 16px" class="col-12 col-xl-9 col-lg-9">
+              <div style="margin-bottom: 16px" class="col-11 col-xl-9 col-lg-9 col-md-10 col-sm-11">
 
-                <h2 style="padding: 0" class="col-12 col-xl-9 col-lg-9">
+                <h2 style="padding: 0" class="">
                   Image
                 </h2>
                 <mat-card>
@@ -55,7 +55,7 @@ import {MetasModel} from '../models/metas.model';
                   [parentForm]="productForm">
                 </smartstock-product-short-detail-form>
 
-                <mat-expansion-panel [expanded]="true" style="margin-top: 8px">
+                <mat-expansion-panel [expanded]="false" style="margin-top: 8px">
                   <mat-expansion-panel-header>
                     <h2 style="margin: 0">Advance Details</h2>
                   </mat-expansion-panel-header>
@@ -162,12 +162,9 @@ import {MetasModel} from '../models/metas.model';
                   <div style="height: 24px"></div>
                 </mat-expansion-panel>
 
-
               </div>
 
-
-              <div class="col-12 col-xl-9 col-lg-9" style="padding-bottom: 100px">
-
+              <div class="col-11 col-xl-9 col-lg-9 col-md-10 col-sm-11" style="padding-bottom: 100px">
                 <div>
                   <button class="btn-block ft-button" color="primary" mat-raised-button
                           [disabled]="mainProgress">
@@ -240,8 +237,8 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
       saleable: [stock && stock.saleable !== undefined ? stock.saleable : true],
       downloadable: [stock && stock.downloadable !== undefined ? stock.downloadable : false],
       downloads: [stock && stock.downloads ? stock.downloads : []],
-      stockable: [stock && stock.stockable !== undefined ? stock.stockable : true],
-      purchasable: [stock && stock.purchasable !== undefined ? stock.purchasable : true],
+      stockable: [stock && stock.stockable !== undefined ? stock.stockable : false],
+      purchasable: [stock && stock.purchasable !== undefined ? stock.purchasable : false],
       description: [stock && stock.description ? stock.description : ''],
       purchase: [stock && stock.purchase ? stock.purchase : 0, [Validators.nullValidator, Validators.required]],
       retailPrice: [stock && stock.retailPrice ? stock.retailPrice : 0, [Validators.nullValidator, Validators.required]],

@@ -4,18 +4,19 @@ import {MatMenuTrigger} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTableDataSource} from '@angular/material/table';
 import {FormBuilder, FormControl} from '@angular/forms';
-import {StockState} from '../states/stock.state';
 import {MatPaginator} from '@angular/material/paginator';
 import {DialogCatalogDeleteComponent} from './dialog-catalog-delete.component';
 import {CatalogModel} from '../models/catalog.model';
 import {DialogCatalogCreateComponent} from './dialog-catalog-create.component';
 import {CatalogService} from '../services/catalog.service';
+import {CatalogState} from '../states/catalog.state';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'smartstock-catalogs',
   template: `
     <mat-card-title class="d-flex flex-row">
-      <button (click)="openAddCatalogDialog()" color="primary" class="ft-button" mat-flat-button>
+      <button routerLink="/stock/catalogs/create" color="primary" class="ft-button" mat-flat-button>
         Add Catalog
       </button>
       <span class="toolbar-spacer"></span>
@@ -34,48 +35,23 @@ import {CatalogService} from '../services/catalog.service';
                [dataSource]="catalogsDatasource">
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Name</th>
-            <td class="editable" [matMenuTriggerFor]="nameMenu"
-                #nameMenuTrigger="matMenuTrigger"
-                [matMenuTriggerData]="{id: element.id, data: element.name}" matRipple mat-cell
+            <td class="editable" matRipple mat-cell
                 *matCellDef="let element">{{element.name}}
-              <mat-menu #nameMenu>
-                <ng-template matMenuContent let-id="id" let-data="data">
-                  <div (click)="$event.stopPropagation()" style="padding: 16px">
-                    <mat-form-field class="my-input" appearance="outline">
-                      <mat-label>Name</mat-label>
-                      <input [value]="data" [formControl]="nameFormControl" matInput>
-                    </mat-form-field>
-                    <button
-                      (click)="updateCatalogName({id: id, value: nameFormControl.value}, nameMenuTrigger)"
-                      mat-button>Update
-                    </button>
-                  </div>
-                </ng-template>
-              </mat-menu>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef>Description</th>
-            <td class="editable" [matMenuTriggerFor]="descriptionMenu"
-                #descriptionMenuTrigger="matMenuTrigger"
-                [matMenuTriggerData]="{id: element.id, data: element.description}" matRipple mat-cell
-                *matCellDef="let element">{{element.description}}
-              <mat-menu #descriptionMenu>
-                <ng-template style="padding: 16px" matMenuContent let-id="id" let-data="data">
-                  <div (click)="$event.stopPropagation()" style="padding: 16px">
-                    <mat-form-field class="my-input" appearance="outline">
-                      <mat-label>Description</mat-label>
-                      <textarea [value]="data" [formControl]="descriptionFormControl" matInput></textarea>
-                    </mat-form-field>
-                    <button
-                      (click)="updateCatalogDescription({id: id, value: descriptionFormControl.value},
-                     descriptionMenuTrigger)"
-                      mat-button>Update
-                    </button>
-                  </div>
-                </ng-template>
-              </mat-menu>
+            <td class="editable" matRipple mat-cell
+                *matCellDef="let element">
+              {{element.description}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="parents">
+            <th mat-header-cell *matHeaderCellDef>Parents</th>
+            <td class="editable" mat-cell *matCellDef="let element">
+              {{element.parents.length}}
             </td>
           </ng-container>
 
@@ -91,6 +67,9 @@ import {CatalogService} from '../services/catalog.service';
                   <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #opts>
+                  <button (click)="editCatalog(element)" mat-menu-item>
+                    Edit
+                  </button>
                   <button (click)="deleteCatalog(element)" mat-menu-item>
                     Delete
                   </button>
@@ -115,7 +94,7 @@ import {CatalogService} from '../services/catalog.service';
 export class CatalogsComponent implements OnInit {
   @ViewChild('matPaginator') matPaginator: MatPaginator;
   catalogsDatasource: MatTableDataSource<CatalogModel> = new MatTableDataSource<CatalogModel>([]);
-  catalogsTableColums = ['name', 'description', 'actions'];
+  catalogsTableColums = ['name', 'description', 'parents', 'actions'];
   catalogsArray: CatalogModel[] = [];
   fetchCategoriesFlag = false;
   nameFormControl = new FormControl();
@@ -124,6 +103,8 @@ export class CatalogsComponent implements OnInit {
   constructor(private readonly catalogService: CatalogService,
               private readonly formBuilder: FormBuilder,
               private readonly dialog: MatDialog,
+              private readonly catalogState: CatalogState,
+              private readonly router: Router,
               private readonly snack: MatSnackBar) {
   }
 
@@ -232,6 +213,12 @@ export class CatalogsComponent implements OnInit {
         this.catalogsArray.push(value);
         this.catalogsDatasource.data = this.catalogsArray;
       }
+    });
+  }
+
+  editCatalog(element: CatalogModel): void {
+    this.catalogState.selectedForEdit.next(element);
+    this.router.navigateByUrl('/stock/catalogs/edit/' + element.id).catch(_ => {
     });
   }
 }

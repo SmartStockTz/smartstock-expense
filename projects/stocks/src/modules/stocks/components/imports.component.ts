@@ -105,6 +105,7 @@ export class ImportsDialogComponent implements OnInit {
 tshirt,TRUE,FALSE,[],TRUE,TRUE,form six,8000,12000,10000,10,41,10,Pieces ,,male,gervas`);
 
   private static _sanitizeField(value: string): any {
+    value = value.replace(new RegExp('[-,]', 'ig'), '').trim();
     if (!isNaN(Number(value))) {
       return Number(value);
     }

@@ -9,15 +9,14 @@ import {MatPaginator} from '@angular/material/paginator';
 import {DialogCategoryDeleteComponent} from './dialog-category-delete.component';
 import {DialogCategoryCreateComponent} from './dialog-category-create.component';
 import {CategoryService} from '../services/category.service';
-import {SupplierModel} from "../models/supplier.model";
-import {Router} from "@angular/router";
-import {CategoryState} from "../states/category.state";
+import {Router} from '@angular/router';
+import {CategoryState} from '../states/category.state';
 
 @Component({
   selector: 'smartstock-categories',
   template: `
     <mat-card-title class="d-flex flex-row">
-      <button (click)="openAddCategoryDialog()" color="primary" class="ft-button" mat-flat-button>
+      <button routerLink="/stock/categories/create" color="primary" class="ft-button" mat-flat-button>
         Add Category
       </button>
       <span class="toolbar-spacer"></span>
@@ -36,48 +35,15 @@ import {CategoryState} from "../states/category.state";
                [dataSource]="categoriesDatasource">
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Name</th>
-            <td class="editable" [matMenuTriggerFor]="nameMenu"
-                #nameMenuTrigger="matMenuTrigger"
-                [matMenuTriggerData]="{id: element.id, data: element.name}" matRipple mat-cell
+            <td class="editable"  matRipple mat-cell
                 *matCellDef="let element">{{element.name}}
-              <mat-menu #nameMenu>
-                <ng-template matMenuContent let-id="id" let-data="data">
-                  <div (click)="$event.stopPropagation()" style="padding: 16px">
-                    <mat-form-field class="my-input" appearance="outline">
-                      <mat-label>Name</mat-label>
-                      <input [value]="data" [formControl]="nameFormControl" matInput>
-                    </mat-form-field>
-                    <button
-                      (click)="updateCategoryName({id: id, value: nameFormControl.value}, nameMenuTrigger)"
-                      mat-button>Update
-                    </button>
-                  </div>
-                </ng-template>
-              </mat-menu>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef>Description</th>
-            <td class="editable" [matMenuTriggerFor]="descriptionMenu"
-                #descriptionMenuTrigger="matMenuTrigger"
-                [matMenuTriggerData]="{id: element.id, data: element.description}" matRipple mat-cell
+            <td class="editable" matRipple mat-cell
                 *matCellDef="let element">{{element.description}}
-              <mat-menu #descriptionMenu>
-                <ng-template style="padding: 16px" matMenuContent let-id="id" let-data="data">
-                  <div (click)="$event.stopPropagation()" style="padding: 16px">
-                    <mat-form-field class="my-input" appearance="outline">
-                      <mat-label>Description</mat-label>
-                      <textarea [value]="data" [formControl]="descriptionFormControl" matInput></textarea>
-                    </mat-form-field>
-                    <button
-                      (click)="updateCategoryDescription({id: id, value: descriptionFormControl.value},
-                     descriptionMenuTrigger)"
-                      mat-button>Update
-                    </button>
-                  </div>
-                </ng-template>
-              </mat-menu>
             </td>
           </ng-container>
 

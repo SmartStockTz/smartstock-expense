@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {UserService} from './user.service';
 import {StorageService} from '@smartstocktz/core-libs';
-import {BFast} from 'bfastjs';
+import {bfast, BFast} from 'bfastjs';
 import {StockModel} from '../models/stock.model';
 
 @Injectable({
@@ -12,11 +12,44 @@ export class StockService {
   }
 
   async exportToExcel(): Promise<any> {
-    const user = await this.userService.currentUser();
-    const email = encodeURIComponent(user.email);
-    return BFast.functions()
-      .request('/functions/stocks/export/' + user.projectId + '/' + email)
-      .get({});
+    const activeShop = await this.storageService.getActiveShop();
+    const columns = [
+      'id',
+      'product',
+      'category',
+      'unit',
+      'quantity',
+      'retailPrice',
+      'wholesalePrice',
+      'wholesaleQuantity',
+      'purchase',
+      'expire',
+      'supplier'
+    ];
+    const total = await bfast.database().table('stocks').query().count(true).find<number>();
+    const stocks = await bfast.database().table('stocks').query()
+      .skip(0)
+      .size(total)
+      .orderBy('product', 1)
+      .find<StockModel[]>({
+        returnFields: columns
+      });
+    let csv = '';
+    csv = csv.concat(columns.join(',')).concat(',\n');
+    stocks.forEach(stock => {
+      columns.forEach(column => {
+        csv = csv.concat(stock[column] ? stock[column].toString().replace(new RegExp('[,-]', 'ig'), '') : '').concat(', ');
+      });
+      csv = csv.concat('\n');
+    });
+    const csvContent = 'data:text/csv;charset=utf-8,' + csv;
+    const url = encodeURI(csvContent);
+    const anchor = document.createElement('a');
+    anchor.setAttribute('style', 'display: none');
+    anchor.download = activeShop.businessName.concat('-stocks.csv').trim();
+    anchor.href = url;
+    anchor.click();
+    return csv;
   }
 
   async importStocks(stocks: StockModel[]): Promise<any> {
@@ -57,12 +90,14 @@ export class StockService {
 
   async getAllStock(): Promise<StockModel[]> {
     const shop = await this.storageService.getActiveShop();
+    const total = await bfast.database().table('stocks').query().count(true).find<number>();
     const stocks: StockModel[] = await BFast.database(shop.projectId)
       .collection<StockModel>('stocks')
-      .getAll<StockModel>(undefined, {
-        cacheEnable: false,
-        dtl: 0
-      });
+      .query()
+      .size(total)
+      .skip(0)
+      .orderBy('product', 1)
+      .find<StockModel[]>();
     await this.storageService.saveStocks(stocks as any);
     return stocks;
   }
