@@ -3,7 +3,7 @@ import {FormGroup} from '@angular/forms';
 import {Observable} from 'rxjs';
 
 @Component({
-  selector: 'smartstock-stock-generated-form-field',
+  selector: 'app-stock-generated-form-field',
   template: `
     <div [formGroup]="formGroup">
       <div [ngSwitch]="type" formGroupName="metas">

@@ -11,7 +11,7 @@ import {BehaviorSubject} from 'rxjs';
 import {MatBottomSheetRef} from '@angular/material/bottom-sheet';
 
 @Component({
-  selector: 'smartstock-stock-supplier-create-form',
+  selector: 'app-stock-supplier-create-form',
   template: `
     <div style="margin-bottom: 100px">
       <form class="d-flex flex-column" [formGroup]="newSupplierForm" (ngSubmit)="createSupplier()">
@@ -60,8 +60,8 @@ import {MatBottomSheetRef} from '@angular/material/bottom-sheet';
         <h2>
           Other Attributes
         </h2>
-        <smartstock-stock-metas-form-field [formGroup]="newSupplierForm"
-                                           [metas]="metasModel"></smartstock-stock-metas-form-field>
+        <app-stock-metas-form-field [formGroup]="newSupplierForm"
+                                           [metas]="metasModel"></app-stock-metas-form-field>
 
         <div style="height: 24px"></div>
 

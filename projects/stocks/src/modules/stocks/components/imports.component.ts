@@ -6,7 +6,7 @@ import {StockState} from '../states/stock.state';
 import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
-  selector: 'smartstock-upload-products',
+  selector: 'app-upload-products',
   template: `
     <div>
       <div class="d-flex flex-row align-items-center" mat-dialog-title>

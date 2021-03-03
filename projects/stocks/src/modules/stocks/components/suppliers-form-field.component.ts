@@ -7,7 +7,7 @@ import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {SupplierCreateFormBottomSheetComponent} from './supplier-create-form-bottom-sheet.component';
 
 @Component({
-  selector: 'smartstock-suppliers-form-field',
+  selector: 'app-suppliers-form-field',
   template: `
     <div [formGroup]="formGroup">
       <mat-form-field *ngIf="purchasable === true" appearance="outline"

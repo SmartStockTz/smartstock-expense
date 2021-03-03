@@ -6,7 +6,7 @@ import {StockState} from '../states/stock.state';
 import {ImportsDialogComponent} from './imports.component';
 
 @Component({
-  selector: 'smartstock-stock-products-table-actions',
+  selector: 'app-stock-products-table-actions',
   template: `
     <mat-card-title class="d-flex flex-row">
       <button routerLink="/stock/products/create" color="primary" class="ft-button" mat-flat-button>

@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {TransferState} from "../states/transfer.state";
 
 @Component({
-  selector: 'smartstock-stock-transfers-table-actions',
+  selector: 'app-stock-transfers-table-actions',
   template: `
     <mat-card-title class="d-flex flex-row">
       <button routerLink="/stock/transfers/create" color="primary" class="ft-button" mat-flat-button>

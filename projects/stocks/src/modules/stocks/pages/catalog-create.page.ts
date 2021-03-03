@@ -2,22 +2,22 @@ import {Component} from '@angular/core';
 import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 
 @Component({
-  selector: 'smartstock-stock-category-create',
+  selector: 'app-stock-category-create',
   template: `
-    <smartstock-layout-sidenav [leftDrawer]="drawer" [body]="body" [leftDrawerMode]="enoughWidth()?'side':'over'"
+    <app-layout-sidenav [leftDrawer]="drawer" [body]="body" [leftDrawerMode]="enoughWidth()?'side':'over'"
                                heading="Create Catalog"
                                [leftDrawerOpened]="enoughWidth()">
       <ng-template #drawer>
-        <smartstock-drawer></smartstock-drawer>
+        <app-drawer></app-drawer>
       </ng-template>
       <ng-template #body>
         <div class="container">
           <div class="container col-lg-9 col-xl-9 col-sm-11 col-md-10 col-11">
-            <smartstock-stock-catalog-create-form></smartstock-stock-catalog-create-form>
+            <app-stock-catalog-create-form></app-stock-catalog-create-form>
           </div>
         </div>
       </ng-template>
-    </smartstock-layout-sidenav>
+    </app-layout-sidenav>
   `
 })
 export class CatalogCreatePage extends DeviceInfoUtil {

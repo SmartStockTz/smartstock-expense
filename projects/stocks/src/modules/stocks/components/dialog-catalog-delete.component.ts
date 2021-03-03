@@ -4,7 +4,7 @@ import {StockState} from '../states/stock.state';
 import {CatalogService} from "../services/catalog.service";
 
 @Component({
-  selector: 'smartstock-catalog-dialog-delete',
+  selector: 'app-catalog-dialog-delete',
   template: `
     <div class="container">
       <div class="row">

@@ -9,7 +9,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {UnitsService} from '../services/units.service';
 
 @Component({
-  selector: 'smartstock-units',
+  selector: 'app-units',
   template: `
     <mat-card-title class="d-flex flex-row">
       <button (click)="openAddUnitDialog()" color="primary" class="ft-button" mat-flat-button>Add Unit</button>
@@ -244,7 +244,7 @@ export class UnitsComponent implements OnInit {
 }
 
 @Component({
-  selector: 'smartstock-dialog-delete',
+  selector: 'app-dialog-delete',
   template: `
     <div class="container">
       <div class="row">
@@ -303,7 +303,7 @@ export class DialogUnitDeleteComponent {
 
 
 @Component({
-  selector: 'smartstock-new-unit',
+  selector: 'app-new-unit',
   template: `
     <div style="min-width: 300px">
       <div mat-dialog-title>Create Unit</div>

@@ -13,7 +13,7 @@ import {Router} from '@angular/router';
 import {CategoryState} from '../states/category.state';
 
 @Component({
-  selector: 'smartstock-categories',
+  selector: 'app-categories',
   template: `
     <mat-card-title class="d-flex flex-row">
       <button routerLink="/stock/categories/create" color="primary" class="ft-button" mat-flat-button>

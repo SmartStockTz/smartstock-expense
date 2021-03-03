@@ -6,7 +6,7 @@
 // import {DialogCatalogCreateComponent} from "./dialog-catalog-create.component";
 //
 // @Component({
-//   selector: 'smartstock-catalogs-form-field',
+//   selector: 'app-catalogs-form-field',
 //   template: `
 //     <div [formGroup]="formGroup" *ngIf="parent">
 //       <mat-form-field appearance="outline" class="my-input">

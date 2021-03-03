@@ -9,7 +9,7 @@ import {CategoryCreateFormBottomSheetComponent} from "./category-create-form-bot
 import {MatBottomSheet} from "@angular/material/bottom-sheet";
 
 @Component({
-  selector: 'smartstock-category-form-field',
+  selector: 'app-category-form-field',
   template: `
     <div [formGroup]="formGroup">
       <mat-form-field appearance="outline" class="my-input">

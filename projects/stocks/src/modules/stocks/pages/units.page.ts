@@ -3,27 +3,27 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 
 
 @Component({
-  selector: 'smartstock-stock-units',
+  selector: 'app-stock-units',
   template: `
     <mat-sidenav-container class="match-parent">
       <mat-sidenav class="match-parent-side" [fixedInViewport]="true" #sidenav [mode]="enoughWidth()?'side':'over'"
                    [opened]="enoughWidth()">
-        <smartstock-drawer></smartstock-drawer>
+        <app-drawer></app-drawer>
       </mat-sidenav>
 
       <mat-sidenav-content (swiperight)="openDrawer(sidenav)">
 
-        <smartstock-toolbar [heading]="'Units'" [showSearch]="false"
+        <app-toolbar [heading]="'Units'" [showSearch]="false"
                             [searchPlaceholder]="'Type to search'"
                             [sidenav]="sidenav" [showProgress]="false">
-        </smartstock-toolbar>
+        </app-toolbar>
 
         <div class="container">
 
           <div class="container col-lg-9 col-xl-9 col-sm-11 col-md-10 col-11">
             <div style="margin: 40px 0">
               <!--              <div class="full-width col-12">-->
-              <smartstock-units></smartstock-units>
+              <app-units></app-units>
               <!--              </div>-->
             </div>
           </div>

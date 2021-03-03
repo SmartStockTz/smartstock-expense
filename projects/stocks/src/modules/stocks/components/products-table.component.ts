@@ -16,7 +16,7 @@ import {DialogDeleteComponent, StockDetailsComponent} from './stock.component';
 import {ImportsDialogComponent} from './imports.component';
 
 @Component({
-  selector: 'smartstock-stock-products-table',
+  selector: 'app-stock-products-table',
   template: `
     <table mat-table matSort [dataSource]="stockDatasource">
 

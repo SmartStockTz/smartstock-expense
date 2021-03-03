@@ -206,6 +206,5 @@ const routes: Routes = [
 })
 export class StocksModule {
   constructor() {
-    LibModule.start();
   }
 }

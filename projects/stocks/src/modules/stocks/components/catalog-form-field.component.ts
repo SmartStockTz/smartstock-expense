@@ -6,7 +6,7 @@ import {DialogCatalogCreateComponent} from './dialog-catalog-create.component';
 import {CatalogService} from '../services/catalog.service';
 
 @Component({
-  selector: 'smartstock-catalog-form-field',
+  selector: 'app-catalog-form-field',
   template: `
     <div [formGroup]="formGroup">
       <mat-form-field appearance="outline" class="my-input">

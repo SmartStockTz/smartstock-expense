@@ -6,7 +6,7 @@ import {DialogCategoryDeleteComponent} from './dialog-category-delete.component'
 import {CategoryService} from '../services/category.service';
 
 @Component({
-  selector: 'smartstock-new-category',
+  selector: 'app-new-category',
   template: `
     <div style="min-width: 300px">
       <div mat-dialog-title>Create Category</div>
@@ -34,7 +34,7 @@ import {CategoryService} from '../services/category.service';
 <!--            Close-->
 <!--          </button>-->
 <!--        </form>-->
-        <smartstock-stock-category-create-form></smartstock-stock-category-create-form>
+        <app-stock-category-create-form></app-stock-category-create-form>
       </div>
     </div>
   `

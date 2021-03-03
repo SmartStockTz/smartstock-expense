@@ -4,7 +4,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {FileBrowserDialogComponent, UserService} from '@smartstocktz/core-libs';
 
 @Component({
-  selector: 'smartstock-stock-downloadable',
+  selector: 'app-stock-downloadable',
   template: `
     <div style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; padding: 8px">
       <div *ngFor="let file of files; let i =index"

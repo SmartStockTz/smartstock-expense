@@ -13,7 +13,7 @@ import {CatalogState} from '../states/catalog.state';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'smartstock-catalogs',
+  selector: 'app-catalogs',
   template: `
     <mat-card-title class="d-flex flex-row">
       <button routerLink="/stock/catalogs/create" color="primary" class="ft-button" mat-flat-button>

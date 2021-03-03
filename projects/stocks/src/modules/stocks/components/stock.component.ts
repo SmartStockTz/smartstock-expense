@@ -5,7 +5,7 @@ import {StockModel} from '../models/stock.model';
 
 // @dynamic
 @Component({
-  selector: 'smartstock-stock-details',
+  selector: 'app-stock-details',
   template: `
     <div>
       <img style="max-width: 400px; height: auto" [src]="data.image" alt="">
@@ -43,7 +43,7 @@ export class StockDetailsComponent {
 
 // @dynamic
 @Component({
-  selector: 'smartstock-dialog-delete',
+  selector: 'app-dialog-delete',
   template: `
     <div class="container">
       <div class="row">

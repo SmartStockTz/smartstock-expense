@@ -4,7 +4,7 @@ import {MessageService, PrintService} from '@smartstocktz/core-libs';
 import {TransferModel} from '../models/transfer.model';
 // @dynamic
 @Component({
-  selector: 'smartstock-stock-transfers-export-options',
+  selector: 'app-stock-transfers-export-options',
   template: `
     <div style="display: flex; flex-direction: row">
       <div style="flex-grow: 1"></div>

@@ -5,7 +5,7 @@ import {StockState} from '../states/stock.state';
 import {DialogDeleteComponent} from './stock.component';
 
 @Component({
-  selector: 'smartstock-stock-products-table-sub-actions',
+  selector: 'app-stock-products-table-sub-actions',
   template: `
     <mat-card-subtitle>
       <button [disabled]="(stockState.isDeleteStocks | async)===true" mat-stroked-button mat-button

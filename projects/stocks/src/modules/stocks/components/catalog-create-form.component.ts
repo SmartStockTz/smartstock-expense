@@ -11,7 +11,7 @@ import {BehaviorSubject} from 'rxjs';
 import {MatBottomSheetRef} from '@angular/material/bottom-sheet';
 
 @Component({
-  selector: 'smartstock-stock-catalog-create-form',
+  selector: 'app-stock-catalog-create-form',
   template: `
     <div style="margin-bottom: 100px; margin-top: 16px">
       <form class="d-flex flex-column" [formGroup]="newCatalogForm" (ngSubmit)="createCatalog()">
@@ -50,22 +50,22 @@ import {MatBottomSheetRef} from '@angular/material/bottom-sheet';
             Is Child?
           </mat-checkbox>
 
-          <!--          <smartstock-units-form-field [stockable]="getIsParentFormControl().value === false"-->
+          <!--          <app-units-form-field [stockable]="getIsParentFormControl().value === false"-->
           <!--                                       [formGroup]="newCatalogForm">-->
-          <!--          </smartstock-units-form-field>-->
-          <smartstock-catalog-form-field *ngIf="getIsParentFormControl().value === true"
+          <!--          </app-units-form-field>-->
+          <app-catalog-form-field *ngIf="getIsParentFormControl().value === true"
                                          [name]="'parents'"
                                          [label]="'Select Parents'"
                                          [onlyParent]="true"
-                                         [formGroup]="newCatalogForm"></smartstock-catalog-form-field>
+                                         [formGroup]="newCatalogForm"></app-catalog-form-field>
 
         </mat-card>
 
         <h2>
           Other Attributes
         </h2>
-        <smartstock-stock-metas-form-field [formGroup]="newCatalogForm"
-                                           [metas]="metasModel"></smartstock-stock-metas-form-field>
+        <app-stock-metas-form-field [formGroup]="newCatalogForm"
+                                           [metas]="metasModel"></app-stock-metas-form-field>
 
         <div style="height: 24px"></div>
 

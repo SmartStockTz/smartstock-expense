@@ -3,7 +3,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {StockModel} from '../models/stock.model';
 
 @Component({
-  selector: 'smartstock-product-short-detail-form',
+  selector: 'app-product-short-detail-form',
   template: `
     <form [formGroup]="parentForm">
       <h2>
@@ -27,15 +27,15 @@ import {StockModel} from '../models/stock.model';
             <input min="0" matInput type="number" required formControlName="retailPrice">
             <mat-error>Sale price required</mat-error>
           </mat-form-field>
-          <smartstock-category-form-field [formGroup]="parentForm"></smartstock-category-form-field>
-          <smartstock-catalog-form-field [formGroup]="parentForm"></smartstock-catalog-form-field>
+          <app-category-form-field [formGroup]="parentForm"></app-category-form-field>
+          <app-catalog-form-field [formGroup]="parentForm"></app-catalog-form-field>
           <div class="d-flex align-items-center">
             <mat-checkbox style="margin-right: 5px" formControlName="downloadable"></mat-checkbox>
             <p style="margin: 0">Can be downloaded</p>
           </div>
           <div *ngIf="downloadAble" class="card-wrapper">
-            <smartstock-stock-downloadable [files]="isUpdateMode?initialStock.downloads:[]">
-            </smartstock-stock-downloadable>
+            <app-stock-downloadable [files]="isUpdateMode?initialStock.downloads:[]">
+            </app-stock-downloadable>
           </div>
         </mat-card-content>
       </mat-card>

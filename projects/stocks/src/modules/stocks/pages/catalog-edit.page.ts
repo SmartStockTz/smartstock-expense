@@ -4,23 +4,23 @@ import {CatalogState} from '../states/catalog.state';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'smartstock-stock-catalog-edit',
+  selector: 'app-stock-catalog-edit',
   template: `
-    <smartstock-layout-sidenav [leftDrawer]="drawer" [body]="body" [leftDrawerMode]="enoughWidth()?'side':'over'"
+    <app-layout-sidenav [leftDrawer]="drawer" [body]="body" [leftDrawerMode]="enoughWidth()?'side':'over'"
                                heading="Edit Catalog"
                                [leftDrawerOpened]="enoughWidth()">
       <ng-template #drawer>
-        <smartstock-drawer></smartstock-drawer>
+        <app-drawer></app-drawer>
       </ng-template>
       <ng-template #body>
         <div class="container">
           <div class="container col-lg-9 col-xl-9 col-sm-11 col-md-10 col-11">
-            <smartstock-stock-catalog-create-form
-              [catalog]="catalogState.selectedForEdit | async"></smartstock-stock-catalog-create-form>
+            <app-stock-catalog-create-form
+              [catalog]="catalogState.selectedForEdit | async"></app-stock-catalog-create-form>
           </div>
         </div>
       </ng-template>
-    </smartstock-layout-sidenav>
+    </app-layout-sidenav>
   `
 })
 export class CatalogEditPage extends DeviceInfoUtil implements OnDestroy, OnInit {

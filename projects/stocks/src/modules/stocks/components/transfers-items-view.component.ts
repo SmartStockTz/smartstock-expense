@@ -3,7 +3,7 @@ import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef} from '@angular/material/bottom
 import {TransferModel} from '../models/transfer.model';
 // @dynamic
 @Component({
-  selector: 'smartstock-stock-transfer-views',
+  selector: 'app-stock-transfer-views',
   template: `
     <div style="display: flex; flex-direction: row;">
       <div style="flex-grow: 1"></div>

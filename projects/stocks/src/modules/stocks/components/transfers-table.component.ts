@@ -10,7 +10,7 @@ import {TransfersItemsViewComponent} from './transfers-items-view.component';
 import {TransfersExportOptionsComponent} from './transfers-export-options.component';
 
 @Component({
-  selector: 'smartstock-stock-transfers-table',
+  selector: 'app-stock-transfers-table',
   template: `
     <table mat-table [dataSource]="transfersDatasource">
       <ng-container cdkColumnDef="date">

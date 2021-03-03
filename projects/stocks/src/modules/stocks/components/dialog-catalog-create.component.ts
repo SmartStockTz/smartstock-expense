@@ -5,7 +5,7 @@ import {MatDialogRef} from '@angular/material/dialog';
 import {CatalogService} from '../services/catalog.service';
 
 @Component({
-  selector: 'smartstock-new-catalog',
+  selector: 'app-new-catalog',
   template: `
     <div style="min-width: 300px">
       <div mat-dialog-title>Create Catalog</div>

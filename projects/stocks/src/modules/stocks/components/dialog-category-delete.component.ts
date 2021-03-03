@@ -3,7 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {CategoryService} from '../services/category.service';
 
 @Component({
-  selector: 'smartstock-dialog-delete',
+  selector: 'app-dialog-delete',
   template: `
     <div class="container">
       <div class="row">

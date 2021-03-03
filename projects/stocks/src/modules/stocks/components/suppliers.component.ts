@@ -10,7 +10,7 @@ import {SupplierState} from '../states/supplier.state';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'smartstock-suppliers',
+  selector: 'app-suppliers',
   template: `
     <mat-card-title class="d-flex flex-row">
       <button routerLink="/stock/suppliers/create" color="primary" class="ft-button" mat-flat-button>
@@ -186,7 +186,7 @@ export class SuppliersComponent implements OnInit {
 }
 
 @Component({
-  selector: 'smartstock-dialog-delete',
+  selector: 'app-dialog-delete',
   template: `
     <div class="container">
       <div class="row">

@@ -6,10 +6,10 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 import {StockState} from '../states/stock.state';
 
 @Component({
-  selector: 'smartstock-stock-edit',
+  selector: 'app-stock-edit',
   template: `
-    <smartstock-stock-new [isLoadingData]="loadStock" [isUpdateMode]="true"
-                          [initialStock]="stock"></smartstock-stock-new>
+    <app-stock-new [isLoadingData]="loadStock" [isUpdateMode]="true"
+                          [initialStock]="stock"></app-stock-new>
   `,
   styleUrls: ['../styles/edit.style.scss']
 })

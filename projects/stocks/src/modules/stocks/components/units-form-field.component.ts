@@ -6,7 +6,7 @@ import {DialogUnitNewComponent} from './units.component';
 import {UnitsService} from '../services/units.service';
 
 @Component({
-  selector: 'smartstock-units-form-field',
+  selector: 'app-units-form-field',
   template: `
     <div [formGroup]="formGroup" *ngIf="stockable">
       <mat-form-field appearance="outline" class="my-input">

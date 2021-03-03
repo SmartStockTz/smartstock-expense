@@ -10,7 +10,7 @@ import {StockModel} from '../models/stock.model';
 import {InfoDialogComponent} from './info-dialog.component';
 
 @Component({
-  selector: 'smartstock-stock-transfer-create-form',
+  selector: 'app-stock-transfer-create-form',
   template: `
     <div class="">
       <form *ngIf="transferFormGroup" [formGroup]="transferFormGroup" (ngSubmit)="saveTransfer()">

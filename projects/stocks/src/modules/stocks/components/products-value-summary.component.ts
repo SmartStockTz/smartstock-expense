@@ -4,9 +4,9 @@ import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
 @Component({
-  selector: 'smartstock-products-value-summary',
+  selector: 'app-products-value-summary',
   template: `
-    <smartstock-dash-card [description]="'non zeros stock values currently'"
+    <app-dash-card [description]="'non zeros stock values currently'"
                           [title]="'Current Stock Value'"
                           [content]="content">
       <ng-template #content>
@@ -19,7 +19,7 @@ import {takeUntil} from 'rxjs/operators';
                                 color="primary"></mat-progress-spinner>
         </div>
       </ng-template>
-    </smartstock-dash-card>
+    </app-dash-card>
   `
 })
 export class ProductsValueSummaryComponent implements OnInit, OnDestroy {

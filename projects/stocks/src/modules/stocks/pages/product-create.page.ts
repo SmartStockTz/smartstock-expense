@@ -10,7 +10,7 @@ import {StockService} from '../services/stock.service';
 import {MetasModel} from '../models/metas.model';
 
 @Component({
-  selector: 'smartstock-stock-new',
+  selector: 'app-stock-new',
   template: `
     <mat-sidenav-container class="match-parent">
       <mat-sidenav class="match-parent-side"
@@ -18,16 +18,16 @@ import {MetasModel} from '../models/metas.model';
                    #sidenav
                    [mode]="enoughWidth()?'side':'over'"
                    [opened]="enoughWidth()">
-        <smartstock-drawer></smartstock-drawer>
+        <app-drawer></app-drawer>
       </mat-sidenav>
 
       <mat-sidenav-content>
 
-        <smartstock-toolbar [heading]="isUpdateMode?'Update Product':'Create Product'"
+        <app-toolbar [heading]="isUpdateMode?'Update Product':'Create Product'"
                             [sidenav]="sidenav"
                             backLink="/stock/products"
                             [showProgress]="false">
-        </smartstock-toolbar>
+        </app-toolbar>
 
         <div class="container stock-new-wrapper">
           <form *ngIf="!isLoadingData" [formGroup]="productForm" #formElement="ngForm"
@@ -47,13 +47,13 @@ import {MetasModel} from '../models/metas.model';
                   </mat-card-actions>
                 </mat-card>
 
-                <smartstock-product-short-detail-form
+                <app-product-short-detail-form
                   [isUpdateMode]="isUpdateMode"
                   [initialStock]="initialStock"
                   [downloadAble]="getDownloadAbleFormControl().value===true"
                   [saleable]="getSaleableFormControl().value === true"
                   [parentForm]="productForm">
-                </smartstock-product-short-detail-form>
+                </app-product-short-detail-form>
 
                 <mat-expansion-panel [expanded]="false" style="margin-top: 8px">
                   <mat-expansion-panel-header>
@@ -128,12 +128,12 @@ import {MetasModel} from '../models/metas.model';
                         <mat-error>Reorder field required</mat-error>
                       </mat-form-field>
 
-                      <smartstock-suppliers-form-field [formGroup]="productForm"
+                      <app-suppliers-form-field [formGroup]="productForm"
                                                        [purchasable]="getPurchasableFormControl().value===true">
-                      </smartstock-suppliers-form-field>
-                      <smartstock-units-form-field [stockable]="getStockableFormControl().value === true"
+                      </app-suppliers-form-field>
+                      <app-units-form-field [stockable]="getStockableFormControl().value === true"
                                                    [formGroup]="productForm">
-                      </smartstock-units-form-field>
+                      </app-units-form-field>
 
                       <mat-checkbox matTooltip="Select if a product can expire" labelPosition="after"
                                     class="my-input"
@@ -157,8 +157,8 @@ import {MetasModel} from '../models/metas.model';
                   <mat-expansion-panel-header>
                     <h2 style="margin: 0">Other Attributes</h2>
                   </mat-expansion-panel-header>
-                  <smartstock-stock-metas-form-field [flat]="true" *ngIf="productForm" [formGroup]="productForm"
-                                                     [metas]="metasModel"></smartstock-stock-metas-form-field>
+                  <app-stock-metas-form-field [flat]="true" *ngIf="productForm" [formGroup]="productForm"
+                                                     [metas]="metasModel"></app-stock-metas-form-field>
                   <div style="height: 24px"></div>
                 </mat-expansion-panel>
 

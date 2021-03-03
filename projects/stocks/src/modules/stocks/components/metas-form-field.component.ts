@@ -4,18 +4,18 @@ import {MetasModel} from '../models/metas.model';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
-  selector: 'smartstock-stock-metas-form-field',
+  selector: 'app-stock-metas-form-field',
   template: `
     <mat-card [formGroup]="formGroup" class="{{flat?'mat-elevation-z0':''}}">
       <mat-card-content formGroupName="metas">
         <div *ngFor="let i = index; let meta of metas | async">
           <div style="display: flex; flex-wrap: nowrap">
-            <smartstock-stock-generated-form-field [label]="meta.name"
+            <app-stock-generated-form-field [label]="meta.name"
                                                    [formGroup]="formGroup"
                                                    [name]="meta.name"
                                                    style="flex-grow: 1"
                                                    [type]="meta.type">
-            </smartstock-stock-generated-form-field>
+            </app-stock-generated-form-field>
             <button (click)="removeAttributeToMeta($event, i, meta.value)" mat-icon-button>
               <mat-icon color="warn">delete</mat-icon>
             </button>
