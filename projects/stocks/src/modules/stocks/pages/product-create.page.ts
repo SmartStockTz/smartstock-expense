@@ -37,9 +37,9 @@ import {MetasModel} from '../models/metas.model';
 
               <div style="margin-bottom: 16px" class="col-11 col-xl-9 col-lg-9 col-md-10 col-sm-11">
 
-                <h2 style="padding: 0" class="">
+                <h4 style="padding: 0" class="">
                   Image
-                </h2>
+                </h4>
                 <mat-card>
                   <img mat-card-image [src]="productForm.value.image" alt="Product Image">
                   <mat-card-actions>
@@ -55,13 +55,13 @@ import {MetasModel} from '../models/metas.model';
                   [parentForm]="productForm">
                 </app-product-short-detail-form>
 
-                <mat-expansion-panel [expanded]="false" style="margin-top: 8px">
+                <mat-expansion-panel [expanded]="true" style="margin-top: 8px">
                   <mat-expansion-panel-header>
-                    <h2 style="margin: 0">Advance Details</h2>
+                    <h4 style="margin: 0">Advance Details</h4>
                   </mat-expansion-panel-header>
-                  <h2>
+                  <h4>
                     Status
-                  </h2>
+                  </h4>
                   <mat-card class="card-wrapper mat-elevation-z0">
                     <mat-list>
                       <mat-list-item>
@@ -82,9 +82,9 @@ import {MetasModel} from '../models/metas.model';
                     <mat-label>Description</mat-label>
                     <textarea placeholder="optional" matInput type="text" formControlName="description"></textarea>
                   </mat-form-field>
-                  <h2>
+                  <h4>
                     Inventory
-                  </h2>
+                  </h4>
                   <mat-card class="card-wrapper mat-elevation-z0">
                     <mat-card-content class="card-content">
                       <mat-form-field *ngIf="getPurchasableFormControl().value === true" appearance="fill"
@@ -155,7 +155,7 @@ import {MetasModel} from '../models/metas.model';
 
                 <mat-expansion-panel [expanded]="false" style="margin-top: 8px">
                   <mat-expansion-panel-header>
-                    <h2 style="margin: 0">Other Attributes</h2>
+                    <h4 style="margin: 0">Other Attributes</h4>
                   </mat-expansion-panel-header>
                   <app-stock-metas-form-field [flat]="true" *ngIf="productForm" [formGroup]="productForm"
                                                      [metas]="metasModel"></app-stock-metas-form-field>

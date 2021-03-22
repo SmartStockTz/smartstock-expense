@@ -161,21 +161,23 @@ tshirt,TRUE,FALSE,[],TRUE,TRUE,form six,8000,12000,10000,10,41,10,Pieces ,,male,
     for (let i = 1; i < lines.length; i++) {
       const obj = {};
       const currentline = lines[i].split(',');
-      for (let j = 0; j < headers.length; j++) {
-        const originalValue: string = currentline[j];
-        let value = originalValue.split('').map((value1, index, array) => {
-          if (index === 0 && value1 === '"') {
-            return '';
-          }
-          if (index === array.length - 1 && value1 === '"') {
-            return '';
-          }
-          return value1;
-        }).join('');
-        value = ImportsDialogComponent._sanitizeField(value);
-        obj[headers[j].toString().trim().split('"').join('')] = value;
+      if (currentline && Array.isArray(currentline) && currentline.length === headers.length){
+        for (let j = 0; j < headers.length; j++) {
+          const originalValue: string = currentline[j];
+          let value = originalValue.split('').map((value1, index, array) => {
+            if (index === 0 && value1 === '"') {
+              return '';
+            }
+            if (index === array.length - 1 && value1 === '"') {
+              return '';
+            }
+            return value1;
+          }).join('');
+          value = ImportsDialogComponent._sanitizeField(value);
+          obj[headers[j].toString().trim().split('"').join('')] = value;
+        }
+        result.push(obj);
       }
-      result.push(obj);
     }
     return result;
   }
