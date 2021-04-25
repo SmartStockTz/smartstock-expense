@@ -31,6 +31,7 @@ export class TransferPage extends DeviceInfoUtil implements OnInit {
 
   constructor() {
     super();
+    document.title = 'SmartStock - Stock Transfers';
   }
 
   ngOnInit(): void {

@@ -33,7 +33,7 @@ import {DialogUnitDeleteComponent, DialogUnitNewComponent, UnitsComponent} from 
 import {DialogSupplierDeleteComponent, SuppliersComponent} from './components/suppliers.component';
 import {ImportsDialogComponent} from './components/imports.component';
 import {CommonModule} from '@angular/common';
-import {LibModule} from '@smartstocktz/core-libs';
+import {ConfigsService, LibModule} from '@smartstocktz/core-libs';
 import {CategoryFormFieldComponent} from './components/category-form-field.component';
 import {SuppliersFormFieldComponent} from './components/suppliers-form-field.component';
 import {UnitsFormFieldComponent} from './components/units-form-field.component';
@@ -83,7 +83,7 @@ import {CatalogCreateFormComponent} from './components/catalog-create-form.compo
 import {CatalogEditPage} from './pages/catalog-edit.page';
 
 const routes: Routes = [
-  {path: '', component: IndexPage},
+  {path: '', component: ProductsPage},
   {path: 'products', component: ProductsPage},
   {path: 'products/create', component: CreatePageComponent},
   {path: 'products/edit/:id', component: EditPageComponent},
@@ -205,6 +205,44 @@ const routes: Routes = [
   ],
 })
 export class StocksModule {
-  constructor() {
+  constructor(private readonly configs: ConfigsService) {
+    this.configs.addMenu({
+      name: 'Stock',
+      icon: 'store',
+      roles: ['admin', 'manager'],
+      pages: [
+        {
+          name: 'products',
+          link: '/stock/products',
+          roles: ['admin', 'manager']
+        },
+        {
+          name: 'categories',
+          link: '/stock/categories',
+          roles: ['admin', 'manager']
+        },
+        {
+          name: 'catalogs',
+          link: '/stock/catalogs',
+          roles: ['admin', 'manager']
+        },
+        {
+          name: 'units',
+          link: '/stock/units',
+          roles: ['admin', 'manager']
+        },
+        {
+          name: 'suppliers',
+          link: '/stock/suppliers',
+          roles: ['admin', 'manager']
+        },
+        {
+          name: 'transfers',
+          link: '/stock/transfers',
+          roles: ['admin', 'manager']
+        }
+      ]
+    });
+    this.configs.selectedModuleName = 'stock';
   }
 }

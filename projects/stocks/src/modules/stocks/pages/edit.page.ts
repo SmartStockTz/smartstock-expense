@@ -22,6 +22,7 @@ export class EditPageComponent extends DeviceInfoUtil implements OnInit {
               private readonly router: Router,
               private readonly snack: MatSnackBar) {
     super();
+    document.title = 'SmartStock - Product Edit';
   }
 
   ngOnInit(): void {

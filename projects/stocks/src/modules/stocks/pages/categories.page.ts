@@ -39,6 +39,7 @@ export class CategoriesPage extends DeviceInfoUtil implements OnInit, OnDestroy 
 
   constructor() {
     super();
+    document.title = 'SmartStock - Categories';
   }
 
   ngOnInit(): void {

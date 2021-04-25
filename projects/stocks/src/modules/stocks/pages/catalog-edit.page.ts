@@ -7,8 +7,8 @@ import {Router} from '@angular/router';
   selector: 'app-stock-catalog-edit',
   template: `
     <app-layout-sidenav [leftDrawer]="drawer" [body]="body" [leftDrawerMode]="enoughWidth()?'side':'over'"
-                               heading="Edit Catalog"
-                               [leftDrawerOpened]="enoughWidth()">
+                        heading="Edit Catalog"
+                        [leftDrawerOpened]="enoughWidth()">
       <ng-template #drawer>
         <app-drawer></app-drawer>
       </ng-template>
@@ -27,6 +27,7 @@ export class CatalogEditPage extends DeviceInfoUtil implements OnDestroy, OnInit
   constructor(public readonly catalogState: CatalogState,
               private readonly router: Router) {
     super();
+    document.title = 'SmartStock - Catalog Edit';
   }
 
   ngOnDestroy(): void {

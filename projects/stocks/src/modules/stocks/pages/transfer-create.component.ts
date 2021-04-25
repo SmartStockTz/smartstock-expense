@@ -29,6 +29,7 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 export class TransferCreateComponent extends DeviceInfoUtil implements OnInit {
   constructor() {
     super();
+    document.title = 'SmartStock - Stock Transfers Create';
   }
 
   ngOnInit(): void {

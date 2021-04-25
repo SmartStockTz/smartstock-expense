@@ -14,8 +14,8 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
       <mat-sidenav-content (swiperight)="openDrawer(sidenav)">
 
         <app-toolbar [heading]="'Catalogs'" [showSearch]="false"
-                            [searchPlaceholder]="'Type to search'"
-                            [sidenav]="sidenav" [showProgress]="false">
+                     [searchPlaceholder]="'Type to search'"
+                     [sidenav]="sidenav" [showProgress]="false">
         </app-toolbar>
 
         <div>
@@ -39,6 +39,7 @@ export class CatalogsPage extends DeviceInfoUtil implements OnInit, OnDestroy {
 
   constructor() {
     super();
+    document.title = 'SmartStock - Catalogs';
   }
 
   ngOnInit(): void {

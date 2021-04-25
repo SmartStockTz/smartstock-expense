@@ -27,6 +27,7 @@ export class SuppliersEditPage extends DeviceInfoUtil implements OnDestroy, OnIn
   constructor(public readonly supplierState: SupplierState,
               private readonly router: Router) {
     super();
+    document.title = 'SmartStock - Supplier Edit';
   }
 
   ngOnDestroy(): void {

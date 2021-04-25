@@ -27,6 +27,7 @@ export class CategoriesEditPage extends DeviceInfoUtil implements OnDestroy, OnI
   constructor(public readonly categoryState: CategoryState,
               private readonly router: Router) {
     super();
+    document.title = 'SmartStock - Category Edit';
   }
 
   ngOnDestroy(): void {

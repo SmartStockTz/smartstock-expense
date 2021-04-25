@@ -78,6 +78,7 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
 
   constructor(private readonly stockState: StockState) {
     super();
+    document.title = 'SmartStock - Stocks';
   }
 
   ngOnInit(): void {

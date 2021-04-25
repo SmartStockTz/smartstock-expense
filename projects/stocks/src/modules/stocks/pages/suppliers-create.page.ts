@@ -22,5 +22,8 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
   `
 })
 export class SuppliersCreatePage extends DeviceInfoUtil {
-
+  constructor() {
+    super();
+    document.title = 'SmartStock - Supplier Create';
+  }
 }

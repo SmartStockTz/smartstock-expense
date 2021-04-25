@@ -5,8 +5,8 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
   selector: 'app-stock-category-create',
   template: `
     <app-layout-sidenav [leftDrawer]="drawer" [body]="body" [leftDrawerMode]="enoughWidth()?'side':'over'"
-                               heading="Create Catalog"
-                               [leftDrawerOpened]="enoughWidth()">
+                        heading="Create Catalog"
+                        [leftDrawerOpened]="enoughWidth()">
       <ng-template #drawer>
         <app-drawer></app-drawer>
       </ng-template>
@@ -21,5 +21,8 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
   `
 })
 export class CatalogCreatePage extends DeviceInfoUtil {
-
+  constructor() {
+    super();
+    document.title = 'SmartStock - Catalog Create';
+  }
 }

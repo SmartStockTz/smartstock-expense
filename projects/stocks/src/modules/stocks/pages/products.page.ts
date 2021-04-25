@@ -43,6 +43,7 @@ export class ProductsPage extends DeviceInfoUtil implements OnInit {
 
   constructor(public readonly stockState: StockState) {
     super();
+    document.title = 'SmartStock - Products';
   }
 
   ngOnInit(): void {

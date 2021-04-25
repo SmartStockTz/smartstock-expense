@@ -213,6 +213,7 @@ export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
               private readonly storageService: StorageService,
               private readonly stockService: StockService) {
     super();
+    document.title = 'SmartStock - Product Create';
   }
 
   ngOnInit(): void {

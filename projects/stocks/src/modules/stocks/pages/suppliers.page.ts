@@ -38,6 +38,7 @@ export class SuppliersPage extends DeviceInfoUtil implements OnInit, OnDestroy {
 
   constructor() {
     super();
+    document.title = 'SmartStock - Suppliers';
   }
 
   ngOnInit(): void {
