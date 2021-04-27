@@ -208,6 +208,7 @@ export class StocksModule {
   constructor(private readonly configs: ConfigsService) {
     this.configs.addMenu({
       name: 'Stock',
+      link: '/stock',
       icon: 'store',
       roles: ['admin', 'manager'],
       pages: [
