@@ -114,7 +114,9 @@ export class StockService {
                 _id: x
               };
             })
-          }
+          },
+          size: stocksId.length,
+          skip: 0
         }
       })
       .commit();
