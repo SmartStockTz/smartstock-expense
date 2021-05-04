@@ -81,9 +81,16 @@ import {CategoryCreateFormBottomSheetComponent} from './components/category-crea
 import {CatalogCreatePage} from './pages/catalog-create.page';
 import {CatalogCreateFormComponent} from './components/catalog-create-form.component';
 import {CatalogEditPage} from './pages/catalog-edit.page';
+import {StorePage} from './pages/store.page';
+import {StoreInPage} from "./pages/store-in.page";
+import {StoreOutPage} from "./pages/store-out.page";
 
 const routes: Routes = [
-  {path: '', component: ProductsPage},
+  {path: '', component: IndexPage},
+  {path: 'store', component: StorePage},
+  {path: 'store/in', component: StoreInPage},
+  {path: 'store/out', component: StoreOutPage},
+  {path: 'store/report', component: CreatePageComponent},
   {path: 'products', component: ProductsPage},
   {path: 'products/create', component: CreatePageComponent},
   {path: 'products/edit/:id', component: EditPageComponent},
@@ -201,49 +208,42 @@ const routes: Routes = [
     TransferCreateComponent,
     ProductSearchDialogComponent,
     CategoryCreateFormComponent,
-    CatalogCreatePage
+    CatalogCreatePage,
+    StorePage,
+    StoreInPage,
+    StoreOutPage,
   ],
 })
 export class StocksModule {
   constructor(private readonly configs: ConfigsService) {
     this.configs.addMenu({
-      name: 'Stock',
-      link: '/stock',
+      name: 'Store',
+      link: '/',
       icon: 'store',
       roles: ['admin', 'manager'],
       pages: [
         {
-          name: 'products',
-          link: '/stock/products',
+          name: 'store',
+          link: '/store',
+          roles: ['admin', 'manager']
+        },
+        {
+          name: 'store in',
+          link: '/store/in',
+          roles: ['admin', 'manager']
+        },
+        {
+          name: 'store out',
+          link: '/store/out',
           roles: ['admin', 'manager']
         },
         {
           name: 'categories',
-          link: '/stock/categories',
-          roles: ['admin', 'manager']
-        },
-        {
-          name: 'catalogs',
-          link: '/stock/catalogs',
-          roles: ['admin', 'manager']
-        },
-        {
-          name: 'units',
-          link: '/stock/units',
-          roles: ['admin', 'manager']
-        },
-        {
-          name: 'suppliers',
-          link: '/stock/suppliers',
-          roles: ['admin', 'manager']
-        },
-        {
-          name: 'transfers',
-          link: '/stock/transfers',
+          link: '/store/categories',
           roles: ['admin', 'manager']
         }
       ]
     });
-    this.configs.selectedModuleName = 'stock';
+    this.configs.selectedModuleName = 'store';
   }
 }

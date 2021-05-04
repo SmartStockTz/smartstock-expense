@@ -10,7 +10,7 @@ import {StockService} from '../services/stock.service';
 import {MetasModel} from '../models/metas.model';
 
 @Component({
-  selector: 'app-stock-new',
+  selector: 'app-store-in',
   template: `
     <mat-sidenav-container class="match-parent">
       <mat-sidenav class="match-parent-side"
@@ -47,115 +47,36 @@ import {MetasModel} from '../models/metas.model';
                   </mat-card-actions>
                 </mat-card>
 
-                <app-product-short-detail-form
-                  [isUpdateMode]="isUpdateMode"
-                  [initialStock]="initialStock"
-                  [downloadAble]="getDownloadAbleFormControl().value===true"
-                  [saleable]="getSaleableFormControl().value === true"
-                  [parentForm]="productForm">
-                </app-product-short-detail-form>
 
-                <mat-expansion-panel [expanded]="true" style="margin-top: 8px">
-<!--                  <mat-card class="card-wrapper mat-elevation-z0">-->
-<!--                    <mat-list>-->
-<!--                      <mat-list-item>-->
-<!--                        <p matLine>Can be sold</p>-->
-<!--                        <mat-checkbox formControlName="saleable" matSuffix></mat-checkbox>-->
-<!--                      </mat-list-item>-->
-<!--                      <mat-list-item>-->
-<!--                        <p matLine>Can be stocked</p>-->
-<!--                        <mat-checkbox formControlName="stockable" matSuffix></mat-checkbox>-->
-<!--                      </mat-list-item>-->
-<!--                      <mat-list-item>-->
-<!--                        <p matLine>Can be purchased</p>-->
-<!--                        <mat-checkbox formControlName="purchasable" matSuffix></mat-checkbox>-->
-<!--                      </mat-list-item>-->
-<!--                    </mat-list>-->
-<!--                  </mat-card>-->
-                  <mat-form-field appearance="fill" class="my-input">
-                    <mat-label>Description</mat-label>
-                    <textarea placeholder="optional" matInput type="text" formControlName="description"></textarea>
+                <mat-expansion-panel [expanded]="true" class="my-4 pt-4">
+
+                  <mat-form-field appearance="outline" class="my-input">
+                    <mat-label>Tag</mat-label>
+                    <input matInput type="text" required formControlName="product">
+                    <mat-error>Tag required</mat-error>
                   </mat-form-field>
-                  <mat-card class="card-wrapper mat-elevation-z0">
-                    <mat-card-content class="card-content">
-                      <mat-form-field appearance="fill"
-                                      class="my-input">
-                        <mat-label>Purchase Price / Unit</mat-label>
-                        <span matSuffix>TZS</span>
-                        <input min="0" matInput type="number" required formControlName="purchase">
-                        <mat-error>Purchase price required</mat-error>
-                      </mat-form-field>
-
-<!--                      <mat-form-field *ngIf="getSaleableFormControl().value === true" appearance="fill"-->
-<!--                                      class="my-input">-->
-<!--                        <mat-label>Wholesale Price / Unit</mat-label>-->
-<!--                        <span matSuffix>TZS</span>-->
-<!--                        <input min="0" matInput type="number" required formControlName="wholesalePrice">-->
-<!--                        <mat-error>Wholesale price required</mat-error>-->
-<!--                      </mat-form-field>-->
-
-                      <mat-form-field appearance="fill" class="my-input"
-                                      matTooltip="Quantity for this product to be sold as a whole or in bulk">
-                        <mat-label>Wholesale Quantity</mat-label>
-                        <input min="0" matInput
-                               type="number"
-                               required formControlName="wholesaleQuantity">
-                        <mat-error>Wholesale Quantity required</mat-error>
-                      </mat-form-field>
-
-<!--                      <mat-form-field *ngIf="getStockableFormControl().value === true" appearance="fill"-->
-<!--                                      class="my-input"-->
-<!--                                      matTooltip="Total initial unit quantity available">-->
-<!--                        <mat-label>Initial Stock Quantity</mat-label>-->
-<!--                        <input min="0" matInput type="number" required-->
-<!--                               formControlName="quantity">-->
-<!--                        <mat-error>Initial Stock Quantity required</mat-error>-->
-<!--                      </mat-form-field>-->
-
-<!--                      <mat-form-field *ngIf="getStockableFormControl().value === true" appearance="fill"-->
-<!--                                      class="my-input">-->
-<!--                        <mat-label>Reorder Level</mat-label>-->
-<!--                        <input min="0" matInput type="number" required formControlName="reorder">-->
-<!--                        <mat-error>Reorder field required</mat-error>-->
-<!--                      </mat-form-field>-->
-
-<!--                      <app-suppliers-form-field [formGroup]="productForm"-->
-<!--                                                       [purchasable]="getPurchasableFormControl().value===true">-->
-<!--                      </app-suppliers-form-field>-->
-<!--                      <app-units-form-field [stockable]="getStockableFormControl().value === true"-->
-<!--                                                   [formGroup]="productForm">-->
-<!--                      </app-units-form-field>-->
-
-                      <mat-checkbox matTooltip="Select if a product can expire" labelPosition="after"
-                                    class="my-input"
-                                    formControlName="canExpire">
-                        Can Expire?
-                      </mat-checkbox>
-
-                      <mat-form-field *ngIf="getCanExpireFormControl().value === true" appearance="outline"
-                                      class="my-input">
-                        <mat-label>Expire Date</mat-label>
-                        <input matInput [matDatepicker]="picker" formControlName="expire">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker [touchUi]="true" #picker></mat-datepicker>
-                      </mat-form-field>
-
-                    </mat-card-content>
-                  </mat-card>
+                  <mat-form-field appearance="outline" class="my-input">
+                    <mat-label>Quantity</mat-label>
+                    <input min="0" matInput
+                           type="number"
+                           required formControlName="wholesaleQuantity">
+                    <mat-error>Quantity required</mat-error>
+                  </mat-form-field>
+                  <app-category-form-field [formGroup]="productForm"></app-category-form-field>
                 </mat-expansion-panel>
 
-                <mat-expansion-panel [expanded]="false" style="margin-top: 8px">
-                  <mat-expansion-panel-header>
-                    <h4 style="margin: 0">Other Attributes</h4>
-                  </mat-expansion-panel-header>
-                  <app-stock-metas-form-field [flat]="true" *ngIf="productForm" [formGroup]="productForm"
-                                                     [metas]="metasModel"></app-stock-metas-form-field>
-                  <div style="height: 24px"></div>
-                </mat-expansion-panel>
+<!--                <mat-expansion-panel [expanded]="false" style="margin-top: 8px">-->
+<!--                  <mat-expansion-panel-header>-->
+<!--                    <h4 style="margin: 0">Other Attributes</h4>-->
+<!--                  </mat-expansion-panel-header>-->
+<!--                  <app-stock-metas-form-field [flat]="true" *ngIf="productForm" [formGroup]="productForm"-->
+<!--                                                     [metas]="metasModel"></app-stock-metas-form-field>-->
+<!--                  <div style="height: 24px"></div>-->
+<!--                </mat-expansion-panel>-->
 
               </div>
 
-              <div class="col-11 col-xl-9 col-lg-9 col-md-10 col-sm-11" style="padding-bottom: 100px">
+              <div class="col-11 col-sm-6" style="padding-bottom: 100px">
                 <div>
                   <button class="btn-block ft-button" color="primary" mat-raised-button
                           [disabled]="mainProgress">
@@ -181,7 +102,7 @@ import {MetasModel} from '../models/metas.model';
   `,
   styleUrls: ['../styles/create.style.scss']
 })
-export class CreatePageComponent extends DeviceInfoUtil implements OnInit {
+export class StoreInPage extends DeviceInfoUtil implements OnInit {
 
   @Input() isUpdateMode = false;
   @Input() initialStock: StockModel;

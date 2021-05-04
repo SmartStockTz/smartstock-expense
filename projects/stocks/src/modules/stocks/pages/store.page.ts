@@ -4,7 +4,7 @@ import {StockState} from '../states/stock.state';
 
 
 @Component({
-  selector: 'app-stock-products',
+  selector: 'app-store',
   template: `
     <mat-sidenav-container class="match-parent">
       <mat-sidenav class="match-parent-side" [fixedInViewport]="true" #sidenav [mode]="enoughWidth()?'side':'over'"
@@ -39,7 +39,7 @@ import {StockState} from '../states/stock.state';
   `,
   styleUrls: ['../styles/stock.style.scss']
 })
-export class ProductsPage extends DeviceInfoUtil implements OnInit {
+export class StorePage extends DeviceInfoUtil implements OnInit {
 
   constructor(public readonly stockState: StockState) {
     super();

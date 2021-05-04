@@ -21,29 +21,28 @@ import {ImportsDialogComponent} from './imports.component';
     <table mat-table matSort [dataSource]="stockDatasource">
 
 
-      <ng-container matColumnDef="select">
-        <th mat-header-cell *matHeaderCellDef>
-          <mat-checkbox (change)="$event ? masterToggle() : null"
-                        [checked]="stockState.selection.hasValue() && isAllSelected()"
-                        [indeterminate]="stockState.selection.hasValue() && !isAllSelected()">
-          </mat-checkbox>
-        </th>
-        <td mat-cell *matCellDef="let row">
-          <mat-checkbox (click)="$event.stopPropagation()"
-                        (change)="$event ? stockState.selection.toggle(row) : null"
-                        [checked]="stockState.selection.isSelected(row)">
-          </mat-checkbox>
-        </td>
-        <td mat-footer-cell *matFooterCellDef>
-          TOTAL
-        </td>
-      </ng-container>
+<!--      <ng-container matColumnDef="select">-->
+<!--        <th mat-header-cell *matHeaderCellDef>-->
+<!--          <mat-checkbox (change)="$event ? masterToggle() : null"-->
+<!--                        [checked]="stockState.selection.hasValue() && isAllSelected()"-->
+<!--                        [indeterminate]="stockState.selection.hasValue() && !isAllSelected()">-->
+<!--          </mat-checkbox>-->
+<!--        </th>-->
+<!--        <td mat-cell *matCellDef="let row">-->
+<!--          <mat-checkbox (click)="$event.stopPropagation()"-->
+<!--                        (change)="$event ? stockState.selection.toggle(row) : null"-->
+<!--                        [checked]="stockState.selection.isSelected(row)">-->
+<!--          </mat-checkbox>-->
+<!--        </td>-->
+<!--        <td mat-footer-cell *matFooterCellDef>-->
+<!--          TOTAL-->
+<!--        </td>-->
+<!--      </ng-container>-->
 
 
-      <ng-container matColumnDef="product">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
+      <ng-container matColumnDef="tag">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Tag</th>
         <td mat-cell *matCellDef="let element">{{element.product}}</td>
-        <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>
 
 
@@ -52,35 +51,20 @@ import {ImportsDialogComponent} from './imports.component';
         <td mat-cell *matCellDef="let element">
           {{element.stockable ? (element.quantity | number) : 'N/A'}}
         </td>
-        <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>
 
-      <ng-container matColumnDef="purchase">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Purchase Price</th>
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
         <td mat-cell *matCellDef="let element">
           {{element.purchasable ? (element.purchase | number) : 'N/A'}}
         </td>
-        <td mat-footer-cell *matFooterCellDef="let element">
-          {{productValue() | number}}
-        </td>
       </ng-container>
-
-      <ng-container matColumnDef="retailPrice">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Sale Pice</th>
-        <td matRipple mat-cell *matCellDef="let element">
-          {{element.saleable ? (element.retailPrice | number) : 'N/A'}}
-        </td>
-        <td mat-footer-cell *matFooterCellDef></td>
-      </ng-container>
-
-      <ng-container matColumnDef="wholesalePrice">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>WholeSale Price</th>
+      <ng-container matColumnDef="date-in">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date In</th>
         <td mat-cell *matCellDef="let element">
-          {{element.saleable ? (element.wholesalePrice | number) : 'N/A'}}
+          {{element.purchasable ? (element.purchase | number) : 'N/A'}}
         </td>
-        <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>
-
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef>
           <div class="d-flex flex-row justify-content-end align-items-end">
@@ -105,12 +89,10 @@ import {ImportsDialogComponent} from './imports.component';
             </mat-menu>
           </div>
         </td>
-        <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="stockColumns"></tr>
-      <tr class="table-data-row" mat-row *matRowDef="let row; columns: stockColumns;"></tr>
-      <tr mat-footer-row style="font-size: 36px" *matFooterRowDef="stockColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="storeColumns"></tr>
+      <tr class="table-data-row" mat-row *matRowDef="let row; columns: storeColumns;"></tr>
     </table>
     <mat-paginator #paginator pageSize="10" [pageSizeOptions]="[5,10, 20, 100]"
                    showFirstLastButtons></mat-paginator>
@@ -137,7 +119,7 @@ export class ProductsTableComponent implements OnInit, OnDestroy, AfterViewInit 
 
   totalPurchase: Observable<number> = of(0);
   stockDatasource: MatTableDataSource<StockModel> = new MatTableDataSource<StockModel>([]);
-  stockColumns = ['select', 'product', 'quantity', 'purchase', 'retailPrice', 'wholesalePrice', 'action'];
+  storeColumns = ['tag', 'quantity', 'category', 'date-in', 'action'];
   @ViewChild('sidenav') sidenav: MatSidenav;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) matSort: MatSort;

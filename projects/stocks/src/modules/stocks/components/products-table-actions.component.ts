@@ -9,8 +9,8 @@ import {ImportsDialogComponent} from './imports.component';
   selector: 'app-stock-products-table-actions',
   template: `
     <mat-card-title class="d-flex flex-row">
-      <button routerLink="/stock/products/create" color="primary" class="ft-button" mat-flat-button>
-        Add Product
+      <button routerLink="/store/in" color="primary" class="ft-button" mat-flat-button>
+        Store In
       </button>
       <span class="toolbar-spacer"></span>
       <span style="width: 8px; height: 8px"></span>
