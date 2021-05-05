@@ -1,66 +1,77 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef} from '@angular/material/bottom-sheet';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Component, OnInit} from '@angular/core';
+import {MatDialogRef} from '@angular/material/dialog';
+import {StockState} from '../states/stock.state';
+import {FormControl} from '@angular/forms';
 import {StockModel} from '../models/stock.model';
-import {Observable} from 'rxjs';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {MatTableDataSource} from '@angular/material/table';
+import {debounceTime} from 'rxjs/operators';
 
-// @dynamic
 @Component({
-  selector: 'app-store-out-search',
+  selector: 'app-stock-products-search-dialog',
   template: `
-  `
+    <div>
+      <div mat-dialog-title>
+        <div style="display: flex; flex-direction: row; flex-wrap: nowrap">
+          <input placeholder="Search product..." [formControl]="searchFormControl" class="search-input"
+                 style="flex-grow: 1;">
+          <div style="width: 20px; height: auto"></div>
+          <button [disabled]="(stockState.isFetchStocks | async)===true" (click)="getProducts()" mat-flat-button
+                  color="primary" style="flex-grow: 0">
+            <mat-icon *ngIf="(stockState.isFetchStocks | async)===false">refresh</mat-icon>
+            <mat-progress-spinner *ngIf="(stockState.isFetchStocks | async)===true" mode="indeterminate" diameter="20"
+                                  color="primary"
+                                  style="display: inline-block"></mat-progress-spinner>
+          </button>
+        </div>
+      </div>
+      <div mat-dialog-content>
+        <cdk-virtual-scroll-viewport [itemSize]="50" style="height: 300px">
+          <div *cdkVirtualFor="let store of storeData ">
+            <div style="display: flex; flex-direction: row; flex-wrap: nowrap">
+              <p style="flex-grow: 1; margin: 0; padding: 4px; text-align: start; display: flex; align-items: center">
+                {{store.tag}}
+              </p>
+              <div style="width: 20px; height: auto"></div>
+              <button (click)="selectProduct(store)" mat-button color="primary" style="flex-grow: 0;margin: 4px">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+            <mat-divider></mat-divider>
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </div>
+      <div mat-dialog-actions>
+        <button mat-button color="warn" mat-dialog-close>Close</button>
+      </div>
+    </div>
+  `,
+  styleUrls: ['../styles/store-out-search.style.scss']
 })
-export class StoreOutSearchComponent implements OnInit{
-  showProgress = false;
-  private currentUser: any;
-  creditors: Observable<any[]>;
-  customers: Observable<any[]>;
-  transferFormGroup: FormGroup;
-  transfersDatasource: MatTableDataSource<{ quantity: number, product: StockModel, amount: number }> = new MatTableDataSource([]);
-  transfersTableColumn = ['product', 'quantity', 'amount', 'subAmount', 'action'];
-  selectedProducts: { quantity: number, product: StockModel, amount: number }[] = [];
-  totalCost = 0;
-  //
-  // constructor(private readonly formBuilder: FormBuilder,
-  //             private readonly message: MessageService,
-  //             private readonly userService: UserService,
-  //             private readonly customerState: CustomerState,
-  //             private readonly salesState: SalesState,
-  //             private readonly dialog: MatDialog,
-  //             private router: Router,
-  //             public readonly transferState: TransferState,
-  //             public readonly creditorState: CreditorState,
-  //             public readonly invoiceState: InvoiceState,
-  //             private readonly snack: MatSnackBar) {
-  // }
+
+export class StoreOutSearchComponent implements OnInit {
+  searchFormControl = new FormControl('');
+  storeData;
+
+  constructor(public readonly dialogRef: MatDialogRef<StoreOutSearchComponent>,
+              public readonly stockState: StockState) {
+  }
 
   ngOnInit(): void {
-    // this.transferFormGroup = this.formBuilder.group({
-    //   date: [new Date(), [Validators.required, Validators.nullValidator]],
-    //   dueDate: [new Date(), [Validators.nullValidator]],
-    //   note: ['Invoice note', [Validators.nullValidator]],
-    //   creditor: [null, [Validators.required, Validators.nullValidator]],
-    //   customer: [null, [Validators.required, Validators.nullValidator]],
-    //   amount: [null, [Validators.required, Validators.nullValidator]],
-    // });
+    this.searchFormControl.valueChanges
+      .pipe(
+        debounceTime(500)
+      ).subscribe(value => {
+      this.stockState.filter(value);
+    });
+    this.stockState.getStocks().then(data => {
+      this.storeData = data;
+    });
   }
 
-
-  addProductToTable($event: MouseEvent): void {
-    // $event.preventDefault();
-    // this.dialog.open(ProductSearchDialogComponent).afterClosed().subscribe(value => {
-    //   if (value && value.product) {
-    //     this.selectedProducts.unshift({
-    //       quantity: 1,
-    //       product: value,
-    //       amount: 0
-    //     });
-    //     this.transfersDatasource = new MatTableDataSource<any>(this.selectedProducts);
-    //     this.updateTotalCost();
-    //   }
-    // });
+  getProducts(): void {
+    this.stockState.getStocksFromRemote();
   }
 
+  selectProduct(stock): void {
+    this.dialogRef.close(stock);
+  }
 }

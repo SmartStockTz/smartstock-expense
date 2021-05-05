@@ -29,50 +29,51 @@ import {MetasModel} from '../models/metas.model';
                      [showProgress]="false">
         </app-toolbar>
 
-        <div class="container stock-new-wrapper">
-            <form *ngIf="!isLoadingData" [formGroup]="productForm" #formElement="ngForm"
-                  (ngSubmit)="isUpdateMode?updateProduct(formElement):addProduct(formElement)">
+        <div class="col-11 col-xl-9 col-lg-9 col-md-10 col-sm-11 mx-auto">
+          <app-store-out-component></app-store-out-component>
+<!--            <form *ngIf="!isLoadingData" [formGroup]="productForm" #formElement="ngForm"-->
+<!--                  (ngSubmit)="isUpdateMode?updateProduct(formElement):addProduct(formElement)">-->
 
-              <div class="row d-flex justify-content-center align-items-center">
-                <div class="col-11 col-xl-9 col-lg-9 col-md-10 col-sm-11">
-                    <mat-card class="card-wrapper">
-                      <mat-card-content class="card-content row p-3">
-                        <mat-form-field appearance="outline"
-                                        class="my-input">
-                          <mat-label>Product Code</mat-label>
-                          <input matInput type="text" required formControlName="purchase">
-                          <mat-error>Product Code required</mat-error>
-                        </mat-form-field>
-                        <mat-form-field appearance="outline" class="my-input"
-                                        matTooltip="Quantity">
-                          <mat-label>Quantity</mat-label>
-                          <input min="0" matInput
-                                 type="number"
-                                 required formControlName="wholesaleQuantity">
-                          <mat-error>Quantity required</mat-error>
-                        </mat-form-field>
-                      </mat-card-content>
+<!--              <div class="row d-flex justify-content-center align-items-center">-->
+<!--                <div class="col-11 col-xl-9 col-lg-9 col-md-10 col-sm-11">-->
+<!--                    <mat-card class="card-wrapper">-->
+<!--                      <mat-card-content class="card-content row p-3">-->
+<!--                        <mat-form-field appearance="outline"-->
+<!--                                        class="my-input">-->
+<!--                          <mat-label>Product Code</mat-label>-->
+<!--                          <input matInput type="text" required formControlName="purchase">-->
+<!--                          <mat-error>Product Code required</mat-error>-->
+<!--                        </mat-form-field>-->
+<!--                        <mat-form-field appearance="outline" class="my-input"-->
+<!--                                        matTooltip="Quantity">-->
+<!--                          <mat-label>Quantity</mat-label>-->
+<!--                          <input min="0" matInput-->
+<!--                                 type="number"-->
+<!--                                 required formControlName="wholesaleQuantity">-->
+<!--                          <mat-error>Quantity required</mat-error>-->
+<!--                        </mat-form-field>-->
+<!--                      </mat-card-content>-->
 
-                  <div class="col-11 col-xl-5 col-lg-5 col-md-6 col-sm-11 mx-auto">
-                    <div>
-                      <button class="btn-block ft-button" color="primary" mat-raised-button
-                              [disabled]="mainProgress">Store Out
-                        <mat-progress-spinner style="display: inline-block" *ngIf="mainProgress" diameter="30"
-                                              mode="indeterminate"></mat-progress-spinner>
-                      </button>
-                      <div style="padding: 16px 0">
-                        <button class="btn-block ft-button" routerLink="/stock" color="primary" mat-button>
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  </mat-card>
-                </div>
+<!--                  <div class="col-11 col-xl-5 col-lg-5 col-md-6 col-sm-11 mx-auto">-->
+<!--                    <div>-->
+<!--                      <button class="btn-block ft-button" color="primary" mat-raised-button-->
+<!--                              [disabled]="mainProgress">Store Out-->
+<!--                        <mat-progress-spinner style="display: inline-block" *ngIf="mainProgress" diameter="30"-->
+<!--                                              mode="indeterminate"></mat-progress-spinner>-->
+<!--                      </button>-->
+<!--                      <div style="padding: 16px 0">-->
+<!--                        <button class="btn-block ft-button" routerLink="/stock" color="primary" mat-button>-->
+<!--                          Cancel-->
+<!--                        </button>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  </mat-card>-->
+<!--                </div>-->
 
 
-              </div>
-            </form>
+<!--              </div>-->
+<!--            </form>-->
         </div>
       </mat-sidenav-content>
 

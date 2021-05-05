@@ -219,6 +219,9 @@ const routes: Routes = [
     StoreOutComponent,
     StoreOutSearchComponent
   ],
+  entryComponents: [
+    StoreOutSearchComponent
+  ]
 })
 export class StocksModule {
   constructor(private readonly configs: ConfigsService) {
