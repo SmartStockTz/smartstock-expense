@@ -12,6 +12,7 @@ export class AuthGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot)
     : Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    console.log('CAn activate');
     return new Promise(async (resolve, reject) => {
       const user = await BFast.auth().currentUser();
       if (user && user.role) {
@@ -21,7 +22,7 @@ export class AuthGuard implements CanActivate {
         }, user.projectId);
         resolve(true);
       } else {
-        this.router.navigateByUrl('/login').catch();
+        this.router.navigateByUrl('login').catch();
         resolve(false);
       }
     });

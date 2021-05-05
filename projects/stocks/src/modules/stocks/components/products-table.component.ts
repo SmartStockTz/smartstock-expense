@@ -42,27 +42,27 @@ import {ImportsDialogComponent} from './imports.component';
 
       <ng-container matColumnDef="tag">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Tag</th>
-        <td mat-cell *matCellDef="let element">{{element.product}}</td>
+        <td mat-cell *matCellDef="let element">{{element.tag}}</td>
       </ng-container>
 
 
       <ng-container matColumnDef="quantity">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
         <td mat-cell *matCellDef="let element">
-          {{element.stockable ? (element.quantity | number) : 'N/A'}}
+          {{(element.quantity | number)}}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="category">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
         <td mat-cell *matCellDef="let element">
-          {{element.purchasable ? (element.purchase | number) : 'N/A'}}
+          {{(element.category)}}
         </td>
       </ng-container>
       <ng-container matColumnDef="date-in">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Date In</th>
         <td mat-cell *matCellDef="let element">
-          {{element.purchasable ? (element.purchase | number) : 'N/A'}}
+          {{element.date ? (element.date | date) : 'N/A'}}
         </td>
       </ng-container>
       <ng-container matColumnDef="action">

@@ -82,11 +82,14 @@ import {CatalogCreatePage} from './pages/catalog-create.page';
 import {CatalogCreateFormComponent} from './components/catalog-create-form.component';
 import {CatalogEditPage} from './pages/catalog-edit.page';
 import {StorePage} from './pages/store.page';
-import {StoreInPage} from "./pages/store-in.page";
-import {StoreOutPage} from "./pages/store-out.page";
+import {StoreInPage} from './pages/store-in.page';
+import {StoreOutPage} from './pages/store-out.page';
+import {AnimateDigitComponent} from './components/animate-digit.component';
+import {StoreOutComponent} from './components/store-out.component';
+import {StoreOutSearchComponent} from './components/store-out-search.component';
 
 const routes: Routes = [
-  {path: '', component: IndexPage},
+  // {path: '', component: IndexPage},
   {path: 'store', component: StorePage},
   {path: 'store/in', component: StoreInPage},
   {path: 'store/out', component: StoreOutPage},
@@ -212,6 +215,9 @@ const routes: Routes = [
     StorePage,
     StoreInPage,
     StoreOutPage,
+    AnimateDigitComponent,
+    StoreOutComponent,
+    StoreOutSearchComponent
   ],
 })
 export class StocksModule {

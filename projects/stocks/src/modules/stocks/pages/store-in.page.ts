@@ -52,19 +52,18 @@ import {MetasModel} from '../models/metas.model';
 
                   <mat-form-field appearance="outline" class="my-input">
                     <mat-label>Tag</mat-label>
-                    <input matInput type="text" required formControlName="product">
+                    <input matInput type="text" required formControlName="tag">
                     <mat-error>Tag required</mat-error>
                   </mat-form-field>
                   <mat-form-field appearance="outline" class="my-input">
                     <mat-label>Quantity</mat-label>
                     <input min="0" matInput
                            type="number"
-                           required formControlName="wholesaleQuantity">
+                           required formControlName="quantity">
                     <mat-error>Quantity required</mat-error>
                   </mat-form-field>
                   <app-category-form-field [formGroup]="productForm"></app-category-form-field>
                 </mat-expansion-panel>
-
 <!--                <mat-expansion-panel [expanded]="false" style="margin-top: 8px">-->
 <!--                  <mat-expansion-panel-header>-->
 <!--                    <h4 style="margin: 0">Other Attributes</h4>-->
@@ -105,7 +104,7 @@ import {MetasModel} from '../models/metas.model';
 export class StoreInPage extends DeviceInfoUtil implements OnInit {
 
   @Input() isUpdateMode = false;
-  @Input() initialStock: StockModel;
+  @Input() initialStock: any;
   @Input() isLoadingData = false;
   metasModel: BehaviorSubject<MetasModel[]> = new BehaviorSubject([]);
   productForm: FormGroup;
@@ -133,7 +132,7 @@ export class StoreInPage extends DeviceInfoUtil implements OnInit {
     this.metas = of([]);
   }
 
-  initializeForm(stock?: StockModel): void {
+  initializeForm(stock?: any): void {
     if (stock && stock.metas) {
       this.metasModel.next(Object.keys(stock.metas).map<MetasModel>(x => {
         return {
@@ -145,28 +144,10 @@ export class StoreInPage extends DeviceInfoUtil implements OnInit {
     }
     this.productForm = this.formBuilder.group({
       image: [stock && stock.image ? stock.image : ''],
-      product: [stock && stock.product ? stock.product : '', [Validators.nullValidator, Validators.required]],
-      barcode: [stock && stock.barcode ? stock.barcode : ''],
-      saleable: [stock && stock.saleable !== undefined ? stock.saleable : true],
-      downloadable: [stock && stock.downloadable !== undefined ? stock.downloadable : false],
-      downloads: [stock && stock.downloads ? stock.downloads : []],
-      stockable: [stock && stock.stockable !== undefined ? stock.stockable : false],
-      purchasable: [stock && stock.purchasable !== undefined ? stock.purchasable : false],
-      description: [stock && stock.description ? stock.description : ''],
-      purchase: [stock && stock.purchase ? stock.purchase : 0, [Validators.nullValidator, Validators.required]],
-      retailPrice: [stock && stock.retailPrice ? stock.retailPrice : 0, [Validators.nullValidator, Validators.required]],
-      wholesalePrice: [stock && stock.wholesalePrice ? stock.wholesalePrice : 0, [Validators.nullValidator, Validators.required]],
-      wholesaleQuantity: [stock && stock.wholesaleQuantity ? stock.wholesaleQuantity : 0, [Validators.nullValidator, Validators.required]],
+      date: [new Date(), [Validators.nullValidator, Validators.required]],
+      tag: [stock && stock.tag ? stock.tag : '', [Validators.nullValidator, Validators.required]],
       quantity: [stock && stock.quantity ? stock.quantity : 0, [Validators.nullValidator, Validators.required]],
-      reorder: [stock && stock.reorder ? stock.reorder : 0, [Validators.nullValidator, Validators.required]],
-      unit: [stock && stock.unit ? stock.unit : 'general', [Validators.nullValidator, Validators.required]],
-      canExpire: [stock && stock.canExpire !== undefined ? stock.canExpire : false],
-      expire: [stock && stock.expire ? stock.expire : null],
       category: [stock && stock.category ? stock.category : 'general', [Validators.required, Validators.nullValidator]],
-      catalog: [stock && stock.catalog && Array.isArray(stock.catalog)
-        ? stock.catalog
-        : ['general'], [Validators.required, Validators.nullValidator]],
-      supplier: [stock && stock.supplier ? stock.supplier : 'general', [Validators.required, Validators.nullValidator]],
       metas: stock && stock.metas
         ? this.getMetaFormGroup(stock.metas)
         : this.formBuilder.group({})
@@ -214,50 +195,60 @@ export class StoreInPage extends DeviceInfoUtil implements OnInit {
       return;
     }
 
-    if (this.getPurchasableFormControl().value === true
-      && ((this.productForm.value.purchase >= this.productForm.value.retailPrice)
-        || (this.productForm.value.purchase >= this.productForm.value.wholesalePrice))) {
-      this.snack.open('Purchase price must not be greater than retailPrice/wholesalePrice', 'Ok', {
-        duration: 3000
-      });
-      return;
-    }
+    // if (this.getPurchasableFormControl().value === true
+    //   && ((this.productForm.value.purchase >= this.productForm.value.retailPrice)
+    //     || (this.productForm.value.purchase >= this.productForm.value.wholesalePrice))) {
+    //   this.snack.open('Purchase price must not be greater than retailPrice/wholesalePrice', 'Ok', {
+    //     duration: 3000
+    //   });
+    //   return;
+    // }
 
-    if (this.productForm.get('canExpire').value && !this.productForm.get('expire').value) {
-      this.snack.open('Please enter expire date', 'Ok', {
-        duration: 3000
-      });
-      return;
-    }
+    // if (this.productForm.get('canExpire').value && !this.productForm.get('expire').value) {
+    //   this.snack.open('Please enter expire date', 'Ok', {
+    //     duration: 3000
+    //   });
+    //   return;
+    // }
 
     this.mainProgress = true;
     if (inUpdateMode) {
       this.productForm.value.id = this.initialStock.id;
     }
     this.stockService.addStock(this.productForm.value, inUpdateMode).then(_ => {
-      this.storageService.getStocks().then(value => {
-        if (inUpdateMode) {
-          value = value.map(value1 => {
-            if (value1.id === _.id) {
-              return Object.assign(value1, _);
-            } else {
-              return value1;
-            }
-          });
-        } else {
-          value.unshift(_ as any);
-        }
-        return this.storageService.saveStocks(value);
-      }).catch(reason => {
-      }).finally(() => {
-        this.mainProgress = false;
-        this.snack.open('Product added', 'Ok', {
-          duration: 3000
-        });
-        this.productForm.reset();
-        formElement.resetForm();
-        this.router.navigateByUrl('/stock/products').catch(console.log);
+      // this.storageService.getStocks()
+      //   .then(value => {
+      //   if (inUpdateMode) {
+      //     value = value.map(value1 => {
+      //       if (value1.id === _.id) {
+      //         return Object.assign(value1, _);
+      //       } else {
+      //         return value1;
+      //       }
+      //     });
+      //   } else {
+      //     value.unshift(_ as any);
+      //   }
+      //   return this.storageService.saveStocks(value);
+      // }).catch(reason => {
+      // })
+      //   .finally(() => {
+      //   this.mainProgress = false;
+      //   this.snack.open('Product added', 'Ok', {
+      //     duration: 3000
+      //   });
+      //   this.productForm.reset();
+      //   formElement.resetForm();
+      //   this.router.navigateByUrl('/stock/products').catch(console.log);
+      // });
+      this.mainProgress = false;
+      this.snack.open(this.productForm.value.tag + ' successfully stored', 'Ok', {
+        duration: 3000
       });
+      this.productForm.reset();
+      // this.productForm.value.tag = '';
+      // this.productForm.value.quantity = 0;
+      // this.productForm.untouched;
     }).catch(reason => {
       this.mainProgress = false;
       this.snack.open(reason.message ? reason.message : 'Unknown', 'Ok', {

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {StockModel} from '../models/stock.model';
 import {StockService} from '../services/stock.service';
-import {MessageService, StorageService} from '@smartstocktz/core-libs';
+import {MessageService, StorageService, toSqlDate} from '@smartstocktz/core-libs';
 import {MatDialogRef} from '@angular/material/dialog';
 import {SelectionModel} from '@angular/cdk/collections';
 
@@ -27,28 +27,35 @@ export class StockState {
   constructor(private readonly stockService: StockService,
               private readonly messageService: MessageService,
               private readonly storageService: StorageService) {
+    this.initStore();
   }
 
-  getStocks(): void {
-    this.isFetchStocks.next(true);
-    this.storageService.getStocks().then(localStocks => {
-      if (localStocks && Array.isArray(localStocks) && localStocks.length > 0) {
-        this.stocks.next(localStocks);
-      } else {
-        return this.stockService.getAllStock();
-      }
-    }).then(remoteStocks => {
-      if (remoteStocks && Array.isArray(remoteStocks) && remoteStocks.length > 0) {
-        this.stocks.next(remoteStocks);
-        return this.storageService.saveStock(remoteStocks as any);
-      }
-    }).catch(reason => {
-      this.messageService.showMobileInfoMessage(
-        reason && reason.message
-          ? reason.message : reason, 2000, 'bottom');
-    }).finally(() => {
-      this.isFetchStocks.next(false);
-    });
+  // tslint:disable-next-line:typedef
+  async initStore(){
+    this.stocks = await this.getStocks();
+
+  }
+  async getStocks(): Promise<any> {
+    return this.stockService.getAllStock();
+    // this.isFetchStocks.next(true);
+    // this.storageService.getStocks().then(localStocks => {
+    //   if (localStocks && Array.isArray(localStocks) && localStocks.length > 0) {
+    //     this.stocks.next(localStocks);
+    //   } else {
+    //     return this.stockService.getAllStock();
+    //   }
+    // }).then(remoteStocks => {
+    //   if (remoteStocks && Array.isArray(remoteStocks) && remoteStocks.length > 0) {
+    //     this.stocks.next(remoteStocks);
+    //     // return this.storageService.saveStock(remoteStocks as any);
+    //   }
+    // }).catch(reason => {
+    //   this.messageService.showMobileInfoMessage(
+    //     reason && reason.message
+    //       ? reason.message : reason, 2000, 'bottom');
+    // }).finally(() => {
+    //   this.isFetchStocks.next(false);
+    // });
   }
 
   private _updateTotalAvailableStocks(total: number): void {
@@ -100,6 +107,22 @@ export class StockState {
     this.stockService.getAllStock().then(remoteStocks => {
       this.stocks.next(remoteStocks);
       return this.storageService.saveStock(remoteStocks as any);
+    }).catch(reason => {
+      this.messageService.showMobileInfoMessage(
+        reason && reason.message
+          ? reason.message : reason, 2000, 'bottom');
+    }).finally(() => {
+      this.isFetchStocks.next(false);
+    });
+  }
+  getStoreSummary(): Promise<any> {
+    this.isFetchStocks.next(true);
+    return  this.stockService.getStoreByDate(toSqlDate(new Date(new Date().setDate(4)))).then(remoteStocks => {
+      console.log(new Date(new Date().setDate(4)));
+      console.log(remoteStocks);
+      return remoteStocks;
+      // this.stocks.next(remoteStocks);
+      // return this.storageService.saveStock(remoteStocks as any);
     }).catch(reason => {
       this.messageService.showMobileInfoMessage(
         reason && reason.message

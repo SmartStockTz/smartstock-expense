@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {UserService} from './user.service';
-import {StorageService} from '@smartstocktz/core-libs';
+import {StorageService, toSqlDate} from '@smartstocktz/core-libs';
 import {bfast, BFast} from 'bfastjs';
 import {StockModel} from '../models/stock.model';
 
@@ -26,8 +26,8 @@ export class StockService {
       'expire',
       'supplier'
     ];
-    const total = await bfast.database(activeShop.projectId).table('stocks').query().count(true).find<number>();
-    const stocks = await bfast.database(activeShop.projectId).table('stocks').query()
+    const total = await bfast.database(activeShop.projectId).table('store').query().count(true).find<number>();
+    const store = await bfast.database(activeShop.projectId).table('store').query()
       .skip(0)
       .size(total)
       .orderBy('product', 1)
@@ -36,7 +36,7 @@ export class StockService {
       });
     let csv = '';
     csv = csv.concat(columns.join(',')).concat(',\n');
-    stocks.forEach(stock => {
+    store.forEach(stock => {
       columns.forEach(column => {
         csv = csv.concat(stock[column] ? stock[column].toString().replace(new RegExp('[,-]', 'ig'), '') : '').concat(', ');
       });
@@ -46,7 +46,7 @@ export class StockService {
     const url = encodeURI(csvContent);
     const anchor = document.createElement('a');
     anchor.setAttribute('style', 'display: none');
-    anchor.download = activeShop.businessName.concat('-stocks.csv').trim();
+    anchor.download = activeShop.businessName.concat('-store.csv').trim();
     anchor.href = url;
     anchor.click();
     return csv;
@@ -57,11 +57,11 @@ export class StockService {
     return BFast
       .database(shop.projectId)
       .transaction()
-      .create('stocks', stocks)
+      .create('store', stocks)
       .commit();
   }
 
-  async addStock(stock: StockModel, inUpdateMode = false): Promise<StockModel> {
+  async addStock(stock: any, inUpdateMode = false): Promise<any> {
     const shop = await this.storageService.getActiveShop();
     if (inUpdateMode) {
       const stockId = stock._id ? stock._id : stock.id;
@@ -69,14 +69,14 @@ export class StockService {
       delete stock._id;
       delete stock.updatedAt;
       delete stock.createdAt;
-      return BFast.database(shop.projectId).collection('stocks')
+      return BFast.database(shop.projectId).collection('store')
         .query()
         .byId(stockId)
         .updateBuilder()
         .doc(stock)
         .update();
     } else {
-      return BFast.database(shop.projectId).collection('stocks').save(stock);
+      return BFast.database(shop.projectId).collection('store').save(stock);
     }
   }
 
@@ -85,19 +85,36 @@ export class StockService {
 
   async deleteStock(stock: StockModel): Promise<any> {
     const shop = await this.storageService.getActiveShop();
-    return BFast.database(shop.projectId).collection('stocks').query().byId(stock._id ? stock._id : stock.id).delete();
+    return BFast.database(shop.projectId).collection('store').query().byId(stock._id ? stock._id : stock.id).delete();
   }
 
   async getAllStock(): Promise<StockModel[]> {
     const shop = await this.storageService.getActiveShop();
-    const total = await bfast.database(shop.projectId).table('stocks').query().count(true).find<number>();
+    const total = await bfast.database(shop.projectId).table('store').query().count(true).find<number>();
     const stocks: StockModel[] = await BFast.database(shop.projectId)
-      .collection<StockModel>('stocks')
+      .collection('store')
+      // .collection<StockModel>('store')
       .query()
       .size(total)
-      .skip(0)
-      .orderBy('product', 1)
-      .find<StockModel[]>();
+      .skip(0).find();
+      // .orderBy('product', 1)
+      // .find<StockModel[]>();
+    await this.storageService.saveStocks(stocks as any);
+    return stocks;
+  }
+
+  async getStoreByDate(date: string): Promise<StockModel[]> {
+    const shop = await this.storageService.getActiveShop();
+    const total = await bfast.database(shop.projectId).table('store').query().count(true).find<number>();
+    const stocks: [] = await BFast.database(shop.projectId)
+      .collection('store')
+      // .collection<StockModel>('store')
+      .query()
+      .searchByRegex('date', date)
+      .size(total)
+      .skip(0).find();
+      // .orderBy('product', 1)
+      // .find<StockModel[]>();
     await this.storageService.saveStocks(stocks as any);
     return stocks;
   }
@@ -106,7 +123,7 @@ export class StockService {
     const activeShop = await this.storageService.getActiveShop();
     return BFast.database(activeShop.projectId)
       .transaction()
-      .delete('stocks', {
+      .delete('store', {
         query: {
           filter: {
             $or: stocksId.map(x => {

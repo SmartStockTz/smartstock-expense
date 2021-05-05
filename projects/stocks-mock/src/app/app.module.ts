@@ -23,14 +23,10 @@ const routes: Routes = [
   {path: '', component: WelcomePage},
   {path: 'login', component: LoginPageComponent},
   {
-    path: 'stock',
+    path: 'store',
     canActivate: [AuthGuard],
     loadChildren: () => import('../../../stocks/src/public-api').then(mod => mod.StocksModule)
   },
-  // {
-  //   path: 'account/shop',
-  //   component: ''
-  // }
 ];
 
 @NgModule({
