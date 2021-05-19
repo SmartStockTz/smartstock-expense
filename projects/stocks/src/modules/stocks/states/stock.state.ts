@@ -32,11 +32,11 @@ export class StockState {
 
   // tslint:disable-next-line:typedef
   async initStore(){
-    this.stocks = await this.getStocks();
+    // this.stocks = await this.getStocks();
 
   }
   async getStocks(): Promise<any> {
-    return this.stockService.getAllStock();
+    return this.stockService.getAllStore();
     // this.isFetchStocks.next(true);
     // this.storageService.getStocks().then(localStocks => {
     //   if (localStocks && Array.isArray(localStocks) && localStocks.length > 0) {
@@ -79,7 +79,7 @@ export class StockState {
           }
         }).reduce((a, b) => a + b, 0));
       } else {
-        return this.stockService.getAllStock();
+        return this.stockService.getAllStore();
       }
     }).then(remoteStocks => {
       if (remoteStocks && Array.isArray(remoteStocks) && remoteStocks.length > 0) {
@@ -104,7 +104,7 @@ export class StockState {
 
   getStocksFromRemote(): void {
     this.isFetchStocks.next(true);
-    this.stockService.getAllStock().then(remoteStocks => {
+    this.stockService.getAllStore().then(remoteStocks => {
       this.stocks.next(remoteStocks);
       return this.storageService.saveStock(remoteStocks as any);
     }).catch(reason => {

@@ -1,6 +1,8 @@
 import {MetasModel} from './metas.model';
 
 export interface StockModel {
+  quantityIn: number;
+  storeOut: StockModel[];
   createdAt?: any;
   catalog?: any[];
   updatedAt?: any;

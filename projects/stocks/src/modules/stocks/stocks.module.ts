@@ -87,13 +87,16 @@ import {StoreOutPage} from './pages/store-out.page';
 import {AnimateDigitComponent} from './components/animate-digit.component';
 import {StoreOutComponent} from './components/store-out.component';
 import {StoreOutSearchComponent} from './components/store-out-search.component';
+import {StoreReportComponent} from './components/store-report.component';
+import {StoreReportPage} from './pages/store-report.page';
+import {StoreOutDetailsComponent} from './components/store-out-details.component';
 
 const routes: Routes = [
   // {path: '', component: IndexPage},
   {path: 'store', component: StorePage},
   {path: 'store/in', component: StoreInPage},
   {path: 'store/out', component: StoreOutPage},
-  {path: 'store/report', component: CreatePageComponent},
+  {path: 'store/report', component: StoreReportPage},
   {path: 'products', component: ProductsPage},
   {path: 'products/create', component: CreatePageComponent},
   {path: 'products/edit/:id', component: EditPageComponent},
@@ -217,7 +220,10 @@ const routes: Routes = [
     StoreOutPage,
     AnimateDigitComponent,
     StoreOutComponent,
-    StoreOutSearchComponent
+    StoreOutSearchComponent,
+    StoreReportComponent,
+    StoreReportPage,
+    StoreOutDetailsComponent
   ],
   entryComponents: [
     StoreOutSearchComponent
@@ -249,6 +255,11 @@ export class StocksModule {
         {
           name: 'categories',
           link: '/store/categories',
+          roles: ['admin', 'manager']
+        },
+        {
+          name: 'report',
+          link: '/store/report',
           roles: ['admin', 'manager']
         }
       ]

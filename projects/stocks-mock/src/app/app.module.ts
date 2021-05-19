@@ -61,8 +61,7 @@ export class AppModule {
   constructor() {
     BFast.init({
       applicationId: 'smartstock_lb',
-      projectId: 'smartstock',
-      appPassword: 'ZMUGVn72o3yd8kSbMGhfWpI80N9nA2IHjxWKlAhG'
+      projectId: 'smartstock'
     });
   }
 

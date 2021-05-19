@@ -5,10 +5,12 @@ import {StockModel} from '../models/stock.model';
 import {Observable} from 'rxjs';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatTableDataSource} from '@angular/material/table';
-import {MessageService} from '@smartstocktz/core-libs';
+import {MessageService, toSqlDate} from '@smartstocktz/core-libs';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {StoreOutSearchComponent} from './store-out-search.component';
+import {StockService} from '../services/stock.service';
+import {log} from 'util';
 
 // @dynamic
 @Component({
@@ -21,7 +23,7 @@ import {StoreOutSearchComponent} from './store-out-search.component';
           <button (click)="addProductToTable($event)"
                   mat-button color="primary">
             <mat-icon matSuffix>add</mat-icon>
-            Add Product
+            Store Out
           </button>
           <div style="width: 16px; height: 16px"></div>
           <button (click)="saveStoreOut()" [disabled]="showProgress" mat-flat-button color="primary">
@@ -48,7 +50,7 @@ import {StoreOutSearchComponent} from './store-out-search.component';
               </td>
             </ng-container>
             <ng-container cdkColumnDef="quantity">
-              <th mat-header-cell *cdkHeaderCellDef>Quantity</th>
+              <th mat-header-cell *cdkHeaderCellDef>Store Out Quantity</th>
               <td mat-cell *cdkCellDef="let element">
                 <input class="quantity-input" (change)="updateQuantity(element, $event)" type="number" min="1"
                         [value]="element.quantity">
@@ -92,7 +94,8 @@ export class StoreOutComponent implements OnInit {
               private readonly message: MessageService,
               private readonly dialog: MatDialog,
               private router: Router,
-              private readonly snack: MatSnackBar) {
+              private readonly snack: MatSnackBar,
+              private readonly stockService: StockService) {
   }
 
   ngOnInit(): void {
@@ -158,6 +161,19 @@ export class StoreOutComponent implements OnInit {
         duration: 3000
       });
       return;
+    } else {
+      const saveStoreOutData = [];
+      this.storeOutDataSource.filteredData.map(x => {
+        saveStoreOutData.push({
+          dateOut: toSqlDate(new Date()),
+          quantity: x.quantity,
+          storeId: x.stock.id,
+          tag: x.stock.tag
+        });
+      });
+      this.stockService.storeOut(saveStoreOutData).then(value => this.stockService.getAllStoreOut());
+      this.storeOutDataSource = new MatTableDataSource();
+      this.totalQuantity = 0;
     }
 
   }

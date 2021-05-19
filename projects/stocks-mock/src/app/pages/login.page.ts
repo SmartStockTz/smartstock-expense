@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {BFast} from 'bfastjs';
 import {Router} from '@angular/router';
-import {StorageService} from '@smartstocktz/core-libs';
+import {StorageService, UserService} from '@smartstocktz/core-libs';
 
 @Component({
   selector: 'app-login',
@@ -38,6 +38,7 @@ export class LoginPageComponent implements OnInit {
   constructor(private readonly formBuilder: FormBuilder,
               private readonly router: Router,
               private readonly storageService: StorageService,
+              private readonly userService: UserService,
               private readonly snack: MatSnackBar) {
   }
 
@@ -47,14 +48,14 @@ export class LoginPageComponent implements OnInit {
     } else {
       this.isLogin = true;
       BFast.auth().logIn(this.loginForm.value.username, this.loginForm.value.password)
-        .then(async user => {
+        .then(async (user: any) => {
           this.router.navigateByUrl('/').catch(console.log);
           BFast.init({
             applicationId: user.applicationId,
             projectId: user.projectId
           }, user.projectId);
-          await this.storageService.saveCurrentProjectId('0UTYLQKeifrk');
-          await this.storageService.saveActiveShop(user as any);
+          await this.storageService.saveCurrentProjectId(user.projectId);
+          await this.storageService.saveActiveShop((await this.userService.getShops(user))[0]);
         })
         .catch(reason => {
           this.snack.open(reason && reason.message ? reason.message : reason, 'Ok');
