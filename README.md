@@ -1,2 +1,2 @@
-# SmartStock Stocks Module
+# SmartStock Stores Module
 
