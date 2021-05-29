@@ -3,11 +3,14 @@ import {MatDialog} from '@angular/material/dialog';
 import {Observable} from 'rxjs';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatTableDataSource} from '@angular/material/table';
-import {MessageService, toSqlDate} from '@smartstocktz/core-libs';
+import {DeviceState, MessageService, toSqlDate} from '@smartstocktz/core-libs';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {StoreOutSearchComponent} from './store-out-search.component';
 import {StoreService} from '../services/store.service';
+import {StoreModel} from '../models/store.model';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {StoreOutSearchBottomSheetComponent} from './store-out-search-bottom-sheet.component';
 
 // @dynamic
 @Component({
@@ -15,9 +18,10 @@ import {StoreService} from '../services/store.service';
   template: `
     <div style="margin-top: 36px; margin-bottom: 24px">
       <form *ngIf="storeOutFormGroup" [formGroup]="storeOutFormGroup">
+
         <h1 style="margin-top: 16px">Items</h1>
         <mat-card>
-          <table mat-table [dataSource]="storeOutDataSource">
+          <table *ngIf="(deviceState.isSmallScreen | async)===false" mat-table [dataSource]="storeOutDataSource">
             <ng-container cdkColumnDef="tag">
               <th mat-header-cell *cdkHeaderCellDef>Product</th>
               <td mat-cell *cdkCellDef="let element">{{element.store.tag}}</td>
@@ -57,7 +61,29 @@ import {StoreService} from '../services/store.service';
             <tr mat-row *matRowDef="let row; columns storeOutTableColumn"></tr>
             <tr mat-footer-row *matFooterRowDef="storeOutTableColumn"></tr>
           </table>
+
+          <mat-list *ngIf="(deviceState.isSmallScreen | async)===true">
+            <div *ngFor="let item of storeOutDataSource.connect() | async">
+              <mat-list-item>
+                <h1 matLine>{{item.store.tag}} ( {{item.store.quantity}} )</h1>
+                <div style="margin-bottom: 8px" matLine>
+                  <input [id]="item.store.id" style="min-width: 150px" [min]="1" [max]="item.quantity"
+                         class="quantity-input"
+                         (change)="updateQuantity(item, $event)" type="number" min="1"
+                         [value]="item.quantity">
+                </div>
+                <button (click)="removeItem($event, item)" color="warn" matlisticon matSuffix mat-icon-button>
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </mat-list-item>
+              <mat-divider></mat-divider>
+            </div>
+            <div>
+              <h3 style="margin: 0; padding: 5px">TOTAL : {{totalQuantity | number}}</h3>
+            </div>
+          </mat-list>
         </mat-card>
+
         <div style="margin-bottom: 16px; display: flex; flex-direction: row; flex-wrap: wrap">
           <button style="margin-top: 24px"
                   [disabled]="saveStoreOutFlag"
@@ -70,11 +96,15 @@ import {StoreService} from '../services/store.service';
                   [disabled]="showProgress || saveStoreOutFlag" mat-flat-button color="primary">
             <mat-icon matSuffix>done_all</mat-icon>
             {{saveStoreOutFlag === true ? 'Saving...' : 'Submit'}}
-            <mat-progress-spinner mode="indeterminate" diameter="20" style="display: inline-block"
+            <mat-progress-spinner mode="indeterminate"
+                                  diameter="20"
+                                  style="display: inline-block"
                                   *ngIf="showProgress"
-                                  color="primary"></mat-progress-spinner>
+                                  color="primary">
+            </mat-progress-spinner>
           </button>
         </div>
+
       </form>
     </div>
   `,
@@ -86,7 +116,7 @@ export class StoreOutComponent implements OnInit {
   creditors: Observable<any[]>;
   customers: Observable<any[]>;
   storeOutFormGroup: FormGroup;
-  storeOutDataSource: MatTableDataSource<{ quantity: number, store: any }> = new MatTableDataSource([]);
+  storeOutDataSource: MatTableDataSource<{ quantity: number, store: StoreModel }> = new MatTableDataSource([]);
   storeOutTableColumn = ['tag', 'quantity-in-store', 'quantity', 'action'];
   selectedProducts: { quantity: number, store: any }[] = [];
   totalQuantity = 0;
@@ -95,8 +125,10 @@ export class StoreOutComponent implements OnInit {
   constructor(private readonly formBuilder: FormBuilder,
               private readonly message: MessageService,
               private readonly dialog: MatDialog,
+              private readonly sheet: MatBottomSheet,
               private router: Router,
               private readonly snack: MatSnackBar,
+              public readonly deviceState: DeviceState,
               private readonly stockService: StoreService) {
   }
 
@@ -108,19 +140,32 @@ export class StoreOutComponent implements OnInit {
     });
   }
 
-
-  addProductToTable($event: MouseEvent): void {
+  addProductToTable($event: MouseEvent): any {
     $event.preventDefault();
-    this.dialog.open(StoreOutSearchComponent).afterClosed().subscribe(value => {
-      if (value && value.tag) {
-        this.selectedProducts.push({
-          quantity: 1,
-          store: value
-        });
-        this.storeOutDataSource = new MatTableDataSource<any>(this.selectedProducts);
-        this.updatableQuantity();
-      }
-    });
+    const isSmallScreen = this.deviceState.isSmallScreen.value;
+    if (isSmallScreen) {
+      this.sheet.open(StoreOutSearchBottomSheetComponent).afterDismissed().subscribe(value => {
+        if (value && value.tag) {
+          this.selectedProducts.push({
+            quantity: 1,
+            store: value
+          });
+          this.storeOutDataSource = new MatTableDataSource<any>(this.selectedProducts);
+          this.updatableQuantity();
+        }
+      });
+    } else {
+      this.dialog.open(StoreOutSearchComponent).afterClosed().subscribe(value => {
+        if (value && value.tag) {
+          this.selectedProducts.push({
+            quantity: 1,
+            store: value
+          });
+          this.storeOutDataSource = new MatTableDataSource<any>(this.selectedProducts);
+          this.updatableQuantity();
+        }
+      });
+    }
   }
 
   updateQuantity(element: { quantity: number, store: any }, $event: Event): void {
@@ -168,7 +213,6 @@ export class StoreOutComponent implements OnInit {
     this.updatableQuantity();
   }
 
-
   async saveStoreOut(): Promise<void> {
     if (this.storeOutDataSource.data.length === 0) {
       this.snack.open('Select Store to add before submitting', 'Ok', {
@@ -184,7 +228,7 @@ export class StoreOutComponent implements OnInit {
           quantity: x.quantity,
           storeId: x.store.id,
           store: x.store,
-          tag: x.store.tag
+          tag: x.store.tag,
         });
       });
       this.saveStoreOutFlag = true;

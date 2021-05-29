@@ -14,7 +14,7 @@ import {Router} from '@angular/router';
       </ng-template>
       <ng-template #body>
         <div class="container">
-          <div class="container col-lg-9 col-xl-9 col-sm-11 col-md-10 col-11">
+          <div class="container col-lg-9 col-xl-9 col-sm-11 col-md-10 col-12">
             <app-store-category-create-form
               [category]="categoryState.selectedForEdit | async"></app-store-category-create-form>
           </div>

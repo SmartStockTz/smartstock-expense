@@ -38,9 +38,9 @@ export class StoreState {
   async reloadReport(range: { start: any, end: any }): Promise<any> {
     this.reportStartDate.next(range.start);
     this.reportEndDate.next(range.end);
-    this.storeFrequencyGroupByTagWithTracking(range.start, range.end);
-    this.storeFrequencyGroupByCategory(range.start, range.end);
-    this.storeFrequencyGroupByTag(range.start, range.end);
+    this.storeFrequencyGroupByTagWithTracking(range.start, range.end).catch(console.log);
+    this.storeFrequencyGroupByCategory(range.start, range.end).catch(console.log);
+    this.storeFrequencyGroupByTag(range.start, range.end).catch(console.log);
   }
 
   async storeFrequencyGroupByCategory(from: string, to: string): Promise<any> {
@@ -103,7 +103,8 @@ export class StoreState {
     }).catch(reason => {
       this.messageService.showMobileInfoMessage(
         reason && reason.message
-          ? reason.message : reason, 2000, 'bottom');
+          ? reason.message : reason, 2000, 'bottom'
+      );
     }).finally(() => {
       this.isFetchStores.next(false);
     });

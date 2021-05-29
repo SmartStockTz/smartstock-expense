@@ -1,6 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {StoreState} from '../states/store.state';
 import {Chart, chart} from 'highcharts';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-store-by-tag-report',
@@ -14,22 +16,28 @@ import {Chart, chart} from 'highcharts';
     </div>
   `
 })
-export class StoreReportByTagComponent implements OnInit {
+export class StoreReportByTagComponent implements OnInit, OnDestroy {
   stockByCategoryStatus: { x: string, y: number }[];
   stockByCategoryChart: Chart = undefined;
+  destroy = new Subject();
 
   constructor(public readonly storeState: StoreState) {
   }
 
   async ngOnInit(): Promise<any> {
-    this.storeState.storeReportByTag.subscribe(value => {
-      this.initiateGraph(value);
+    this.storeState.storeReportByTag.pipe(takeUntil(this.destroy)).subscribe(value => {
+      if (value) {
+        this.initiateGraph(value);
+      }
     });
-    this.storeState.storeFrequencyGroupByTag(this.storeState.reportStartDate.value,
-      this.storeState.reportEndDate.value).catch(console.log);
-    // .then(value => {
-    //   this.initiateGraph(value);
-    // });
+    this.storeState.storeFrequencyGroupByTag(
+      this.storeState.reportStartDate.value,
+      this.storeState.reportEndDate.value
+    ).catch(console.log);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy.next(true);
   }
 
   private initiateGraph(data: { id: string, total: number }[]): any {

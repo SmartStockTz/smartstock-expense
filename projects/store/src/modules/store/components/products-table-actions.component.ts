@@ -1,9 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
-import {SelectionModel} from '@angular/cdk/collections';
 import {MatDialog} from '@angular/material/dialog';
 import {StoreState} from '../states/store.state';
-import {ImportsDialogComponent} from './imports.component';
 
 @Component({
   selector: 'app-store-products-table-actions',
@@ -29,32 +26,32 @@ import {ImportsDialogComponent} from './imports.component';
         </mat-progress-spinner>
       </button>
       <span style="width: 8px; height: 8px"></span>
-<!--      <button (click)="exportStore()" [disabled]="(stockState.isExportToExcel | async)===true"-->
-<!--              matTooltip="Export Products To Csv"-->
-<!--              color="primary"-->
-<!--              class="ft-button" mat-flat-button>-->
-<!--        <mat-icon *ngIf="(stockState.isExportToExcel | async) === false">-->
-<!--          cloud_download-->
-<!--        </mat-icon>-->
-<!--        <mat-progress-spinner *ngIf="(stockState.isExportToExcel | async)===true" [diameter]="20"-->
-<!--                              matTooltip="Export Products InProgress.."-->
-<!--                              mode="indeterminate"-->
-<!--                              color="primary">-->
-<!--        </mat-progress-spinner>-->
-<!--      </button>-->
-<!--      <span style="width: 8px; height: 8px"></span>-->
-<!--      <button (click)="importStores()" matTooltip="Import Products" color="primary" class="ft-button"-->
-<!--              mat-flat-button>-->
-<!--        <mat-icon>cloud_upload</mat-icon>-->
-<!--      </button>-->
-<!--      <button [matMenuTriggerFor]="stockMenu" color="primary" mat-icon-button>-->
-<!--        <mat-icon>more_vert</mat-icon>-->
-<!--      </button>-->
-<!--      <mat-menu #stockMenu>-->
-<!--        <button (click)="hotReloadStores()" matTooltip="refresh products in table" mat-menu-item>Hot-->
-<!--          Reload-->
-<!--        </button>-->
-<!--      </mat-menu>-->
+      <!--      <button (click)="exportStore()" [disabled]="(stockState.isExportToExcel | async)===true"-->
+      <!--              matTooltip="Export Products To Csv"-->
+      <!--              color="primary"-->
+      <!--              class="ft-button" mat-flat-button>-->
+      <!--        <mat-icon *ngIf="(stockState.isExportToExcel | async) === false">-->
+      <!--          cloud_download-->
+      <!--        </mat-icon>-->
+      <!--        <mat-progress-spinner *ngIf="(stockState.isExportToExcel | async)===true" [diameter]="20"-->
+      <!--                              matTooltip="Export Products InProgress.."-->
+      <!--                              mode="indeterminate"-->
+      <!--                              color="primary">-->
+      <!--        </mat-progress-spinner>-->
+      <!--      </button>-->
+      <!--      <span style="width: 8px; height: 8px"></span>-->
+      <!--      <button (click)="importStores()" matTooltip="Import Products" color="primary" class="ft-button"-->
+      <!--              mat-flat-button>-->
+      <!--        <mat-icon>cloud_upload</mat-icon>-->
+      <!--      </button>-->
+      <!--      <button [matMenuTriggerFor]="stockMenu" color="primary" mat-icon-button>-->
+      <!--        <mat-icon>more_vert</mat-icon>-->
+      <!--      </button>-->
+      <!--      <mat-menu #stockMenu>-->
+      <!--        <button (click)="hotReloadStores()" matTooltip="refresh products in table" mat-menu-item>Hot-->
+      <!--          Reload-->
+      <!--        </button>-->
+      <!--      </mat-menu>-->
     </mat-card-title>
   `
 })
@@ -75,12 +72,6 @@ export class ProductsTableActionsComponent implements OnInit {
 
   exportStore(): void {
     this.stockState.exportToExcel();
-  }
-
-  importStores(): void {
-    this.dialog.open(ImportsDialogComponent, {
-      closeOnNavigation: true,
-    });
   }
 
 }

@@ -1,18 +1,17 @@
 import {Component, OnInit} from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
 import {StoreState} from '../states/store.state';
 import {FormControl} from '@angular/forms';
-import {StoreModel} from '../models/store.model';
 import {debounceTime} from 'rxjs/operators';
+import {MatBottomSheetRef} from '@angular/material/bottom-sheet';
 
 @Component({
-  selector: 'app-store-products-search-dialog',
+  selector: 'app-store-search-sheet',
   template: `
     <div>
-      <div mat-dialog-title>
+      <div>
         <div style="display: flex; flex-direction: row; flex-wrap: nowrap">
-          <input placeholder="Search product..."
-                 [formControl]="searchFormControl" class="search-input"
+          <input placeholder="Search item..."
+                 [formControl]="searchFormControl" class="search-input-small"
                  style="flex-grow: 1;">
           <div style="width: 20px; height: auto"></div>
           <button [disabled]="(storeState.isFetchStores | async)===true" (click)="getProducts()"
@@ -28,7 +27,7 @@ import {debounceTime} from 'rxjs/operators';
           </button>
         </div>
       </div>
-      <div mat-dialog-content>
+      <div>
         <cdk-virtual-scroll-viewport [itemSize]="50" style="height: 300px">
           <div *cdkVirtualFor="let store of storeState.storeItems | async ">
             <div style="display: flex; flex-direction: row; flex-wrap: nowrap" (click)="selectProduct(store)">
@@ -44,18 +43,15 @@ import {debounceTime} from 'rxjs/operators';
           </div>
         </cdk-virtual-scroll-viewport>
       </div>
-      <div mat-dialog-actions>
-        <button mat-button color="warn" mat-dialog-close>Close</button>
-      </div>
     </div>
   `,
   styleUrls: ['../styles/store-out-search.style.scss']
 })
 
-export class StoreOutSearchComponent implements OnInit {
+export class StoreOutSearchBottomSheetComponent implements OnInit {
   searchFormControl = new FormControl('');
 
-  constructor(public readonly dialogRef: MatDialogRef<StoreOutSearchComponent>,
+  constructor(public readonly dialogRef: MatBottomSheetRef<StoreOutSearchBottomSheetComponent>,
               public readonly storeState: StoreState) {
   }
 
@@ -74,6 +70,6 @@ export class StoreOutSearchComponent implements OnInit {
   }
 
   selectProduct(store): void {
-    this.dialogRef.close(store);
+    this.dialogRef.dismiss(store);
   }
 }

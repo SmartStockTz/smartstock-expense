@@ -12,18 +12,10 @@ import {MatSort} from '@angular/material/sort';
       <h1>Store Out</h1>
       <h2 class="row justify-content-between">
         <span class=" px-2">{{data.id}}</span>
-<!--        <span class=" px-2">{{data.category}}</span>-->
       </h2>
     </div>
-    <mat-card class="mat-elevation-z0 m-3">
+    <mat-card class="mat-elevation-z0">
       <table mat-table matSort [dataSource]="storeOutDatasource">
-
-        <ng-container matColumnDef="sn">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
-          <td mat-cell *matCellDef="let i = index">{{i + 1}}</td>
-          <td mat-footer-cell *matFooterCellDef></td>
-        </ng-container>
-
         <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
           <td mat-cell *matCellDef="let element">
@@ -31,7 +23,6 @@ import {MatSort} from '@angular/material/sort';
           </td>
           <td mat-footer-cell class="font-weight-bold" *matFooterCellDef> Total</td>
         </ng-container>
-
         <ng-container matColumnDef="quantity">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
           <td mat-cell *matCellDef="let element">
@@ -39,7 +30,6 @@ import {MatSort} from '@angular/material/sort';
           </td>
           <td mat-footer-cell class="font-weight-bold" *matFooterCellDef> {{getTotalQuantity() | number}} </td>
         </ng-container>
-
         <tr mat-header-row *matHeaderRowDef="storeOutColumns"></tr>
         <tr class="table-data-row" matTooltip="Click for store out details" mat-row
             *matRowDef="let row; columns: storeOutColumns;"></tr>
@@ -53,7 +43,7 @@ import {MatSort} from '@angular/material/sort';
 })
 export class StoreOutDetailsComponent implements OnInit {
   storeOutDatasource: MatTableDataSource<{ date: string, quantity: number }>;
-  storeOutColumns = ['sn', 'date', 'quantity'];
+  storeOutColumns = ['date', 'quantity'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) matSort: MatSort;
 

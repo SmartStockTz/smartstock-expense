@@ -1,36 +1,44 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, FormGroupDirective, Validators} from '@angular/forms';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
-import {DeviceInfoUtil, FileBrowserDialogComponent, StorageService} from '@smartstocktz/core-libs';
+import {
+  DeviceInfoUtil,
+  DeviceState,
+  FileBrowserDialogComponent,
+  FileBrowserSheetComponent,
+  FilesService,
+  StorageService
+} from '@smartstocktz/core-libs';
 import {StoreService} from '../services/store.service';
 import {MetasModel} from '../models/metas.model';
+import {MatDialog} from '@angular/material/dialog';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
 
 @Component({
   selector: 'app-store-in',
   template: `
-    <mat-sidenav-container class="match-parent">
-      <mat-sidenav class="match-parent-side"
-                   [fixedInViewport]="true"
-                   #sidenav
-                   [mode]="enoughWidth()?'side':'over'"
-                   [opened]="enoughWidth()">
+    <app-layout-sidenav
+      [leftDrawerMode]="enoughWidth()?'side':'over'"
+      [leftDrawerOpened]="enoughWidth()"
+      [leftDrawer]="side"
+      [heading]="isUpdateMode?'Update Store':'Store In'"
+      backLink="/store"
+      [body]="body"
+      [hasBackRoute]="true">
+
+      <ng-template #side>
         <app-drawer></app-drawer>
-      </mat-sidenav>
-      <mat-sidenav-content>
-        <app-toolbar [heading]="isUpdateMode?'Update Item':'Store In'"
-                     [sidenav]="sidenav"
-                     backLink="/store/item"
-                     [showProgress]="false">
-        </app-toolbar>
+      </ng-template>
+
+      <ng-template #body>
         <div class="container store-new-wrapper">
           <form *ngIf="!isLoadingData" [formGroup]="productForm" #formElement="ngForm"
                 (ngSubmit)="isUpdateMode?updateProduct(formElement):addProduct(formElement)">
             <div class="row d-flex justify-content-center align-items-center">
 
-              <div style="margin-bottom: 16px" class="col-11 col-xl-9 col-lg-9 col-md-10 col-sm-11">
+              <div style="margin-bottom: 16px" class="col-12 col-xl-9 col-lg-9 col-md-10 col-sm-11">
 
                 <h4 style="padding: 0" class="">
                   Image
@@ -58,7 +66,7 @@ import {MetasModel} from '../models/metas.model';
                   <app-category-form-field [formGroup]="productForm"></app-category-form-field>
                 </mat-expansion-panel>
               </div>
-              <div class="col-11 col-sm-6" style="padding-bottom: 100px">
+              <div class="col-12 col-sm-6" style="padding-bottom: 100px">
                 <div>
                   <button class="btn-block ft-button" color="primary" mat-raised-button
                           [disabled]="mainProgress">
@@ -76,8 +84,8 @@ import {MetasModel} from '../models/metas.model';
             </div>
           </form>
         </div>
-      </mat-sidenav-content>
-    </mat-sidenav-container>
+      </ng-template>
+    </app-layout-sidenav>
   `,
   styleUrls: ['../styles/create.style.scss']
 })
@@ -99,9 +107,12 @@ export class StoreInPage extends DeviceInfoUtil implements OnInit {
 
   constructor(private readonly formBuilder: FormBuilder,
               private readonly snack: MatSnackBar,
+              private readonly filesService: FilesService,
               private readonly dialog: MatDialog,
+              private readonly bottom: MatBottomSheet,
               private readonly router: Router,
               private readonly storageService: StorageService,
+              private readonly deviceState: DeviceState,
               private readonly stockService: StoreService) {
     super();
     document.title = 'SmartStock - Store In';
@@ -180,39 +191,12 @@ export class StoreInPage extends DeviceInfoUtil implements OnInit {
       this.productForm.value.id = this.initialStore.id;
     }
     this.stockService.addStore(this.productForm.value, inUpdateMode).then(_ => {
-      // this.storageService.getStores()
-      //   .then(value => {
-      //   if (inUpdateMode) {
-      //     value = value.map(value1 => {
-      //       if (value1.id === _.id) {
-      //         return Object.assign(value1, _);
-      //       } else {
-      //         return value1;
-      //       }
-      //     });
-      //   } else {
-      //     value.unshift(_ as any);
-      //   }
-      //   return this.storageService.saveStores(value);
-      // }).catch(reason => {
-      // })
-      //   .finally(() => {
-      //   this.mainProgress = false;
-      //   this.snack.open('Item added', 'Ok', {
-      //     duration: 3000
-      //   });
-      //   this.productForm.reset();
-      //   formElement.resetForm();
       this.router.navigateByUrl('/store/item').catch(console.log);
-      // });
       this.mainProgress = false;
       this.snack.open(this.productForm.value.tag + ' successfully stored', 'Ok', {
         duration: 3000
       });
       this.productForm.reset();
-      // this.productForm.value.tag = '';
-      // this.productForm.value.quantity = 0;
-      // this.productForm.untouched;
     }).catch(reason => {
       console.log(reason);
       this.mainProgress = false;
@@ -232,18 +216,34 @@ export class StoreInPage extends DeviceInfoUtil implements OnInit {
 
   async browserMedia($event: MouseEvent, control: string): Promise<void> {
     $event.preventDefault();
+    const isMobile = this.deviceState.isSmallScreen.value;
     const shop = await this.storageService.getActiveShop();
-    this.dialog.open(FileBrowserDialogComponent, {
-      closeOnNavigation: false,
-      disableClose: true,
-      data: {
-        shop
-      }
-    }).afterClosed().subscribe(value => {
-      if (value && value.url) {
-        this.productForm.get(control).setValue(value.url);
-      } else {
-      }
-    });
+    if (isMobile) {
+      this.bottom.open(FileBrowserSheetComponent, {
+        closeOnNavigation: false,
+        disableClose: true,
+        data: {
+          shop
+        }
+      }).afterDismissed().subscribe(value => {
+        if (value && value.url) {
+          this.productForm.get(control).setValue(value.url);
+        } else {
+        }
+      });
+    } else {
+      this.dialog.open(FileBrowserDialogComponent, {
+        closeOnNavigation: false,
+        disableClose: true,
+        data: {
+          shop
+        }
+      }).afterClosed().subscribe(value => {
+        if (value && value.url) {
+          this.productForm.get(control).setValue(value.url);
+        } else {
+        }
+      });
+    }
   }
 }

@@ -2,7 +2,7 @@ import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/c
 import {MatTableDataSource} from '@angular/material/table';
 import {Observable, of, Subject} from 'rxjs';
 import {Router} from '@angular/router';
-import {LogService, StorageService} from '@smartstocktz/core-libs';
+import {DeviceState, LogService, StorageService} from '@smartstocktz/core-libs';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatDialog} from '@angular/material/dialog';
@@ -13,12 +13,11 @@ import {MatSidenav} from '@angular/material/sidenav';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {DialogDeleteComponent, StoreDetailsComponent} from './store.component';
-import {ImportsDialogComponent} from './imports.component';
 
 @Component({
   selector: 'app-store-products-table',
   template: `
-    <table mat-table matSort [dataSource]="stockDatasource">
+    <table *ngIf="(deviceState.isSmallScreen | async)===false" mat-table matSort [dataSource]="stockDatasource">
       <ng-container matColumnDef="tag">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Tag</th>
         <td mat-cell *matCellDef="let element">{{element.tag}}</td>
@@ -70,8 +69,34 @@ import {ImportsDialogComponent} from './imports.component';
       <tr mat-header-row *matHeaderRowDef="storeColumns"></tr>
       <tr class="table-data-row" mat-row *matRowDef="let row; columns: storeColumns;"></tr>
     </table>
-    <mat-paginator #paginator pageSize="10" [pageSizeOptions]="[5,10, 20, 100]"
+    <mat-paginator *ngIf="(deviceState.isSmallScreen | async)===false"
+                   #paginator pageSize="10" [pageSizeOptions]="[5,10, 20, 100]"
                    showFirstLastButtons></mat-paginator>
+
+    <mat-nav-list *ngIf="(deviceState.isSmallScreen | async)===true">
+      <div *ngFor="let m of stockDatasource.connect() | async">
+        <mat-list-item [matMenuTriggerFor]="menum">
+          <p matListIcon>
+            <img style="width: 30px; height: 30px; border-radius: 30px"
+                 src="{{m.image+'/thumbnail?width=30&height=30'}}" alt="">
+          </p>
+          <h1 matLine>{{m.tag}} - ( {{m.quantity}} )</h1>
+          <p matLine>{{m.date | date}}</p>
+          <mat-menu #menum>
+            <button mat-menu-item [matTooltip]="'view item information'"
+                    (click)="viewProduct(m)">View
+            </button>
+            <button mat-menu-item [matTooltip]="'change item information'"
+                    (click)="editStore(m)">Edit
+            </button>
+            <button mat-menu-item [matTooltip]="'permanent delete store'"
+                    (click)="deleteStore(m)">Delete
+            </button>
+          </mat-menu>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+      </div>
+    </mat-nav-list>
   `
 })
 
@@ -85,10 +110,10 @@ export class ProductsTableComponent implements OnInit, OnDestroy, AfterViewInit 
               private readonly snack: MatSnackBar,
               private readonly logger: LogService,
               private readonly dialog: MatDialog,
+              public readonly deviceState: DeviceState,
               public readonly stockState: StoreState) {
     this.stockState.storeItems.pipe(takeUntil(this.onDestroy)).subscribe(stocks => {
       this.stockDatasource.data = stocks;
-      this._getTotalPurchaseOfStore(stocks);
     });
   }
 
@@ -157,25 +182,9 @@ export class ProductsTableComponent implements OnInit, OnDestroy, AfterViewInit 
     this.stockState.filter(query);
   }
 
-  private _getTotalPurchaseOfStore(stocks: StoreModel[] = []): void {
-    const sum = stocks.map(x => {
-      if (x.purchase && x.quantity && x.quantity >= 0 && x.purchasable === true) {
-        return x.purchase * x.quantity;
-      } else {
-        return 0;
-      }
-    }).reduce((a, b) => a + b, 0);
-    this.totalPurchase = of(sum);
-  }
 
   exportStore(): void {
     this.stockState.exportToExcel();
-  }
-
-  importStores(): void {
-    this.dialog.open(ImportsDialogComponent, {
-      closeOnNavigation: true,
-    });
   }
 
   ngOnDestroy(): void {
@@ -184,16 +193,6 @@ export class ProductsTableComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   createGroupProduct(): void {
-  }
-
-  productValue(): number {
-    if (!this.stockDatasource.data) {
-      return 0;
-    }
-    return this.stockState.storeItems.value
-      .filter(x => x.stockable === true && x.quantity > 0)
-      .map(x => x.purchase * x.quantity)
-      .reduce((a, b) => a + b, 0);
   }
 
   ngAfterViewInit(): void {

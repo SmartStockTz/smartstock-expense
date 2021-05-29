@@ -1,2 +1,0 @@
-product,saleable,downloadable,downloads,stockable,purchasable,description,purchase,retailPrice,wholesalePrice,wholesaleQuantity,quantity,reorder,unit,expire,category,supplier
-tshirt,TRUE,FALSE,[],TRUE,TRUE,form six,8000,12000,10000,10,41,10,Pieces ,,male,gervas

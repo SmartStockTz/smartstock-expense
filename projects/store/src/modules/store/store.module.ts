@@ -27,33 +27,23 @@ import {RouterModule, ROUTES, Routes} from '@angular/router';
 import {DialogDeleteComponent, StoreDetailsComponent} from './components/store.component';
 import {EditPageComponent} from './pages/edit.page';
 import {CategoriesComponent} from './components/categories.component';
-import {DialogUnitDeleteComponent, DialogUnitNewComponent, UnitsComponent} from './components/units.component';
-import {ImportsDialogComponent} from './components/imports.component';
 import {CommonModule} from '@angular/common';
 import {ConfigsService, LibModule} from '@smartstocktz/core-libs';
 import {CategoryFormFieldComponent} from './components/category-form-field.component';
-import {UnitsFormFieldComponent} from './components/units-form-field.component';
 import {ProductShortDetailFormComponent} from './components/product-short-detail-form.component';
 import {IndexPage} from './pages/index.page';
 import {CategoriesPage} from './pages/categories.page';
 import {DialogCategoryDeleteComponent} from './components/dialog-category-delete.component';
 import {DialogCategoryCreateComponent} from './components/dialog-category-create.component';
-import {TotalProductsSummaryComponent} from './components/total-products-summary.component';
 import {ProductsValueSummaryComponent} from './components/products-value-summary.component';
 import {MatSortModule} from '@angular/material/sort';
 import {CdkTableModule} from '@angular/cdk/table';
 import {ProductsTableComponent} from './components/products-table.component';
 import {ProductsTableActionsComponent} from './components/products-table-actions.component';
 import {ProductsTableSubActionsComponent} from './components/products-table-sub-actions.component';
-import {TransfersTableComponent} from './components/transfers-table.component';
-import {TransfersTableActionsComponent} from './components/transfers-table-actions.component';
-import {TransferCreateFormComponent} from './components/transfer-create-form.component';
 import {ProductSearchDialogComponent} from './components/product-search-dialog.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {InfoDialogComponent} from './components/info-dialog.component';
-import {TransfersItemsViewComponent} from './components/transfers-items-view.component';
-import {TransfersExportOptionsComponent} from './components/transfers-export-options.component';
-import {DownloadableComponent} from './components/downloadable.component';
 import {MetasFormFieldComponent} from './components/metas-form-field.component';
 import {GeneratedFormFieldComponent} from './components/generated-form-field.component';
 import {CategoryCreatePage} from './pages/category-create.page';
@@ -63,7 +53,6 @@ import {CategoryCreateFormBottomSheetComponent} from './components/category-crea
 import {StorePage} from './pages/store.page';
 import {StoreInPage} from './pages/store-in.page';
 import {StoreOutPage} from './pages/store-out.page';
-import {AnimateDigitComponent} from './components/animate-digit.component';
 import {StoreOutComponent} from './components/store-out.component';
 import {StoreOutSearchComponent} from './components/store-out-search.component';
 import {StoreReportComponent} from './components/store-report.component';
@@ -71,6 +60,7 @@ import {StoreReportPage} from './pages/store-report.page';
 import {StoreOutDetailsComponent} from './components/store-out-details.component';
 import {StoreReportByCategoryComponent} from './components/store-report-by-category.component';
 import {StoreReportByTagComponent} from './components/store-report-by-tag.component';
+import {StoreOutSearchBottomSheetComponent} from './components/store-out-search-bottom-sheet.component';
 
 const routes: Routes = [
   {path: '', component: IndexPage},
@@ -125,7 +115,9 @@ const routes: Routes = [
     MatSortModule,
     CdkTableModule,
     ScrollingModule,
-    FormsModule
+    FormsModule,
+    MatBottomSheetModule,
+    MatMenuModule,
   ],
   declarations: [
     CategoriesEditPage,
@@ -133,32 +125,20 @@ const routes: Routes = [
     CategoryCreatePage,
     MetasFormFieldComponent,
     GeneratedFormFieldComponent,
-    DownloadableComponent,
-    TransfersItemsViewComponent,
-    TransfersExportOptionsComponent,
     InfoDialogComponent,
-    TransferCreateFormComponent,
-    TransfersTableComponent,
-    TransfersTableActionsComponent,
     ProductsTableActionsComponent,
     ProductsTableComponent,
     DialogDeleteComponent,
     IndexPage,
     EditPageComponent,
     CategoriesComponent,
-    UnitsComponent,
     StoreDetailsComponent,
     DialogCategoryDeleteComponent,
     DialogCategoryCreateComponent,
-    DialogUnitDeleteComponent,
-    DialogUnitNewComponent,
-    ImportsDialogComponent,
     CategoryFormFieldComponent,
-    UnitsFormFieldComponent,
     ProductShortDetailFormComponent,
     ProductShortDetailFormComponent,
     CategoriesPage,
-    TotalProductsSummaryComponent,
     ProductsValueSummaryComponent,
     ProductsTableSubActionsComponent,
     ProductSearchDialogComponent,
@@ -166,14 +146,14 @@ const routes: Routes = [
     StorePage,
     StoreInPage,
     StoreOutPage,
-    AnimateDigitComponent,
     StoreOutComponent,
     StoreOutSearchComponent,
     StoreReportComponent,
     StoreReportPage,
     StoreOutDetailsComponent,
     StoreReportByCategoryComponent,
-    StoreReportByTagComponent
+    StoreReportByTagComponent,
+    StoreOutSearchBottomSheetComponent
   ],
   entryComponents: []
 })

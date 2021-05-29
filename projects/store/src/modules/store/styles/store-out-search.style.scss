@@ -22,3 +22,23 @@
 
   color: #027206;
 }
+
+.search-input-small {
+  background: #FAFAFA;
+  border: 1px solid #E0E0E0;
+  box-sizing: border-box;
+  border-radius: 6px;
+
+  padding: 0 8px;
+
+  outline: none !important;
+
+  min-width: 200px;
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 21px;
+  /* identical to box height */
+}

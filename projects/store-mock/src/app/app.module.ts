@@ -18,6 +18,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {ConfigsService} from '@smartstocktz/core-libs';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
+import {MatMenuModule} from '@angular/material/menu';
 
 
 const routes: Routes = [
@@ -46,14 +48,15 @@ const routes: Routes = [
     MatSnackBarModule,
     RouterModule,
     MatNativeDateModule,
-    HammerModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatBottomSheetModule,
+    MatMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]
