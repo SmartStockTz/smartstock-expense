@@ -1,0 +1,15 @@
+{
+  "name": "@smartstocktz/expense",
+  "version": "0.1.0",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/smartstocktz"
+  },
+  "repository": {
+    "url": "git://github.com/smartstocktz/smartstock-expense.git"
+  },
+  "peerDependencies": {
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}

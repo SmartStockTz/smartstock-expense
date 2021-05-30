@@ -3,30 +3,30 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "store": {
+    "expense": {
       "projectType": "library",
-      "root": "projects/store",
-      "sourceRoot": "projects/store/src",
+      "root": "projects/expense",
+      "sourceRoot": "projects/expense/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "tsConfig": "projects/store/tsconfig.lib.json",
-            "project": "projects/store/ng-package.json"
+            "tsConfig": "projects/expense/tsconfig.lib.json",
+            "project": "projects/expense/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/store/tsconfig.lib.prod.json"
+              "tsConfig": "projects/expense/tsconfig.lib.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/store/src/test.ts",
-            "tsConfig": "projects/store/tsconfig.spec.json",
-            "karmaConfig": "projects/store/karma.conf.js"
+            "main": "projects/expense/src/test.ts",
+            "tsConfig": "projects/expense/tsconfig.spec.json",
+            "karmaConfig": "projects/expense/karma.conf.js"
           }
         },
         "lint": {
@@ -34,8 +34,8 @@
           "options": {
             "fix": true,
             "tsConfig": [
-              "projects/store/tsconfig.lib.json",
-              "projects/store/tsconfig.spec.json"
+              "projects/expense/tsconfig.lib.json",
+              "projects/expense/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -44,33 +44,33 @@
         }
       }
     },
-    "store-mock": {
+    "expense-mock": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
         }
       },
-      "root": "projects/store-mock",
-      "sourceRoot": "projects/store-mock/src",
+      "root": "projects/expense-mock",
+      "sourceRoot": "projects/expense-mock/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/store-mock",
-            "index": "projects/store-mock/src/index.html",
-            "main": "projects/store-mock/src/main.ts",
-            "polyfills": "projects/store-mock/src/polyfills.ts",
-            "tsConfig": "projects/store-mock/tsconfig.app.json",
+            "outputPath": "dist/expense-mock",
+            "index": "projects/expense-mock/src/index.html",
+            "main": "projects/expense-mock/src/main.ts",
+            "polyfills": "projects/expense-mock/src/polyfills.ts",
+            "tsConfig": "projects/expense-mock/tsconfig.app.json",
             "aot": true,
             "assets": [
-              "projects/store-mock/src/favicon.ico",
-              "projects/store-mock/src/assets"
+              "projects/expense-mock/src/favicon.ico",
+              "projects/expense-mock/src/assets"
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "projects/store-mock/src/styles.scss",
+              "projects/expense-mock/src/styles.scss",
               "node_modules/material-design-icons/iconfont/material-icons.css",
               "node_modules/bootstrap/dist/css/bootstrap.css"
             ],
@@ -80,8 +80,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "projects/store-mock/src/environments/environment.ts",
-                  "with": "projects/store-mock/src/environments/environment.prod.ts"
+                  "replace": "projects/expense-mock/src/environments/environment.ts",
+                  "with": "projects/expense-mock/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -109,34 +109,34 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "store-mock:build"
+            "browserTarget": "expense-mock:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "store-mock:build:production"
+              "browserTarget": "expense-mock:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "store-mock:build"
+            "browserTarget": "expense-mock:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/store-mock/src/test.ts",
-            "polyfills": "projects/store-mock/src/polyfills.ts",
-            "tsConfig": "projects/store-mock/tsconfig.spec.json",
-            "karmaConfig": "projects/store-mock/karma.conf.js",
+            "main": "projects/expense-mock/src/test.ts",
+            "polyfills": "projects/expense-mock/src/polyfills.ts",
+            "tsConfig": "projects/expense-mock/tsconfig.spec.json",
+            "karmaConfig": "projects/expense-mock/karma.conf.js",
             "assets": [
-              "projects/store-mock/src/favicon.ico",
-              "projects/store-mock/src/assets"
+              "projects/expense-mock/src/favicon.ico",
+              "projects/expense-mock/src/assets"
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "projects/store-mock/src/styles.scss",
+              "projects/expense-mock/src/styles.scss",
               "node_modules/material-design-icons/iconfont/material-icons.css",
               "node_modules/bootstrap/dist/css/bootstrap.css"
             ],
@@ -147,9 +147,9 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/store-mock/tsconfig.app.json",
-              "projects/store-mock/tsconfig.spec.json",
-              "projects/store-mock/e2e/tsconfig.json"
+              "projects/expense-mock/tsconfig.app.json",
+              "projects/expense-mock/tsconfig.spec.json",
+              "projects/expense-mock/e2e/tsconfig.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -159,12 +159,12 @@
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
-            "protractorConfig": "projects/store-mock/e2e/protractor.conf.js",
-            "devServerTarget": "store-mock:serve"
+            "protractorConfig": "projects/expense-mock/e2e/protractor.conf.js",
+            "devServerTarget": "expense-mock:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "store-mock:serve:production"
+              "devServerTarget": "expense-mock:serve:production"
             }
           }
         }
@@ -174,5 +174,5 @@
   "cli": {
     "analytics": false
   },
-  "defaultProject": "store-mock"
+  "defaultProject": "expense-mock"
 }

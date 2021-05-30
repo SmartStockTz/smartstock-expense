@@ -1,12 +1,12 @@
 {
-  "name": "@smartstocktz/store",
+  "name": "@smartstocktz/expense",
   "version": "0.1.0",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
     "ng": "ng",
-    "start": "ng serve store-mock",
+    "start": "ng serve expense-mock",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
