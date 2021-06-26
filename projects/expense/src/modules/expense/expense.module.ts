@@ -28,7 +28,7 @@ import {DialogDeleteComponent, StoreDetailsComponent} from './components/expense
 import {EditPageComponent} from './pages/edit.page';
 import {CategoriesComponent} from './components/categories.component';
 import {CommonModule} from '@angular/common';
-import {ConfigsService, LibModule} from '@smartstocktz/core-libs';
+import {LibModule} from '@smartstocktz/core-libs';
 import {CategoryFormFieldComponent} from './components/category-form-field.component';
 import {ProductShortDetailFormComponent} from './components/product-short-detail-form.component';
 import {IndexPage} from './pages/index.page';
@@ -61,6 +61,7 @@ import {ExpenseReportDetailsComponent} from './components/expense-report-details
 import {ExpensesReportByCategoryComponent} from './components/expenses-report-by-category.component';
 import {ExpensesReportByNameComponent} from './components/expenses-report-by-name.component';
 import {AddExpenseSearchBottomSheetComponent} from './components/add-expense-search-bottom-sheet.component';
+import {ExpenseNavigationService} from './services/expense-navigation.service';
 
 const routes: Routes = [
   {path: '', component: IndexPage},
@@ -158,40 +159,8 @@ const routes: Routes = [
   entryComponents: []
 })
 export class ExpenseModule {
-  constructor(private readonly configs: ConfigsService) {
-    this.configs.addMenu({
-      name: 'Expenses',
-      link: '/expense',
-      icon: 'receipt',
-      roles: ['*'],
-      pages: [
-        {
-          name: 'items',
-          link: '/expense/item',
-          roles: ['*']
-        },
-        {
-          name: 'add item',
-          link: '/expense/item/in',
-          roles: ['*']
-        },
-        {
-          name: 'add expenses',
-          link: '/expense/item/out',
-          roles: ['*']
-        },
-        {
-          name: 'categories',
-          link: '/expense/categories',
-          roles: ['*']
-        },
-        {
-          name: 'report',
-          link: '/expense/report',
-          roles: ['admin']
-        }
-      ]
-    });
-    this.configs.selectedModuleName = 'Expenses';
+  constructor(private readonly expenseNavService: ExpenseNavigationService) {
+    expenseNavService.init();
+    expenseNavService.selected();
   }
 }
