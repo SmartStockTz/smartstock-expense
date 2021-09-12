@@ -8,8 +8,8 @@ import {MatSort} from '@angular/material/sort';
 @Component({
   selector: 'app-store-details',
   template: `
-    <div class="bg-success text-white m-0 p-3">
-      <h1>Store Out</h1>
+    <div class="bg-success text-white m-0 pb-3">
+      <h1>Details</h1>
       <h2 class="row justify-content-between">
         <span class="px-2">{{data.id}}</span>
       </h2>

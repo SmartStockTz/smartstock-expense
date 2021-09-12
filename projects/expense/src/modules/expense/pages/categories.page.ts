@@ -32,7 +32,7 @@ import {DeviceState} from '@smartstocktz/core-libs';
 export class CategoriesPage implements OnInit, OnDestroy {
 
   constructor(public readonly deviceState: DeviceState) {
-    document.title = 'SmartStock - Store Category';
+    document.title = 'SmartStock - Expense Category';
   }
 
   ngOnInit(): void {

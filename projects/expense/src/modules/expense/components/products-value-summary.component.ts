@@ -7,15 +7,17 @@ import {takeUntil} from 'rxjs/operators';
   selector: 'app-products-value-summary',
   template: `
     <app-dash-card [description]="'non zeros item values currently'"
-                   [title]="'Current Store Value'"
+                   [title]="''"
                    [content]="content">
       <ng-template #content>
         <div
           style="display: flex; height: 100%; flex-direction: column; justify-content: center; align-items: center">
           <h1 *ngIf="(stockState.isFetchExpenseItems | async)=== false" style="font-size: 34px">
-            <app-animate-digit [digit]="stockState.totalValueOfStores.value" [duration]="1000"></app-animate-digit>
+            <app-animate-digit [digit]="stockState.totalValueOfStores.value"
+                               [duration]="1000"></app-animate-digit>
           </h1>
-          <mat-progress-spinner *ngIf="(stockState.isFetchExpenseItems | async)=== true" mode="indeterminate" diameter="20"
+          <mat-progress-spinner *ngIf="(stockState.isFetchExpenseItems | async)=== true" mode="indeterminate"
+                                diameter="20"
                                 color="primary"></mat-progress-spinner>
         </div>
       </ng-template>
@@ -40,11 +42,13 @@ export class ProductsValueSummaryComponent implements OnInit, AfterViewInit, OnD
     //   }).reduce((a, b) => a + b, 0);
     // });
   }
+
   ngOnInit(): void {
-   this.stockState.getStoreSummary().then(value => {
-     console.log(value);
-   });
+    this.stockState.getStoreSummary().then(value => {
+      console.log(value);
+    });
   }
+
   ngAfterViewInit(): void {
     this.animateValue(0, this.stockState.totalValidStores.value, 2000);
   }
@@ -52,7 +56,9 @@ export class ProductsValueSummaryComponent implements OnInit, AfterViewInit, OnD
   animateValue(start, end, duration): any {
     let startTimestamp = null;
     const step = (timestamp) => {
-      if (!startTimestamp) { startTimestamp = timestamp; }
+      if (!startTimestamp) {
+        startTimestamp = timestamp;
+      }
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
       if (progress < 1 || !this.stockState.isFetchExpenseItems) {
         window.requestAnimationFrame(step);

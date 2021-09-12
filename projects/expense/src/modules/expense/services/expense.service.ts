@@ -18,7 +18,9 @@ export class ExpenseService {
       .query()
       .cids(true)
       .raw({
-        date: `it >= '${from}' && it <= '${to}'`
+        date: {
+          $fn : `return it >= '${from}' && it <= '${to}'`
+        }
       });
     const expenses = await Promise.all(
       cids.map(c => {
@@ -32,7 +34,7 @@ export class ExpenseService {
           previousValue[currentValue.item.category].total += currentValue.amount;
         } else {
           previousValue[currentValue.item.category] = {
-            _id: currentValue.item.category,
+            id: currentValue.item.category,
             total: currentValue.amount
           };
         }
@@ -48,7 +50,9 @@ export class ExpenseService {
       .query()
       .cids(true)
       .raw({
-        date: `it >= '${from}' && it <= '${to}'`
+        date: {
+          $fn : `return it >= '${from}' && it <= '${to}'`
+        }
       });
     const expenses = await Promise.all(
       cids.map(c => {
@@ -62,7 +66,7 @@ export class ExpenseService {
           previousValue[currentValue.item.name].total += currentValue.amount;
         } else {
           previousValue[currentValue.item.name] = {
-            _id: currentValue.item.name,
+            id: currentValue.item.name,
             total: currentValue.amount
           };
         }
@@ -78,7 +82,9 @@ export class ExpenseService {
       .query()
       .cids(true)
       .raw({
-        date: `it >= '${from}' && it <= '${to}'`
+        date: {
+          $fn: `return it >= '${from}' && it <= '${to}'`
+        }
       });
     const expenses = await Promise.all(
       cids.map(c => {
@@ -98,7 +104,7 @@ export class ExpenseService {
           });
         } else {
           previousValue[currentValue.item.name] = {
-            _id: currentValue.item.name,
+            id: currentValue.item.name,
             track: [{
               date: currentValue.date,
               amount: currentValue.amount,

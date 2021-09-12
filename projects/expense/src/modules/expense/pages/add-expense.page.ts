@@ -17,7 +17,7 @@ import {DeviceState} from '@smartstocktz/core-libs';
       </ng-template>
       <ng-template #body>
         <div class="col-12 col-xl-9 col-lg-9 col-md-10 col-sm-11 mx-auto" style="min-height: 100vh">
-          <app-store-out-component></app-store-out-component>
+          <app-add-expense-component></app-add-expense-component>
         </div>
       </ng-template>
     </app-layout-sidenav>
@@ -26,7 +26,7 @@ import {DeviceState} from '@smartstocktz/core-libs';
 })
 export class AddExpensePage implements OnInit {
   constructor(public readonly deviceState: DeviceState) {
-    document.title = 'SmartStock - Store Out';
+    document.title = 'SmartStock - Add Expense';
   }
 
   ngOnInit(): void {

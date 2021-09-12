@@ -1,4 +1,4 @@
-# Smartstock Core Stores
+# Smartstock Expenses
 
 Angular2 library that provides item module to be used across smartstock
 

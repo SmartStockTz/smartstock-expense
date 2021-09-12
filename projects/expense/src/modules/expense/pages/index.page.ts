@@ -17,7 +17,7 @@ import {ExpenseState} from '../states/expense.state';
       </ng-template>
       <ng-template #body>
 
-        <div *ngIf="(deviceSatte.isSmallScreen | async)===false"
+        <div *ngIf="(deviceState.isSmallScreen | async)===false"
              class="container col-xl-10 col-lg-10 col-sm-9 col-md-9 col-sm-12 col-10">
           <h1 class="d-none d-sm-none d-md-block" style="margin-top: 16px">Go To</h1>
           <div class="d-flex flex-row flex-wrap">
@@ -34,7 +34,7 @@ import {ExpenseState} from '../states/expense.state';
           </div>
         </div>
 
-        <mat-nav-list *ngIf="(deviceSatte.isSmallScreen | async)===true" style="min-height: 100vh">
+        <mat-nav-list *ngIf="(deviceState.isSmallScreen | async)===true" style="min-height: 100vh">
           <div *ngFor="let page of pages" routerLink="{{page.link}}">
             <mat-list-item>
               <mat-icon matListIcon>{{page.icon}}</mat-icon>
@@ -44,7 +44,7 @@ import {ExpenseState} from '../states/expense.state';
           </div>
         </mat-nav-list>
 
-        <div *ngIf="(deviceSatte.isSmallScreen | async)===false"
+        <div *ngIf="(deviceState.isSmallScreen | async)===false"
              class="container col-xl-10 col-lg-10 col-sm-9 col-md-9 col-sm-12 col-10 mt-3">
           <h2>This Month Summary</h2>
           <div class="row">

@@ -63,7 +63,6 @@
             "main": "projects/expense-mock/src/main.ts",
             "polyfills": "projects/expense-mock/src/polyfills.ts",
             "tsConfig": "projects/expense-mock/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "projects/expense-mock/src/favicon.ico",
               "projects/expense-mock/src/assets"
@@ -74,7 +73,13 @@
               "node_modules/material-design-icons/iconfont/material-icons.css",
               "node_modules/bootstrap/dist/css/bootstrap.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -104,7 +109,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",

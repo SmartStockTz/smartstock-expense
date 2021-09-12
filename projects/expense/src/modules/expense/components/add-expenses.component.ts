@@ -14,7 +14,7 @@ import {ExpenseModel} from '../models/expense.model';
 
 // @dynamic
 @Component({
-  selector: 'app-store-out-component',
+  selector: 'app-add-expense-component',
   template: `
     <div style="margin-top: 36px; margin-bottom: 24px">
       <form *ngIf="storeOutFormGroup" [formGroup]="storeOutFormGroup">
@@ -217,7 +217,7 @@ export class AddExpensesComponent implements OnInit {
         .then(_ => {
           this.storeOutDataSource = new MatTableDataSource();
           this.totalQuantity = 0;
-          this.router.navigateByUrl('/expense/item').catch(console.log);
+          this.router.navigateByUrl('/expense/report').catch(console.log);
         }).catch(reason => {
         this.snack.open(reason && reason.message ? reason.message : reason.toString(), 'Ok', {
           duration: 2000
