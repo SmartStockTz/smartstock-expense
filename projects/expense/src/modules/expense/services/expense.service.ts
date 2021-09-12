@@ -1,97 +1,148 @@
 import {Injectable} from '@angular/core';
-import {UserService} from './user.service';
-import {StorageService} from '@smartstocktz/core-libs';
-import {bfast, BFast} from 'bfastjs';
+import {database} from 'bfast';
 import {ExpenseModel} from '../models/expense.model';
 import {ExpenseItemModel} from '../models/expense-item.model';
+import {IpfsService, UserService} from '@smartstocktz/core-libs';
 
 @Injectable({
-  providedIn: 'any'
+  providedIn: 'root'
 })
 export class ExpenseService {
-  constructor(private readonly userService: UserService,
-              private readonly storageService: StorageService) {
+  constructor(private readonly userService: UserService) {
   }
 
-  async storeFrequencyGroupByCategory(from: string, to: string): Promise<any> {
-    const shop = await this.storageService.getActiveShop();
-    return bfast.database(shop.projectId)
+  async expenseFrequencyGroupByCategory(from: string, to: string): Promise<any> {
+    const shop = await this.userService.getCurrentShop();
+    const cids: string[] = await database(shop.projectId)
       .table('expenses')
       .query()
-      .aggregate([
-        {
-          $match: {
-            date: {
-              $gte: from,
-              $lte: to
-            }
-          }
-        },
-        {
-          $group: {
-            _id: '$item.category',
-            total: {$sum: '$amount'}
-          }
+      .cids(true)
+      .raw({
+        date: `it >= '${from}' && it <= '${to}'`
+      });
+    const expenses = await Promise.all(
+      cids.map(c => {
+        return IpfsService.getDataFromCid(c);
+      })
+    ) as any[];
+    return Object.values(
+      expenses.reduce((previousValue, currentValue: ExpenseModel) => {
+        const x = previousValue[currentValue.item.category];
+        if (x) {
+          previousValue[currentValue.item.category].total += currentValue.amount;
+        } else {
+          previousValue[currentValue.item.category] = {
+            _id: currentValue.item.category,
+            total: currentValue.amount
+          };
         }
-      ], {});
+        return previousValue;
+      }, {})
+    );
   }
 
-  async storeFrequencyGroupByTag(from: string, to: string): Promise<any> {
-    const shop = await this.storageService.getActiveShop();
-    return bfast.database(shop.projectId)
+  async expenseFrequencyGroupByTag(from: string, to: string): Promise<any> {
+    const shop = await this.userService.getCurrentShop();
+    const cids: string[] = await database(shop.projectId)
       .table('expenses')
       .query()
-      .aggregate([
-        {
-          $match: {
-            date: {
-              $gte: from,
-              $lte: to
-            }
-          }
-        },
-        {
-          $group: {
-            _id: '$item.name',
-            total: {$sum: '$amount'}
-          }
+      .cids(true)
+      .raw({
+        date: `it >= '${from}' && it <= '${to}'`
+      });
+    const expenses = await Promise.all(
+      cids.map(c => {
+        return IpfsService.getDataFromCid(c);
+      })
+    ) as any[];
+    return Object.values(
+      expenses.reduce((previousValue, currentValue: ExpenseModel) => {
+        const x = previousValue[currentValue.item.name];
+        if (x) {
+          previousValue[currentValue.item.name].total += currentValue.amount;
+        } else {
+          previousValue[currentValue.item.name] = {
+            _id: currentValue.item.name,
+            total: currentValue.amount
+          };
         }
-      ], {});
+        return previousValue;
+      }, {})
+    );
   }
 
-  async storeFrequencyGroupByTagWithTracking(from: string, to: string): Promise<any> {
-    const shop = await this.storageService.getActiveShop();
-    return bfast.database(shop.projectId)
+  async expenseFrequencyGroupByTagWithTracking(from: string, to: string): Promise<any> {
+    const shop = await this.userService.getCurrentShop();
+    const cids: string[] = await database(shop.projectId)
       .table('expenses')
       .query()
-      .aggregate([
-        {
-          $match: {
-            date: {
-              $gte: from,
-              $lte: to
-            }
-          }
-        },
-        {
-          $sort: {
-            date: -1,
-            time: -1
-          }
-        },
-        {
-          $group: {
-            _id: '$item.name',
-            track: {$push: {date: '$date', amount: '$amount', time: '$time'}},
-            total: {$sum: '$amount'}
-          }
-        },
-        {
-          $sort: {
-            total: -1
-          }
+      .cids(true)
+      .raw({
+        date: `it >= '${from}' && it <= '${to}'`
+      });
+    const expenses = await Promise.all(
+      cids.map(c => {
+        return IpfsService.getDataFromCid(c);
+      })
+    ) as any[];
+    return Object.values(
+      expenses.reduce((previousValue, currentValue: ExpenseModel) => {
+        const x = previousValue[currentValue.item.name];
+        if (x) {
+          previousValue[currentValue.item.name].total += currentValue.amount;
+          previousValue[currentValue.item.name].track.push({
+            date: currentValue.date,
+            amount: currentValue.amount,
+            // @ts-ignore
+            time: currentValue.time,
+          });
+        } else {
+          previousValue[currentValue.item.name] = {
+            _id: currentValue.item.name,
+            track: [{
+              date: currentValue.date,
+              amount: currentValue.amount,
+              // @ts-ignore
+              time: currentValue.time,
+            }],
+            total: currentValue.amount
+          };
         }
-      ], {});
+        return previousValue;
+      }, {})
+    );
+    // const shop = await this.userService.getCurrentShop();
+    // return database(shop.projectId)
+    //   .table('expenses')
+    //   .query()
+    //   .aggregate([
+    //     {
+    //       $match: {
+    //         date: {
+    //           $gte: from,
+    //           $lte: to
+    //         }
+    //       }
+    //     },
+    //     {
+    //       $sort: {
+    //         date: -1,
+    //         time: -1
+    //       }
+    //     },
+    //     {
+    //       $group: {
+    //         _id: '$item.name',
+    //         track: {$push: {date: '$date', amount: '$amount', time: '$time'}},
+    //         total: {$sum: '$amount'}
+    //       }
+    //     },
+    //     {
+    //       $sort: {
+    //         total: -1
+    //       }
+    //     }
+    //   ], {});
   }
 
   // async exportToExcel(): Promise<any> {
@@ -137,16 +188,14 @@ export class ExpenseService {
   // }
 
   async addExpenseItem(expenseItem: ExpenseItemModel, inUpdateMode = false): Promise<any> {
-    const shop = await this.storageService.getActiveShop();
-    console.log(expenseItem);
-    console.log(inUpdateMode);
+    const shop = await this.userService.getCurrentShop();
     if (inUpdateMode) {
       const stockId = expenseItem._id ? expenseItem._id : expenseItem.id;
       delete expenseItem.id;
       delete expenseItem._id;
       delete expenseItem.updatedAt;
       delete expenseItem.createdAt;
-      return BFast.database(shop.projectId).collection('expense_items')
+      return database(shop.projectId).collection('expense_items')
         .query()
         .byId(stockId)
         .updateBuilder()
@@ -155,7 +204,7 @@ export class ExpenseService {
     } else {
       // tslint:disable-next-line:variable-name
       const _store = {...expenseItem};
-      return BFast.database(shop.projectId).collection('expense_items')
+      return database(shop.projectId).collection('expense_items')
         .query()
         .byId(_store.name)
         .updateBuilder()
@@ -166,83 +215,88 @@ export class ExpenseService {
   }
 
   async addExpenses(storeOutData: ExpenseModel[]): Promise<any> {
-    const shop = await this.storageService.getActiveShop();
-    return BFast.database(shop.projectId).table('expenses').save(storeOutData);
-    // .update('expenses', storeOutData.map(x => {
-    //   return {
-    //     query: {
-    //       id: x.storeId
-    //     },
-    //     update: {
-    //       $inc: {
-    //         quantity: -x.quantity
-    //       }
-    //     }
-    //   };
-    // }))
-    // return BFast.database(shop.projectId).collection('store_out').save(storeOutData);
-
+    const shop = await this.userService.getCurrentShop();
+    return database(shop.projectId).table('expenses').save(storeOutData);
   }
 
   async deleteExpenseItem(expense: ExpenseItemModel): Promise<any> {
-    const shop = await this.storageService.getActiveShop();
-    return BFast.database(shop.projectId).collection('expense_items')
+    const shop = await this.userService.getCurrentShop();
+    return database(shop.projectId).collection('expense_items')
       .query().byId(expense._id ? expense._id : expense.id)
       .delete();
   }
 
   async getExpenses(): Promise<ExpenseModel[]> {
-    const shop = await this.storageService.getActiveShop();
-    const total = await bfast.database(shop.projectId)
+    const shop = await this.userService.getCurrentShop();
+    const total = await database(shop.projectId)
       .table('expenses')
       .query()
       .count(true)
       .find<number>();
-    return await BFast.database(shop.projectId)
+    const cids: string[] = await database(shop.projectId)
       .collection('expenses')
       .query()
+      .cids(true)
       .size(total)
       .skip(0)
       .find();
+    return await Promise.all(
+      cids.map(c => {
+        return IpfsService.getDataFromCid(c);
+      })
+    ) as any[];
   }
 
 
   async getExpenseItems(): Promise<ExpenseItemModel[]> {
-    const shop = await this.storageService.getActiveShop();
-    const total = await bfast.database(shop.projectId)
+    const shop = await this.userService.getCurrentShop();
+    const total = await database(shop.projectId)
       .table('expense_items')
       .query()
       .count(true)
       .find<number>();
-    return await BFast.database(shop.projectId)
+    const cids: string[] = await database(shop.projectId)
       .collection('expense_items')
       .query()
+      .cids(true)
       .size(total)
       .skip(0)
-      .orderBy('_updated_at', -1)
+      // .orderBy('_updated_at', -1)
       .find();
+    return await Promise.all(
+      cids.map(c => {
+        return IpfsService.getDataFromCid(c);
+      })
+    ) as any[];
   }
 
   async getExpenseByDate(date: string): Promise<ExpenseModel[]> {
-    const shop = await this.storageService.getActiveShop();
-    const total = await bfast.database(shop.projectId)
+    const shop = await this.userService.getCurrentShop();
+    const total = await database(shop.projectId)
       .table('expenses')
       .query()
+      .equalTo('date', date)
       .count(true)
       .find<number>();
-    return await BFast.database(shop.projectId)
+    const cids: string[] = await database(shop.projectId)
       .collection('expense_items')
       .query()
+      .cids(true)
       .equalTo('date', date)
       .size(total)
       .skip(0)
       .find();
+    return await Promise.all(
+      cids.map(c => {
+        return IpfsService.getDataFromCid(c);
+      })
+    ) as any[];
   }
 
   async deleteManyExpenseItems(expenseItemsIds: string[]): Promise<any> {
-    const activeShop = await this.storageService.getActiveShop();
-    return BFast.database(activeShop.projectId)
-      .transaction()
+    const activeShop = await this.userService.getCurrentShop();
+    return database(activeShop.projectId)
+      .bulk()
       .delete('expense_items', {
         query: {
           filter: {

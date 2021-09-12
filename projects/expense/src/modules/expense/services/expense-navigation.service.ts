@@ -19,26 +19,31 @@ export class ExpenseNavigationService {
           name: 'items',
           link: '/expense/item',
           roles: ['admin', 'manager'],
+          click: null
         },
         {
           name: 'add item',
           link: '/expense/item/in',
           roles: ['admin', 'manager'],
+          click: null
         },
         {
           name: 'add expenses',
           link: '/expense/item/out',
           roles: ['admin', 'manager'],
+          click: null
         },
         {
           name: 'categories',
           link: '/expense/categories',
           roles: ['admin', 'manager'],
+          click: null
         },
         {
           name: 'report',
           link: '/expense/report',
-          roles: ['admin', 'manager']
+          roles: ['admin', 'manager'],
+          click: null
         }
       ]
     });

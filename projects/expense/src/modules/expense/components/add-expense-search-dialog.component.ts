@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {ExpenseState} from '../states/expense.state';
 import {FormControl} from '@angular/forms';
-import {ExpenseItemModel} from '../models/expense-item.model';
 import {debounceTime} from 'rxjs/operators';
 
 @Component({

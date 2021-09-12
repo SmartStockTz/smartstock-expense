@@ -4,12 +4,11 @@ import {BehaviorSubject, Observable, of} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {
-  DeviceInfoUtil,
   DeviceState,
   FileBrowserDialogComponent,
   FileBrowserSheetComponent,
   FilesService,
-  StorageService
+  StorageService, UserService
 } from '@smartstocktz/core-libs';
 import {ExpenseService} from '../services/expense.service';
 import {MetasModel} from '../models/metas.model';
@@ -17,11 +16,11 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 
 @Component({
-  selector: 'app-store-in',
+  selector: 'app-expense-item',
   template: `
     <app-layout-sidenav
-      [leftDrawerMode]="enoughWidth()?'side':'over'"
-      [leftDrawerOpened]="enoughWidth()"
+      [leftDrawerMode]="(deviceState.enoughWidth | async)===true?'side':'over'"
+      [leftDrawerOpened]="(deviceState.enoughWidth | async)===true"
       [leftDrawer]="side"
       [heading]="isUpdateMode?'Update Item':'Add Item'"
       backLink="/expense"
@@ -72,7 +71,7 @@ import {MatBottomSheet} from '@angular/material/bottom-sheet';
   `,
   styleUrls: ['../styles/create.style.scss']
 })
-export class AddExpenseItemPage extends DeviceInfoUtil implements OnInit {
+export class AddExpenseItemPage implements OnInit {
 
   @Input() isUpdateMode = false;
   @Input() initialStore: any;
@@ -85,8 +84,6 @@ export class AddExpenseItemPage extends DeviceInfoUtil implements OnInit {
     controlName: string;
   }[]>;
   mainProgress = false;
-  uploadPercentage = 0;
-  uploadTag = '';
 
   constructor(private readonly formBuilder: FormBuilder,
               private readonly snack: MatSnackBar,
@@ -95,10 +92,10 @@ export class AddExpenseItemPage extends DeviceInfoUtil implements OnInit {
               private readonly bottom: MatBottomSheet,
               private readonly router: Router,
               private readonly storageService: StorageService,
-              private readonly deviceState: DeviceState,
+              private readonly userService: UserService,
+              public readonly deviceState: DeviceState,
               private readonly stockService: ExpenseService) {
-    super();
-    document.title = 'SmartStock - Store In';
+    document.title = 'SmartStock - Add expense item';
   }
 
   ngOnInit(): void {
@@ -195,7 +192,7 @@ export class AddExpenseItemPage extends DeviceInfoUtil implements OnInit {
   async browserMedia($event: MouseEvent, control: string): Promise<void> {
     $event.preventDefault();
     const isMobile = this.deviceState.isSmallScreen.value;
-    const shop = await this.storageService.getActiveShop();
+    const shop = await this.userService.getCurrentShop();
     if (isMobile) {
       this.bottom.open(FileBrowserSheetComponent, {
         closeOnNavigation: false,

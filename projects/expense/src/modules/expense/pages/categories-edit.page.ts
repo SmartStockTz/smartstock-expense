@@ -1,14 +1,15 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {DeviceInfoUtil} from '@smartstocktz/core-libs';
+import {DeviceState} from '@smartstocktz/core-libs';
 import {CategoryState} from '../states/category.state';
 import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-store-category-edit',
   template: `
-    <app-layout-sidenav [leftDrawer]="drawer" [body]="body" [leftDrawerMode]="enoughWidth()?'side':'over'"
-                               heading="Edit Category"
-                               [leftDrawerOpened]="enoughWidth()">
+    <app-layout-sidenav [leftDrawer]="drawer" [body]="body"
+                        [leftDrawerMode]="(deviceState.enoughWidth | async) === true?'side':'over'"
+                        heading="Edit Category"
+                        [leftDrawerOpened]="(deviceState.enoughWidth | async) === true">
       <ng-template #drawer>
         <app-drawer></app-drawer>
       </ng-template>
@@ -23,10 +24,10 @@ import {Router} from '@angular/router';
     </app-layout-sidenav>
   `
 })
-export class CategoriesEditPage extends DeviceInfoUtil implements OnDestroy, OnInit {
+export class CategoriesEditPage implements OnDestroy, OnInit {
   constructor(public readonly categoryState: CategoryState,
+              public readonly deviceState: DeviceState,
               private readonly router: Router) {
-    super();
     document.title = 'SmartStock - Category Edit';
   }
 

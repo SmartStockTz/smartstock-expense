@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CategoryService} from '../services/category.service';
 import {MatDialog} from '@angular/material/dialog';
-import {FileBrowserDialogComponent, StorageService} from '@smartstocktz/core-libs';
+import {FileBrowserDialogComponent, StorageService, UserService} from '@smartstocktz/core-libs';
 import {CategoryModel} from '../models/category.model';
 import {MetasModel} from '../models/metas.model';
 import {Router} from '@angular/router';
@@ -69,6 +69,7 @@ export class CategoryCreateFormComponent implements OnInit {
     private readonly snack: MatSnackBar,
     private readonly dialog: MatDialog,
     private readonly storage: StorageService,
+    private readonly userService: UserService,
     private readonly router: Router,
     private readonly categoryService: CategoryService) {
   }
@@ -136,7 +137,7 @@ export class CategoryCreateFormComponent implements OnInit {
       closeOnNavigation: false,
       disableClose: false,
       data: {
-        shop: await this.storage.getActiveShop()
+        shop: await this.userService.getCurrentShop()
       }
     }).afterClosed().subscribe(value => {
       if (value && value.url) {

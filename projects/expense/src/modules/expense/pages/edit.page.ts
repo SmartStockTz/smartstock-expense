@@ -2,18 +2,18 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ExpenseItemModel} from '../models/expense-item.model';
-import {DeviceInfoUtil} from '@smartstocktz/core-libs';
+import {} from '@smartstocktz/core-libs';
 import {ExpenseState} from '../states/expense.state';
 
 @Component({
   selector: 'app-store-edit',
   template: `
-    <app-store-in [isLoadingData]="loadStore" [isUpdateMode]="true"
-                          [initialStore]="store"></app-store-in>
+      <app-expense-item [isLoadingData]="loadStore" [isUpdateMode]="true"
+                        [initialStore]="store"></app-expense-item>
   `,
   styleUrls: ['../styles/edit.style.scss']
 })
-export class EditPageComponent extends DeviceInfoUtil implements OnInit {
+export class EditPageComponent implements OnInit {
 
   store: ExpenseItemModel;
   loadStore = false;
@@ -21,7 +21,6 @@ export class EditPageComponent extends DeviceInfoUtil implements OnInit {
   constructor(private readonly stockState: ExpenseState,
               private readonly router: Router,
               private readonly snack: MatSnackBar) {
-    super();
     document.title = 'SmartStock - Edit Store Item';
   }
 

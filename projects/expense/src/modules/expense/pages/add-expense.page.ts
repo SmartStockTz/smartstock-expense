@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {DeviceInfoUtil} from '@smartstocktz/core-libs';
+import {DeviceState} from '@smartstocktz/core-libs';
 
 @Component({
   selector: 'app-store-out',
@@ -10,8 +10,8 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
                         [hasBackRoute]="true"
                         #sidenav
                         [body]="body"
-                        [leftDrawerMode]="enoughWidth()?'side':'over'"
-                        [leftDrawerOpened]="enoughWidth()">
+                        [leftDrawerMode]="(deviceState.enoughWidth | async) === true?'side':'over'"
+                        [leftDrawerOpened]="(deviceState.enoughWidth | async) === true">
       <ng-template #side>
         <app-drawer></app-drawer>
       </ng-template>
@@ -24,9 +24,8 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
   `,
   styleUrls: ['../styles/create.style.scss']
 })
-export class AddExpensePage extends DeviceInfoUtil implements OnInit {
-  constructor() {
-    super();
+export class AddExpensePage implements OnInit {
+  constructor(public readonly deviceState: DeviceState) {
     document.title = 'SmartStock - Store Out';
   }
 

@@ -42,7 +42,7 @@ export class ExpenseState {
 
   async expenseFrequencyGroupByCategory(from: string, to: string): Promise<any> {
     this.isFetchCategoryReport.next(true);
-    return this.storeService.storeFrequencyGroupByCategory(from, to)
+    return this.storeService.expenseFrequencyGroupByCategory(from, to)
       .then(value => {
         this.expenseReportByCategory.next(value);
         return value;
@@ -58,7 +58,7 @@ export class ExpenseState {
 
   async expenseFrequencyGroupByTag(from: string, to: string): Promise<any> {
     this.isFetchTagReport.next(true);
-    return this.storeService.storeFrequencyGroupByTag(from, to)
+    return this.storeService.expenseFrequencyGroupByTag(from, to)
       .then(value => {
         this.expenseReportByTag.next(value);
         return value;
@@ -74,7 +74,7 @@ export class ExpenseState {
 
   async expenseFrequencyGroupByTagWithTracking(from: string, to: string): Promise<any> {
     this.isFetchTagWithTrackReport.next(true);
-    return this.storeService.storeFrequencyGroupByTagWithTracking(from, to)
+    return this.storeService.expenseFrequencyGroupByTagWithTracking(from, to)
       .then(value => {
         this.expenseReportByTagWithTrack.next(value);
         return value;

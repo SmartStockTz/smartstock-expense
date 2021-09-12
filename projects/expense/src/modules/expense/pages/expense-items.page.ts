@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {DeviceInfoUtil, DeviceState} from '@smartstocktz/core-libs';
+import {DeviceState} from '@smartstocktz/core-libs';
 import {ExpenseState} from '../states/expense.state';
 
 
@@ -9,8 +9,8 @@ import {ExpenseState} from '../states/expense.state';
     <app-layout-sidenav
       [leftDrawer]="side"
       [showSearch]="false"
-      [leftDrawerMode]="enoughWidth()?'side':'over'"
-      [leftDrawerOpened]="enoughWidth()"
+      [leftDrawerMode]="(deviceState.enoughWidth | async) === true?'side':'over'"
+      [leftDrawerOpened]="(deviceState.enoughWidth | async) === true"
       [hasBackRoute]="true"
       backLink="/expense"
       [heading]="'Expense Items'"
@@ -37,11 +37,10 @@ import {ExpenseState} from '../states/expense.state';
   `,
   styleUrls: ['../styles/store.style.scss']
 })
-export class ExpenseItemsPage extends DeviceInfoUtil implements OnInit {
+export class ExpenseItemsPage implements OnInit {
 
   constructor(public readonly stockState: ExpenseState,
               public readonly deviceState: DeviceState) {
-    super();
     document.title = 'SmartStore - Store';
   }
 

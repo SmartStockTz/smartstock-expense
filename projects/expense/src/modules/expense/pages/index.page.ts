@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {DeviceInfoUtil, DeviceState} from '@smartstocktz/core-libs';
+import {DeviceState} from '@smartstocktz/core-libs';
 import {ExpenseState} from '../states/expense.state';
 
 @Component({
@@ -8,8 +8,8 @@ import {ExpenseState} from '../states/expense.state';
     <app-layout-sidenav
       [leftDrawer]="side"
       [showSearch]="false"
-      [leftDrawerOpened]="enoughWidth()"
-      [leftDrawerMode]="enoughWidth()?'side':'over'"
+      [leftDrawerOpened]="(deviceState.enoughWidth | async) === true"
+      [leftDrawerMode]="(deviceState.enoughWidth | async) === true?'side':'over'"
       [heading]="'Expenses'"
       [body]="body">
       <ng-template #side>
@@ -70,7 +70,7 @@ import {ExpenseState} from '../states/expense.state';
   `
 })
 
-export class IndexPage extends DeviceInfoUtil implements OnInit {
+export class IndexPage implements OnInit {
   pages = [
     {
       name: 'Items',
@@ -100,9 +100,8 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
   ];
 
   constructor(private readonly stockState: ExpenseState,
-              public readonly deviceSatte: DeviceState) {
-    super();
-    document.title = 'SmartStock - Store';
+              public readonly deviceState: DeviceState) {
+    document.title = 'SmartStock - Expense';
   }
 
   ngOnInit(): void {

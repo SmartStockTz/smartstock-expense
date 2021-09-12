@@ -1,18 +1,12 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {Observable} from 'rxjs';
-import {MatDialog} from '@angular/material/dialog';
-import {StorageService} from '@smartstocktz/core-libs';
-import {NoStockDialogComponent} from '@smartstocktz/core-libs';
-import {UserService} from '../services/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExistsGuard implements CanActivate {
-  constructor(private readonly storageService: StorageService,
-              private readonly userService: UserService,
-              private readonly dialog: MatDialog) {
+  constructor() {
   }
 
   canActivate(

@@ -52,7 +52,7 @@ export class CategoryFormFieldComponent implements OnInit {
 
   getCategories(): void {
     this.categoriesFetching = true;
-    this.categoryService.getAllCategory({size: 10000}).then(categoryObject => {
+    this.categoryService.getAllCategory().then(categoryObject => {
       categoryObject.push({name: 'general'});
       this.categories = of(categoryObject);
       this.categoriesFetching = false;

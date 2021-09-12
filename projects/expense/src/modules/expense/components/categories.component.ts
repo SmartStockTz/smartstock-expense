@@ -126,7 +126,7 @@ export class CategoriesComponent implements OnInit {
 
   getCategories(): void {
     this.fetchCategoriesFlag = true;
-    this.stockDatabase.getAllCategory({size: 100}).then(data => {
+    this.stockDatabase.getAllCategory().then(data => {
       this.categoriesArray = JSON.parse(JSON.stringify(data));
       this.categoriesDatasource = new MatTableDataSource<CategoryModel>(this.categoriesArray);
       this.categoriesDatasource.paginator = this.matPaginator;

@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {DeviceInfoUtil} from '@smartstocktz/core-libs';
+import {DeviceState} from '@smartstocktz/core-libs';
 
 
 @Component({
@@ -13,8 +13,8 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
                         backLink="/expense"
                         [searchPlaceholder]="'Search...'"
                         [showProgress]="false"
-                        [leftDrawerMode]="enoughWidth()?'side':'over'"
-                        [leftDrawerOpened]="enoughWidth()">
+                        [leftDrawerMode]="(deviceState.enoughWidth | async)===true?'side':'over'"
+                        [leftDrawerOpened]="(deviceState.enoughWidth | async)===true">
       <ng-template #side>
         <app-drawer></app-drawer>
       </ng-template>
@@ -29,10 +29,9 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
   `,
   styleUrls: ['../styles/store.style.scss']
 })
-export class CategoriesPage extends DeviceInfoUtil implements OnInit, OnDestroy {
+export class CategoriesPage implements OnInit, OnDestroy {
 
-  constructor() {
-    super();
+  constructor(public readonly deviceState: DeviceState) {
     document.title = 'SmartStock - Store Category';
   }
 

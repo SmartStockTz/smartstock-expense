@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {BFast} from 'bfastjs';
+import {auth, init} from 'bfast';
 import {Router} from '@angular/router';
 import {StorageService, UserService} from '@smartstocktz/core-libs';
 
@@ -47,15 +47,16 @@ export class LoginPageComponent implements OnInit {
       this.snack.open('Please fill all required fields', 'Ok', {duration: 3000});
     } else {
       this.isLogin = true;
-      BFast.auth()
+      auth()
         .logIn(this.loginForm.value.username, this.loginForm.value.password)
         .then(async (user: any) => {
-          BFast.init({
+          init({
             applicationId: user.applicationId,
             projectId: user.projectId
           }, user.projectId);
+          const shops = await this.userService.getShops(user);
           await this.storageService.saveCurrentProjectId(user.projectId);
-          return await this.storageService.saveActiveShop((await this.userService.getShops(user))[0]);
+          return await this.userService.saveCurrentShop(shops[0]);
         }).then(s => {
         // console.log(s);
         this.router.navigateByUrl('/').catch(console.log);

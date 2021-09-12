@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {DeviceInfoUtil} from '@smartstocktz/core-libs';
+import {DeviceState} from '@smartstocktz/core-libs';
 import {ExpenseState} from '../states/expense.state';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
@@ -8,8 +8,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
   selector: 'app-store-report',
   template: `
     <app-layout-sidenav [heading]="'Expense Report'"
-                        [leftDrawerMode]="enoughWidth()?'side':'over'"
-                        [leftDrawerOpened]="enoughWidth()"
+                        [leftDrawerMode]="(deviceState.enoughWidth | async) === true?'side':'over'"
+                        [leftDrawerOpened]="(deviceState.enoughWidth | async) === true"
                         [showSearch]="false"
                         [hasBackRoute]="true"
                         backLink="/expense"
@@ -75,14 +75,14 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
   `,
   styleUrls: ['../styles/store.style.scss']
 })
-export class ExpenseReportPage extends DeviceInfoUtil implements OnInit {
+export class ExpenseReportPage implements OnInit {
 
   dateRange: FormGroup;
 
   constructor(public readonly storeState: ExpenseState,
+              public readonly deviceState: DeviceState,
               private readonly formBuilder: FormBuilder) {
-    super();
-    document.title = 'SmartStock - Store Report';
+    document.title = 'SmartStock - Expense Report';
   }
 
   ngOnInit(): void {
