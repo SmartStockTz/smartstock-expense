@@ -1,10 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {Observable, of} from 'rxjs';
-import {MatDialog} from '@angular/material/dialog';
 import {CategoryService} from '../services/category.service';
 import {CategoryCreateFormBottomSheetComponent} from './category-create-form-bottom-sheet.component';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {database} from 'bfast';
+import {UserService} from '@smartstocktz/core-libs';
 
 @Component({
   selector: 'app-category-form-field',
@@ -36,17 +37,27 @@ import {MatBottomSheet} from '@angular/material/bottom-sheet';
     </div>
   `
 })
-export class CategoryFormFieldComponent implements OnInit {
+export class CategoryFormFieldComponent implements OnInit, OnDestroy {
   @Input() formGroup: FormGroup;
   categoriesFetching = true;
   categories: Observable<any[]>;
+  private sig = false;
+  private obfn;
 
   constructor(private readonly categoryService: CategoryService,
               private readonly bottomSheet: MatBottomSheet,
-              private readonly dialog: MatDialog) {
+              private readonly userService: UserService) {
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    const shop = await this.userService.getCurrentShop();
+    this.obfn = database(shop.projectId).syncs('expense_categories').changes().observe(_ => {
+      if (this.sig === true) {
+        return this.sig;
+      }
+      this.getCategories();
+      this.sig = true;
+    });
     this.getCategories();
   }
 
@@ -73,19 +84,16 @@ export class CategoryFormFieldComponent implements OnInit {
     }).afterDismissed().subscribe(_ => {
       this.getCategories();
     });
-    // this.dialog.open(DialogCategoryCreateComponent, {
-    //   closeOnNavigation: true
-    // }).afterClosed().subscribe(value => {
-    //   if (value) {
-    //     this.getCategories();
-    //   }
-    // });
   }
 
   refreshCategories($event: MouseEvent): void {
     $event.preventDefault();
     $event.stopPropagation();
     this.getCategories();
+  }
+
+  ngOnDestroy(): void {
+    this.obfn?.unobserve();
   }
 
 }

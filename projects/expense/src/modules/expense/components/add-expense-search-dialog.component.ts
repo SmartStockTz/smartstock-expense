@@ -29,7 +29,7 @@ import {debounceTime} from 'rxjs/operators';
       </div>
       <div mat-dialog-content>
         <cdk-virtual-scroll-viewport [itemSize]="50" style="height: 300px">
-          <div *cdkVirtualFor="let item of storeState.expenseItems | async ">
+          <div *cdkVirtualFor="let item of storeState.expenseItems.connect() | async">
             <div style="display: flex; flex-direction: row; flex-wrap: nowrap" (click)="selectProduct(item)">
               <p style="flex-grow: 1; margin: 0; padding: 4px; text-align: start; display: flex; align-items: center">
                 {{item.name}}

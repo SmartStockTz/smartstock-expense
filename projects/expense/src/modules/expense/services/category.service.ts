@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {IpfsService, UserService} from '@smartstocktz/core-libs';
+import {SecurityUtil, UserService} from '@smartstocktz/core-libs';
 import {CategoryModel} from '../models/category.model';
 import {database} from 'bfast';
 
@@ -15,54 +15,51 @@ export class CategoryService {
   async addCategory(expenseCategory: CategoryModel, id = null): Promise<any> {
     const shop = await this.userService.getCurrentShop();
     if (id) {
-      return database(shop.projectId)
-        .collection('expense_categories')
-        .query()
-        .byId(id)
-        .updateBuilder()
-        .doc(expenseCategory)
-        .update();
+      let oc = database(shop.projectId).syncs('expense_categories').changes().get(id);
+      oc.updatedAt = new Date().toISOString();
+      oc = Object.assign(oc, expenseCategory);
+      database(shop.projectId).syncs('expense_categories').changes().set(oc);
+      return oc;
     } else {
-      return database(shop.projectId).collection<CategoryModel>('expense_categories').save(expenseCategory);
+      expenseCategory.id = SecurityUtil.generateUUID();
+      expenseCategory.createdAt = new Date().toISOString();
+      expenseCategory.updatedAt = new Date().toISOString();
+      database(shop.projectId).syncs('expense_categories').changes().set(expenseCategory as any);
+      return expenseCategory;
     }
   }
 
   async deleteCategory(category: CategoryModel): Promise<any> {
     const shop = await this.userService.getCurrentShop();
-    return database(shop.projectId).collection('expense_categories').query().byId(category.id).delete();
+    database(shop.projectId).syncs('expense_categories').changes().delete(category.id);
+    return {id: category.id};
   }
 
   async getAllCategory(): Promise<CategoryModel[]> {
     const shop = await this.userService.getCurrentShop();
-    const cids = await database(shop.projectId)
-      .collection('expense_categories')
-      .getAll<string>({
-        cids: true
-      });
-    return await Promise.all(
-      cids.map(c => {
-        return IpfsService.getDataFromCid(c);
-      })
-    ) as any[];
+    const e = await database(shop.projectId)
+      .syncs('expense_categories')
+      .changes().values();
+    return Array.from(e);
   }
 
-  getCategory(id: string, callback: (category: CategoryModel) => void): void {
+  async getAllCategoryRemote(): Promise<CategoryModel[]> {
+    const shop = await this.userService.getCurrentShop();
+    return database(shop.projectId).syncs('expense_categories').upload();
+  }
+
+  async getCategory(id: string): Promise<void> {
+    const shop = await this.userService.getCurrentShop();
+    return database(shop.projectId).syncs('expense_categories').changes().get(id);
   }
 
   async updateCategory(category: { id: string, value: string, field: string }): Promise<any> {
     const shop = await this.userService.getCurrentShop();
-    const categoryId = category.id;
-    const data = {};
-    data[category.field] = category.value;
-    delete category.id;
-    const response = await database(shop.projectId).collection('expense_categories')
-      .query()
-      .byId(categoryId)
-      .updateBuilder()
-      .set(category.field, category.value)
-      .update();
-    response.id = categoryId;
-    return response;
+    const oc = database(shop.projectId).syncs('expense_categories').changes().get(category.id);
+    oc.updatedAt = new Date().toISOString();
+    oc[category.field] = category.value;
+    database(shop.projectId).syncs('expense_categories').changes().set(oc);
+    return oc;
   }
 
 }

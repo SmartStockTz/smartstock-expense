@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {auth, init} from 'bfast';
 import {Router} from '@angular/router';
-import {StorageService, UserService} from '@smartstocktz/core-libs';
+import {getDaasAddress, getFaasAddress, StorageService, UserService} from '@smartstocktz/core-libs';
 
 @Component({
   selector: 'app-login',
@@ -52,7 +52,9 @@ export class LoginPageComponent implements OnInit {
         .then(async (user: any) => {
           init({
             applicationId: user.applicationId,
-            projectId: user.projectId
+            projectId: user.projectId,
+            databaseURL: getDaasAddress(user),
+            functionsURL: getFaasAddress(user)
           }, user.projectId);
           const shops = await this.userService.getShops(user);
           await this.storageService.saveCurrentProjectId(user.projectId);

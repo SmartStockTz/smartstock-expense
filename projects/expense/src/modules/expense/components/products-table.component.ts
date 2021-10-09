@@ -18,7 +18,7 @@ import {ExpenseModel} from '../models/expense.model';
 @Component({
   selector: 'app-store-products-table',
   template: `
-    <table *ngIf="(deviceState.isSmallScreen | async)===false" mat-table matSort [dataSource]="stockDatasource">
+    <table *ngIf="(deviceState.isSmallScreen | async)===false" mat-table matSort [dataSource]="expenseState.expenseItems">
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
         <td mat-cell *matCellDef="let element">{{element.name}}</td>
@@ -69,7 +69,7 @@ import {ExpenseModel} from '../models/expense.model';
                    showFirstLastButtons></mat-paginator>
 
     <mat-nav-list *ngIf="(deviceState.isSmallScreen | async)===true">
-      <div *ngFor="let m of stockDatasource.connect() | async">
+      <div *ngFor="let m of expenseState.expenseItems.data">
         <mat-list-item [matMenuTriggerFor]="menum">
           <!--          <p matListIcon>-->
           <!--            <img style="width: 30px; height: 30px; border-radius: 30px"-->
@@ -106,52 +106,48 @@ export class ProductsTableComponent implements OnInit, OnDestroy, AfterViewInit 
               private readonly logger: LogService,
               private readonly dialog: MatDialog,
               public readonly deviceState: DeviceState,
-              public readonly stockState: ExpenseState) {
-    this.stockState.expenseItems.pipe(takeUntil(this.onDestroy)).subscribe(stocks => {
-      this.stockDatasource.data = stocks;
-    });
+              public readonly expenseState: ExpenseState) {
   }
 
   totalPurchase: Observable<number> = of(0);
-  stockDatasource: MatTableDataSource<ExpenseItemModel> = new MatTableDataSource<ExpenseItemModel>([]);
   storeColumns = ['name', 'category', 'created', 'action'];
   @ViewChild('sidenav') sidenav: MatSidenav;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) matSort: MatSort;
 
   ngOnInit(): void {
-    this.stockState.getExpenseItems().catch(console.log);
+    this.expenseState.getExpenseItems().catch(console.log);
   }
 
 
   isAllSelected(): boolean {
-    if (!this.stockDatasource.data) {
+    if (!this.expenseState.expenseItems.data) {
       return false;
     }
-    const numSelected = this.stockState.selection.selected.length;
-    const numRows = this.stockDatasource.data.length;
+    const numSelected = this.expenseState.selection.selected.length;
+    const numRows = this.expenseState.expenseItems.data.length;
     return numSelected === numRows;
   }
 
   masterToggle(): void {
     this.isAllSelected() ?
-      this.stockState.selection.clear() :
-      this.stockDatasource.data.forEach(row => this.stockState.selection.select(row));
+      this.expenseState.selection.clear() :
+      this.expenseState.expenseItems.data.forEach(row => this.expenseState.selection.select(row));
   }
 
   checkboxLabel(row?): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
-    return `${this.stockState.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+    return `${this.expenseState.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
   hotReloadStores(): void {
-    this.stockState.getExpenseItems();
+    this.expenseState.getExpenseItems().catch(console.log);
   }
 
   editStore(element: ExpenseItemModel): void {
-    this.stockState.selectedExpenseItem.next(element);
+    this.expenseState.selectedExpenseItem.next(element);
     this.router.navigateByUrl('/expense/item/in/' + element.id).catch(reason => this.logger.e(reason));
   }
 
@@ -161,7 +157,7 @@ export class ProductsTableComponent implements OnInit, OnDestroy, AfterViewInit 
       if (value === 'no') {
         this.snack.open('Process cancelled', 'Ok', {duration: 3000});
       } else {
-        this.stockState.deleteExpenseItem(element);
+        this.expenseState.deleteExpenseItem(element);
       }
     });
   }
@@ -174,12 +170,12 @@ export class ProductsTableComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   handleSearch(query: string): void {
-    this.stockState.filter(query);
+    this.expenseState.filter(query);
   }
 
 
   ngOnDestroy(): void {
-    this.stockState.expenseItems.next([]);
+    this.expenseState.expenseItems.data = [];
     this.onDestroy.next();
   }
 
@@ -187,8 +183,8 @@ export class ProductsTableComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   ngAfterViewInit(): void {
-    this.stockDatasource.paginator = this.paginator;
-    this.stockDatasource.sort = this.matSort;
+    this.expenseState.expenseItems.paginator = this.paginator;
+    this.expenseState.expenseItems.sort = this.matSort;
   }
 
 }

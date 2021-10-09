@@ -1,9 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {MatMenuTrigger} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTableDataSource} from '@angular/material/table';
-import {FormBuilder, FormControl} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import {CategoryModel} from '../models/category.model';
 import {MatPaginator} from '@angular/material/paginator';
 import {DialogCategoryDeleteComponent} from './dialog-category-delete.component';
@@ -11,6 +11,8 @@ import {DialogCategoryCreateComponent} from './dialog-category-create.component'
 import {CategoryService} from '../services/category.service';
 import {Router} from '@angular/router';
 import {CategoryState} from '../states/category.state';
+import {UserService} from '@smartstocktz/core-libs';
+import {database} from 'bfast';
 
 @Component({
   selector: 'app-categories',
@@ -24,7 +26,7 @@ import {CategoryState} from '../states/category.state';
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menuCategories>
-        <button (click)="getCategories()" mat-menu-item>Reload Categories</button>
+        <button (click)="reload()" mat-menu-item>Reload Categories</button>
       </mat-menu>
     </mat-card-title>
     <mat-card class="mat-elevation-z3">
@@ -35,7 +37,7 @@ import {CategoryState} from '../states/category.state';
                [dataSource]="categoriesDatasource">
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef>Name</th>
-            <td class="editable"  matRipple mat-cell
+            <td class="editable" matRipple mat-cell
                 *matCellDef="let element">{{element.name}}
             </td>
           </ng-container>
@@ -83,25 +85,38 @@ import {CategoryState} from '../states/category.state';
   `,
   styleUrls: ['../styles/categories.style.scss']
 })
-export class CategoriesComponent implements OnInit {
+export class CategoriesComponent implements OnInit, OnDestroy {
   @ViewChild('matPaginator') matPaginator: MatPaginator;
   categoriesDatasource: MatTableDataSource<CategoryModel> = new MatTableDataSource<CategoryModel>([]);
   categoriesTableColums = ['name', 'description', 'actions'];
   categoriesArray: CategoryModel[] = [];
   fetchCategoriesFlag = false;
-  nameFormControl = new FormControl();
-  descriptionFormControl = new FormControl();
+  private sig = false;
+  private obfn;
 
   constructor(private readonly stockDatabase: CategoryService,
               private readonly formBuilder: FormBuilder,
               private readonly dialog: MatDialog,
               private readonly categoryState: CategoryState,
               private readonly router: Router,
+              private readonly userService: UserService,
               private readonly snack: MatSnackBar) {
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    const shop = await this.userService.getCurrentShop();
     this.getCategories();
+    this.obfn = database(shop.projectId).syncs('expense_categories').changes().observe(_ => {
+      if (this.sig === true) {
+        return this.sig;
+      }
+      this.getCategories();
+      this.sig = true;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.obfn?.unobserve();
   }
 
   searchCategory(query: string): void {
@@ -209,6 +224,19 @@ export class CategoriesComponent implements OnInit {
         this.categoriesArray.push(value);
         this.categoriesDatasource.data = this.categoriesArray;
       }
+    });
+  }
+
+  reload(): void {
+    this.fetchCategoriesFlag = true;
+    this.stockDatabase.getAllCategoryRemote().then(data => {
+      this.categoriesArray = JSON.parse(JSON.stringify(data));
+      this.categoriesDatasource = new MatTableDataSource<CategoryModel>(this.categoriesArray);
+      this.categoriesDatasource.paginator = this.matPaginator;
+      this.fetchCategoriesFlag = false;
+    }).catch(reason => {
+      console.log(reason);
+      this.fetchCategoriesFlag = false;
     });
   }
 }

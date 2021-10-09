@@ -14,10 +14,11 @@ import {debounceTime} from 'rxjs/operators';
           <input placeholder="Search product..." [formControl]="searchFormControl" class="search-input"
                  style="flex-grow: 1;">
           <div style="width: 20px; height: auto"></div>
-          <button [disabled]="(stockState.isFetchExpenseItems | async)===true" (click)="getProducts()" mat-flat-button
+          <button [disabled]="(expenseState.isFetchExpenseItems | async)===true" (click)="getProducts()" mat-flat-button
                   color="primary" style="flex-grow: 0">
-            <mat-icon *ngIf="(stockState.isFetchExpenseItems | async)===false">refresh</mat-icon>
-            <mat-progress-spinner *ngIf="(stockState.isFetchExpenseItems | async)===true" mode="indeterminate" diameter="20"
+            <mat-icon *ngIf="(expenseState.isFetchExpenseItems | async)===false">refresh</mat-icon>
+            <mat-progress-spinner *ngIf="(expenseState.isFetchExpenseItems | async)===true" mode="indeterminate"
+                                  diameter="20"
                                   color="primary"
                                   style="display: inline-block"></mat-progress-spinner>
           </button>
@@ -25,7 +26,7 @@ import {debounceTime} from 'rxjs/operators';
       </div>
       <div mat-dialog-content>
         <cdk-virtual-scroll-viewport [itemSize]="50" style="height: 300px">
-          <div *cdkVirtualFor="let product of stockState.expenseItems | async">
+          <div *cdkVirtualFor="let product of expenseState.expenseItems.data">
             <div style="display: flex; flex-direction: row; flex-wrap: nowrap">
               <p style="flex-grow: 1; margin: 0; padding: 4px; text-align: start; display: flex; align-items: center">
                 {{product.name}}
@@ -47,11 +48,11 @@ import {debounceTime} from 'rxjs/operators';
   styleUrls: ['../styles/product-search-dialog.style.scss']
 })
 
-export class ProductSearchDialogComponent implements OnInit {
+export class ItemSearchDialogComponent implements OnInit {
   searchFormControl = new FormControl('');
 
-  constructor(public readonly dialogRef: MatDialogRef<ProductSearchDialogComponent>,
-              public readonly stockState: ExpenseState) {
+  constructor(public readonly dialogRef: MatDialogRef<ItemSearchDialogComponent>,
+              public readonly expenseState: ExpenseState) {
   }
 
   ngOnInit(): void {
@@ -59,13 +60,13 @@ export class ProductSearchDialogComponent implements OnInit {
       .pipe(
         debounceTime(500)
       ).subscribe(value => {
-      this.stockState.filter(value);
+      this.expenseState.filter(value);
     });
-    this.stockState.getExpenseItems();
+    this.expenseState.getExpenseItems().catch(console.log);
   }
 
   getProducts(): void {
-    this.stockState.getStoresFromRemote();
+    this.expenseState.getStoresFromRemote();
   }
 
   selectProduct(product: ExpenseItemModel): void {

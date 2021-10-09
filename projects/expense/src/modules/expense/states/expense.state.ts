@@ -5,6 +5,7 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {ExpenseItemModel} from '../models/expense-item.model';
 import {ExpenseService} from '../services/expense.service';
 import * as moment from 'moment';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Injectable({
   providedIn: 'any'
@@ -13,7 +14,7 @@ export class ExpenseState {
 
   reportStartDate: BehaviorSubject<string> = new BehaviorSubject<any>(moment().startOf('month').format('YYYY-MM-DD'));
   reportEndDate: BehaviorSubject<string> = new BehaviorSubject<any>(moment().endOf('month').format('YYYY-MM-DD'));
-  expenseItems: BehaviorSubject<ExpenseItemModel[]> = new BehaviorSubject<ExpenseItemModel[]>([]);
+  expenseItems: MatTableDataSource<ExpenseItemModel> = new MatTableDataSource<ExpenseItemModel>([]);
   selectedExpenseItem: BehaviorSubject<ExpenseItemModel> = new BehaviorSubject<ExpenseItemModel>(null);
   isFetchExpenseItems: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isDeleteExpenseItems: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -90,10 +91,10 @@ export class ExpenseState {
 
   async getExpenseItems(): Promise<any> {
     this.isFetchExpenseItems.next(true);
-    this.storeService.getExpenseItems().then(storeItems => {
-      if (storeItems && Array.isArray(storeItems) && storeItems.length > 0) {
-        this.expenseItems.next(storeItems);
-        return storeItems;
+    this.storeService.getExpenseItems().then(expenseItems => {
+      if (expenseItems && Array.isArray(expenseItems) && expenseItems.length > 0) {
+        this.expenseItems.data = expenseItems;
+        return expenseItems;
       } else {
         return [];
       }
@@ -121,9 +122,9 @@ export class ExpenseState {
 
   getStoresFromRemote(): void {
     this.isFetchExpenseItems.next(true);
-    this.storeService.getExpenseItems().then(storeItems => {
-      this.expenseItems.next(storeItems);
-      return storeItems;
+    this.storeService.getExpenseItems().then(items => {
+      this.expenseItems.data  = items;
+      return items;
     }).catch(reason => {
       this.messageService.showMobileInfoMessage(
         reason && reason.message
@@ -153,7 +154,7 @@ export class ExpenseState {
   deleteExpenseItem(store: ExpenseItemModel): void {
     this.isFetchExpenseItems.next(true);
     this.storeService.deleteExpenseItem(store).then(__1 => {
-      this.expenseItems.next(this.expenseItems.value.filter(x => x.id !== store.id) as any);
+      this.expenseItems.data = this.expenseItems.data.filter(x => x.id !== store.id) as any;
       this.messageService.showMobileInfoMessage('Store updated', 1000, 'bottom');
     }).catch(reason => {
       this.messageService.showMobileInfoMessage(
@@ -164,13 +165,16 @@ export class ExpenseState {
   }
 
   filter(query: string): void {
+    // console.log(query);
+    this.expenseItems.filter = query.toLowerCase();
+    // return this.expenseItems.data;
   }
 
   deleteManyExpenseItems(selectionModel: SelectionModel<ExpenseItemModel>): void {
     this.isDeleteExpenseItems.next(true);
     this.storeService.deleteManyExpenseItems(selectionModel.selected.map(x => x.id)).then(_ => {
       this.messageService.showMobileInfoMessage('Products deleted', 2000, 'bottom');
-      this.expenseItems.next(this.expenseItems.value.filter(x => selectionModel.selected.findIndex(y => y.id === x.id) === -1));
+      this.expenseItems.data = this.expenseItems.data.filter(x => selectionModel.selected.findIndex(y => y.id === x.id) === -1);
       selectionModel.clear();
     }).catch(reason => {
       this.messageService.showMobileInfoMessage(

@@ -41,7 +41,7 @@ import {CdkTableModule} from '@angular/cdk/table';
 import {ProductsTableComponent} from './components/products-table.component';
 import {ProductsTableActionsComponent} from './components/products-table-actions.component';
 import {ProductsTableSubActionsComponent} from './components/products-table-sub-actions.component';
-import {ProductSearchDialogComponent} from './components/product-search-dialog.component';
+import {ItemSearchDialogComponent} from './components/item-search-dialog.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {InfoDialogComponent} from './components/info-dialog.component';
 import {MetasFormFieldComponent} from './components/metas-form-field.component';
@@ -142,7 +142,7 @@ const routes: Routes = [
     CategoriesPage,
     ProductsValueSummaryComponent,
     ProductsTableSubActionsComponent,
-    ProductSearchDialogComponent,
+    ItemSearchDialogComponent,
     CategoryCreateFormComponent,
     ExpenseItemsPage,
     AddExpenseItemPage,
