@@ -45,6 +45,7 @@ import {ExpenseState} from '../states/expense.state';
         </mat-nav-list>
 
         <div *ngIf="(deviceState.isSmallScreen | async)===false"
+             style="margin-bottom: 100px"
              class="container col-xl-10 col-lg-10 col-sm-9 col-md-9 col-sm-12 col-10 mt-3">
           <h2>This Month Summary</h2>
           <div class="row">

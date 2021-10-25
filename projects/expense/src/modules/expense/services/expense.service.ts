@@ -16,12 +16,10 @@ export class ExpenseService {
     const cids: string[] = await database(shop.projectId)
       .table('expenses')
       .query()
+      .greaterThanOrEqual('date', from)
+      .lessThanOrEqual('date', to)
       .cids(true)
-      .raw({
-        date: {
-          $fn : `return it >= '${from}' && it <= '${to}'`
-        }
-      });
+      .find();
     const expenses = await Promise.all(
       cids.map(c => {
         return IpfsService.getDataFromCid(c);
@@ -48,12 +46,10 @@ export class ExpenseService {
     const cids: string[] = await database(shop.projectId)
       .table('expenses')
       .query()
+      .greaterThanOrEqual('date', from)
+      .lessThanOrEqual('date', to)
       .cids(true)
-      .raw({
-        date: {
-          $fn : `return it >= '${from}' && it <= '${to}'`
-        }
-      });
+      .find();
     const expenses = await Promise.all(
       cids.map(c => {
         return IpfsService.getDataFromCid(c);
@@ -80,12 +76,10 @@ export class ExpenseService {
     const cids: string[] = await database(shop.projectId)
       .table('expenses')
       .query()
+      .greaterThanOrEqual('date', from)
+      .lessThanOrEqual('date', to)
       .cids(true)
-      .raw({
-        date: {
-          $fn: `return it >= '${from}' && it <= '${to}'`
-        }
-      });
+      .find();
     const expenses = await Promise.all(
       cids.map(c => {
         return IpfsService.getDataFromCid(c);
