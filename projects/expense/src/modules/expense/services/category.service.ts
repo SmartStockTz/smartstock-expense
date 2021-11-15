@@ -15,51 +15,44 @@ export class CategoryService {
   async addCategory(expenseCategory: CategoryModel, id = null): Promise<any> {
     const shop = await this.userService.getCurrentShop();
     if (id) {
-      let oc = database(shop.projectId).syncs('expense_categories').changes().get(id);
-      oc.updatedAt = new Date().toISOString();
-      oc = Object.assign(oc, expenseCategory);
-      database(shop.projectId).syncs('expense_categories').changes().set(oc);
-      return oc;
+      return database(shop.projectId).table('expense_categories')
+        .query().byId(id)
+        .updateBuilder()
+        .doc(expenseCategory)
+        .update();
     } else {
-      expenseCategory.id = SecurityUtil.generateUUID();
-      expenseCategory.createdAt = new Date().toISOString();
-      expenseCategory.updatedAt = new Date().toISOString();
-      database(shop.projectId).syncs('expense_categories').changes().set(expenseCategory as any);
-      return expenseCategory;
+      return database(shop.projectId).table('expense_categories').save(expenseCategory);
     }
   }
 
   async deleteCategory(category: CategoryModel): Promise<any> {
     const shop = await this.userService.getCurrentShop();
-    database(shop.projectId).syncs('expense_categories').changes().delete(category.id);
-    return {id: category.id};
+    return database(shop.projectId).table('expense_categories').query().byId(category.id).delete();
   }
 
   async getAllCategory(): Promise<CategoryModel[]> {
     const shop = await this.userService.getCurrentShop();
-    const e = await database(shop.projectId)
-      .syncs('expense_categories')
-      .changes().values();
-    return Array.from(e);
+    return database(shop.projectId).table('expense_categories').getAll();
   }
 
   async getAllCategoryRemote(): Promise<CategoryModel[]> {
     const shop = await this.userService.getCurrentShop();
-    return database(shop.projectId).syncs('expense_categories').upload();
+    return database(shop.projectId).table('expense_categories').getAll();
   }
 
   async getCategory(id: string): Promise<void> {
     const shop = await this.userService.getCurrentShop();
-    return database(shop.projectId).syncs('expense_categories').changes().get(id);
+    return database(shop.projectId).table('expense_categories').get(id);
   }
 
   async updateCategory(category: { id: string, value: string, field: string }): Promise<any> {
     const shop = await this.userService.getCurrentShop();
-    const oc = database(shop.projectId).syncs('expense_categories').changes().get(category.id);
-    oc.updatedAt = new Date().toISOString();
-    oc[category.field] = category.value;
-    database(shop.projectId).syncs('expense_categories').changes().set(oc);
-    return oc;
+    return database(shop.projectId).table('expense_categories')
+      .query()
+      .byId(category.id)
+      .updateBuilder()
+      .set(category.field, category.value)
+      .update();
   }
 
 }

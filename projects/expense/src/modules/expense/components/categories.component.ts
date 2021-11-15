@@ -1,18 +1,15 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {MatMenuTrigger} from '@angular/material/menu';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTableDataSource} from '@angular/material/table';
 import {FormBuilder} from '@angular/forms';
 import {CategoryModel} from '../models/category.model';
 import {MatPaginator} from '@angular/material/paginator';
 import {DialogCategoryDeleteComponent} from './dialog-category-delete.component';
-import {DialogCategoryCreateComponent} from './dialog-category-create.component';
 import {CategoryService} from '../services/category.service';
 import {Router} from '@angular/router';
 import {CategoryState} from '../states/category.state';
 import {UserService} from '@smartstocktz/core-libs';
-import {database} from 'bfast';
 
 @Component({
   selector: 'app-categories',
@@ -91,8 +88,6 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   categoriesTableColums = ['name', 'description', 'actions'];
   categoriesArray: CategoryModel[] = [];
   fetchCategoriesFlag = false;
-  private sig = false;
-  private obfn;
 
   constructor(private readonly stockDatabase: CategoryService,
               private readonly formBuilder: FormBuilder,
@@ -104,39 +99,10 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    const shop = await this.userService.getCurrentShop();
     this.getCategories();
-    this.obfn = database(shop.projectId).syncs('expense_categories').changes().observe(_ => {
-      if (this.sig === true) {
-        return this.sig;
-      }
-      this.getCategories();
-      this.sig = true;
-    });
   }
 
   ngOnDestroy(): void {
-    this.obfn?.unobserve();
-  }
-
-  searchCategory(query: string): void {
-    // if ($event && $event.query) {
-    //   this.fetchCategoriesFlag = true;
-    //   this.stockDatabase.searchCategory($event.query, {size: 20}).then(data => {
-    //     this.catalogsArray = JSON.parse(JSON.stringify(data));
-    //     // this.skip +=this.productsArray.length;
-    //     this.categoriesDatasource = new MatTableDataSource(this.catalogsArray);
-    //     this.fetchCategoriesFlag = false;
-    //     // this.size = 0;
-    //   }).catch(reason => {
-    //     this.snack.open(reason, 'Ok', {
-    //       duration: 3000
-    //     });
-    //     this.fetchCategoriesFlag = false;
-    //   });
-    // } else {
-    //   this.getCatalogs();
-    // }
   }
 
   getCategories(): void {
@@ -177,14 +143,6 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateCategoryName(category, matMenu: MatMenuTrigger): void {
-    matMenu.toggleMenu();
-    if (category && category.value) {
-      category.field = 'name';
-      this.updateCategory(category);
-    }
-  }
-
   updateCategory(category: { id: string, value: string, field: string }): void {
     this.snack.open('Update in progress..', 'Ok');
     this.stockDatabase.updateCategory(category).then(data => {
@@ -204,26 +162,6 @@ export class CategoriesComponent implements OnInit, OnDestroy {
       this.snack.open(reason && reason.message ? reason.message : 'Fail to update category', 'Ok', {
         duration: 3000
       });
-    });
-  }
-
-  updateCategoryDescription(category, matMenu: MatMenuTrigger): void {
-    matMenu.toggleMenu();
-    if (category && category.value) {
-      category.field = 'description';
-      this.updateCategory(category);
-    }
-  }
-
-  openAddCategoryDialog(): void {
-    this.dialog.open(DialogCategoryCreateComponent, {
-      closeOnNavigation: true,
-      hasBackdrop: true
-    }).afterClosed().subscribe(value => {
-      if (value) {
-        this.categoriesArray.push(value);
-        this.categoriesDatasource.data = this.categoriesArray;
-      }
     });
   }
 

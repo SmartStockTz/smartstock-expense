@@ -28,19 +28,6 @@
             "tsConfig": "projects/expense/tsconfig.spec.json",
             "karmaConfig": "projects/expense/karma.conf.js"
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "fix": true,
-            "tsConfig": [
-              "projects/expense/tsconfig.lib.json",
-              "projects/expense/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
         }
       }
     },
@@ -147,19 +134,6 @@
               "node_modules/bootstrap/dist/css/bootstrap.css"
             ],
             "scripts": []
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/expense-mock/tsconfig.app.json",
-              "projects/expense-mock/tsconfig.spec.json",
-              "projects/expense-mock/e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         },
         "e2e": {

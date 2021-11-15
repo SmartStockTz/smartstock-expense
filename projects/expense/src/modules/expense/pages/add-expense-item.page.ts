@@ -5,7 +5,6 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {
   DeviceState,
-  FileBrowserDialogComponent,
   FileBrowserSheetComponent,
   FilesService,
   StorageService, UserService
@@ -207,13 +206,7 @@ export class AddExpenseItemPage implements OnInit {
         }
       });
     } else {
-      this.dialog.open(FileBrowserDialogComponent, {
-        closeOnNavigation: false,
-        disableClose: true,
-        data: {
-          shop
-        }
-      }).afterClosed().subscribe(value => {
+      this.filesService.browse().then(value => {
         if (value && value.url) {
           this.productForm.get(control).setValue(value.url);
         } else {

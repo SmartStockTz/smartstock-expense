@@ -1,24 +1,23 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
-import {Observable, of, Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 import {Router} from '@angular/router';
 import {DeviceState, LogService, StorageService} from '@smartstocktz/core-libs';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatDialog} from '@angular/material/dialog';
 import {ExpenseState} from '../states/expense.state';
-import {takeUntil} from 'rxjs/operators';
 import {ExpenseItemModel} from '../models/expense-item.model';
 import {MatSidenav} from '@angular/material/sidenav';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {DialogDeleteComponent, StoreDetailsComponent} from './expense.component';
-import {ExpenseModel} from '../models/expense.model';
 
 @Component({
   selector: 'app-store-products-table',
   template: `
-    <table *ngIf="(deviceState.isSmallScreen | async)===false" mat-table matSort [dataSource]="expenseState.expenseItems">
+    <table *ngIf="(deviceState.isSmallScreen | async)===false" mat-table matSort
+           [dataSource]="expenseState.expenseItems">
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
         <td mat-cell *matCellDef="let element">{{element.name}}</td>
@@ -109,7 +108,6 @@ export class ProductsTableComponent implements OnInit, OnDestroy, AfterViewInit 
               public readonly expenseState: ExpenseState) {
   }
 
-  totalPurchase: Observable<number> = of(0);
   storeColumns = ['name', 'category', 'created', 'action'];
   @ViewChild('sidenav') sidenav: MatSidenav;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -127,23 +125,6 @@ export class ProductsTableComponent implements OnInit, OnDestroy, AfterViewInit 
     const numSelected = this.expenseState.selection.selected.length;
     const numRows = this.expenseState.expenseItems.data.length;
     return numSelected === numRows;
-  }
-
-  masterToggle(): void {
-    this.isAllSelected() ?
-      this.expenseState.selection.clear() :
-      this.expenseState.expenseItems.data.forEach(row => this.expenseState.selection.select(row));
-  }
-
-  checkboxLabel(row?): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-    }
-    return `${this.expenseState.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
-  }
-
-  hotReloadStores(): void {
-    this.expenseState.getExpenseItems().catch(console.log);
   }
 
   editStore(element: ExpenseItemModel): void {
@@ -169,17 +150,9 @@ export class ProductsTableComponent implements OnInit, OnDestroy, AfterViewInit 
     });
   }
 
-  handleSearch(query: string): void {
-    this.expenseState.filter(query);
-  }
-
-
   ngOnDestroy(): void {
     this.expenseState.expenseItems.data = [];
     this.onDestroy.next();
-  }
-
-  createGroupProduct(): void {
   }
 
   ngAfterViewInit(): void {

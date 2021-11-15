@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CategoryService} from '../services/category.service';
 import {MatDialog} from '@angular/material/dialog';
-import {FileBrowserDialogComponent, StorageService, UserService} from '@smartstocktz/core-libs';
+import {FilesService, StorageService, UserService} from '@smartstocktz/core-libs';
 import {CategoryModel} from '../models/category.model';
 import {MetasModel} from '../models/metas.model';
 import {Router} from '@angular/router';
@@ -71,6 +71,7 @@ export class CategoryCreateFormComponent implements OnInit {
     private readonly storage: StorageService,
     private readonly userService: UserService,
     private readonly router: Router,
+    private readonly fileService: FilesService,
     private readonly categoryService: CategoryService) {
   }
 
@@ -133,13 +134,7 @@ export class CategoryCreateFormComponent implements OnInit {
 
   async mediaBrowser($event: MouseEvent): Promise<void> {
     $event.preventDefault();
-    this.dialog.open(FileBrowserDialogComponent, {
-      closeOnNavigation: false,
-      disableClose: false,
-      data: {
-        shop: await this.userService.getCurrentShop()
-      }
-    }).afterClosed().subscribe(value => {
+    this.fileService.browse().then(value => {
       if (value && value.url) {
         this.newCategoryForm.get('image').setValue(value.url);
       }

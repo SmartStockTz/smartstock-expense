@@ -4,8 +4,6 @@ import {Observable, of} from 'rxjs';
 import {CategoryService} from '../services/category.service';
 import {CategoryCreateFormBottomSheetComponent} from './category-create-form-bottom-sheet.component';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
-import {database} from 'bfast';
-import {UserService} from '@smartstocktz/core-libs';
 
 @Component({
   selector: 'app-category-form-field',
@@ -41,23 +39,12 @@ export class CategoryFormFieldComponent implements OnInit, OnDestroy {
   @Input() formGroup: FormGroup;
   categoriesFetching = true;
   categories: Observable<any[]>;
-  private sig = false;
-  private obfn;
 
   constructor(private readonly categoryService: CategoryService,
-              private readonly bottomSheet: MatBottomSheet,
-              private readonly userService: UserService) {
+              private readonly bottomSheet: MatBottomSheet) {
   }
 
   async ngOnInit(): Promise<void> {
-    const shop = await this.userService.getCurrentShop();
-    this.obfn = database(shop.projectId).syncs('expense_categories').changes().observe(_ => {
-      if (this.sig === true) {
-        return this.sig;
-      }
-      this.getCategories();
-      this.sig = true;
-    });
     this.getCategories();
   }
 
@@ -93,7 +80,6 @@ export class CategoryFormFieldComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.obfn?.unobserve();
   }
 
 }
