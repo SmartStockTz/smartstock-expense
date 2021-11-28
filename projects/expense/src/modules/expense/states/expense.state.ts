@@ -4,7 +4,6 @@ import {MessageService, toSqlDate} from '@smartstocktz/core-libs';
 import {SelectionModel} from '@angular/cdk/collections';
 import {ExpenseItemModel} from '../models/expense-item.model';
 import {ExpenseService} from '../services/expense.service';
-import * as moment from 'moment';
 import {MatTableDataSource} from '@angular/material/table';
 
 @Injectable({
@@ -12,17 +11,17 @@ import {MatTableDataSource} from '@angular/material/table';
 })
 export class ExpenseState {
 
-  reportStartDate: BehaviorSubject<string> = new BehaviorSubject<any>(moment().startOf('month').format('YYYY-MM-DD'));
-  reportEndDate: BehaviorSubject<string> = new BehaviorSubject<any>(moment().endOf('month').format('YYYY-MM-DD'));
-  expenseItems: MatTableDataSource<ExpenseItemModel> = new MatTableDataSource<ExpenseItemModel>([]);
-  selectedExpenseItem: BehaviorSubject<ExpenseItemModel> = new BehaviorSubject<ExpenseItemModel>(null);
-  isFetchExpenseItems: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  isDeleteExpenseItems: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  totalValidStores: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-  totalValueOfStores: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-  isFetchCategoryReport: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  isFetchTagReport: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  isFetchTagWithTrackReport: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  reportStartDate = new BehaviorSubject<any>(new Date());
+  reportEndDate = new BehaviorSubject<any>(new Date());
+  expenseItems = new MatTableDataSource<ExpenseItemModel>([]);
+  selectedExpenseItem = new BehaviorSubject<ExpenseItemModel>(null);
+  isFetchExpenseItems = new BehaviorSubject<boolean>(false);
+  isDeleteExpenseItems = new BehaviorSubject<boolean>(false);
+  totalValidStores = new BehaviorSubject<number>(0);
+  totalValueOfStores = new BehaviorSubject<number>(0);
+  isFetchCategoryReport = new BehaviorSubject<boolean>(false);
+  isFetchTagReport = new BehaviorSubject<boolean>(false);
+  isFetchTagWithTrackReport = new BehaviorSubject<boolean>(false);
   expenseReportByCategory: BehaviorSubject<{ id: string, total: any }[]> = new BehaviorSubject<any[]>(null);
   expenseReportByTag: BehaviorSubject<{ id: string, total: any }[]> = new BehaviorSubject<any[]>(null);
   expenseReportByTagWithTrack: BehaviorSubject<{ id: string, total: any }[]> = new BehaviorSubject<any[]>(null);
