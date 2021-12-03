@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CategoryService} from '../services/category.service';
 import {MatDialog} from '@angular/material/dialog';
-import {FilesService, StorageService, UserService} from '@smartstocktz/core-libs';
+import {FilesService, UserService} from '@smartstocktz/core-libs';
 import {CategoryModel} from '../models/category.model';
 import {MetasModel} from '../models/metas.model';
 import {Router} from '@angular/router';
@@ -68,7 +68,6 @@ export class CategoryCreateFormComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly snack: MatSnackBar,
     private readonly dialog: MatDialog,
-    private readonly storage: StorageService,
     private readonly userService: UserService,
     private readonly router: Router,
     private readonly fileService: FilesService,

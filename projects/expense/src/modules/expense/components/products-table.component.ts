@@ -2,7 +2,7 @@ import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/c
 import {MatTableDataSource} from '@angular/material/table';
 import {Subject} from 'rxjs';
 import {Router} from '@angular/router';
-import {DeviceState, LogService, StorageService} from '@smartstocktz/core-libs';
+import {DeviceState, LogService} from '@smartstocktz/core-libs';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatDialog} from '@angular/material/dialog';
@@ -99,7 +99,6 @@ export class ProductsTableComponent implements OnInit, OnDestroy, AfterViewInit 
   private readonly onDestroy = new Subject<void>();
 
   constructor(private readonly router: Router,
-              private readonly indexDb: StorageService,
               public readonly bottomSheet: MatBottomSheet,
               private readonly snack: MatSnackBar,
               private readonly logger: LogService,

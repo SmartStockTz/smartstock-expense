@@ -6,8 +6,7 @@ import {Router} from '@angular/router';
 import {
   DeviceState,
   FileBrowserSheetComponent,
-  FilesService,
-  StorageService, UserService
+  FilesService, UserService
 } from '@smartstocktz/core-libs';
 import {ExpenseService} from '../services/expense.service';
 import {MetasModel} from '../models/metas.model';
@@ -90,7 +89,6 @@ export class AddExpenseItemPage implements OnInit {
               private readonly dialog: MatDialog,
               private readonly bottom: MatBottomSheet,
               private readonly router: Router,
-              private readonly storageService: StorageService,
               private readonly userService: UserService,
               public readonly deviceState: DeviceState,
               private readonly stockService: ExpenseService) {
