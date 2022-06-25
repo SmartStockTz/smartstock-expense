@@ -1,9 +1,6 @@
 {
   "name": "@smartstocktz/expense",
-  "version": "0.3.0",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
+  "version": "1.0.0",
   "repository": {
     "url": "git://github.com/smartstocktz/smartstock-expense.git"
   },
