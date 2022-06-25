@@ -1,9 +1,6 @@
 {
   "name": "smartstock-expense",
-  "version": "0.1.0",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "box":"yarn install && yarn start",
