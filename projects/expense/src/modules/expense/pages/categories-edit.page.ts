@@ -1,15 +1,20 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {DeviceState} from '@smartstocktz/core-libs';
-import {CategoryState} from '../states/category.state';
-import {Router} from '@angular/router';
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { DeviceState } from "smartstock-core";
+import { CategoryState } from "../states/category.state";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-store-category-edit',
+  selector: "app-store-category-edit",
   template: `
-    <app-layout-sidenav [leftDrawer]="drawer" [body]="body"
-                        [leftDrawerMode]="(deviceState.enoughWidth | async) === true?'side':'over'"
-                        heading="Edit Category"
-                        [leftDrawerOpened]="(deviceState.enoughWidth | async) === true">
+    <app-layout-sidenav
+      [leftDrawer]="drawer"
+      [body]="body"
+      [leftDrawerMode]="
+        (deviceState.enoughWidth | async) === true ? 'side' : 'over'
+      "
+      heading="Edit Category"
+      [leftDrawerOpened]="(deviceState.enoughWidth | async) === true"
+    >
       <ng-template #drawer>
         <app-drawer></app-drawer>
       </ng-template>
@@ -17,7 +22,8 @@ import {Router} from '@angular/router';
         <div class="container">
           <div class="container col-lg-9 col-xl-9 col-sm-11 col-md-10 col-12">
             <app-store-category-create-form
-              [category]="categoryState.selectedForEdit | async"></app-store-category-create-form>
+              [category]="categoryState.selectedForEdit | async"
+            ></app-store-category-create-form>
           </div>
         </div>
       </ng-template>
@@ -25,10 +31,12 @@ import {Router} from '@angular/router';
   `
 })
 export class CategoriesEditPage implements OnDestroy, OnInit {
-  constructor(public readonly categoryState: CategoryState,
-              public readonly deviceState: DeviceState,
-              private readonly router: Router) {
-    document.title = 'SmartStock - Category Edit';
+  constructor(
+    public readonly categoryState: CategoryState,
+    public readonly deviceState: DeviceState,
+    private readonly router: Router
+  ) {
+    document.title = "SmartStock - Category Edit";
   }
 
   ngOnDestroy(): void {
@@ -37,8 +45,7 @@ export class CategoriesEditPage implements OnDestroy, OnInit {
 
   ngOnInit(): void {
     if (this.categoryState.selectedForEdit.value === null) {
-      this.router.navigateByUrl('/expense/categories').catch(_ => {
-      });
+      this.router.navigateByUrl("/expense/categories").catch((_) => {});
     }
   }
 }

@@ -1,15 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {DeviceState} from '@smartstocktz/core-libs';
-import {ExpenseState} from '../states/expense.state';
-
+import { Component, OnInit } from "@angular/core";
+import { DeviceState } from "smartstock-core";
+import { ExpenseState } from "../states/expense.state";
 
 @Component({
-  selector: 'app-store',
+  selector: "app-store",
   template: `
     <app-layout-sidenav
       [leftDrawer]="side"
       [showSearch]="false"
-      [leftDrawerMode]="(deviceState.enoughWidth | async) === true?'side':'over'"
+      [leftDrawerMode]="
+        (deviceState.enoughWidth | async) === true ? 'side' : 'over'
+      "
       [leftDrawerOpened]="(deviceState.enoughWidth | async) === true"
       [hasBackRoute]="true"
       backLink="/expense"
@@ -17,7 +18,8 @@ import {ExpenseState} from '../states/expense.state';
       [searchPlaceholder]="'Search..'"
       showSearch="true"
       (searchCallback)="handleSearch($event)"
-      [body]="body">
+      [body]="body"
+    >
       <ng-template #side>
         <app-drawer></app-drawer>
       </ng-template>
@@ -35,25 +37,19 @@ import {ExpenseState} from '../states/expense.state';
       </ng-template>
     </app-layout-sidenav>
   `,
-  styleUrls: ['../styles/store.style.scss']
+  styleUrls: ["../styles/store.style.scss"]
 })
 export class ExpenseItemsPage implements OnInit {
-
-  constructor(public readonly stockState: ExpenseState,
-              public readonly deviceState: DeviceState) {
-    document.title = 'SmartStore - Store';
+  constructor(
+    public readonly stockState: ExpenseState,
+    public readonly deviceState: DeviceState
+  ) {
+    document.title = "SmartStore - Store";
   }
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 
   handleSearch(query: string): void {
     this.stockState.filter(query);
   }
-
 }
-
-
-
-
