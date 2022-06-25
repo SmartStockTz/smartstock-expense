@@ -1,11 +1,12 @@
 {
-  "name": "@smartstocktz/expense",
+  "name": "smartstock-expenses",
   "version": "0.1.0",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
     "ng": "ng",
+    "box":"yarn install && yarn start",
     "start": "ng serve expense-mock",
     "build": "ng build",
     "test": "ng test",
@@ -25,7 +26,7 @@
     "@angular/platform-browser": "~13.0.2",
     "@angular/platform-browser-dynamic": "~13.0.2",
     "@angular/router": "~13.0.2",
-    "@smartstocktz/core-libs": "^0.5.0",
+    "smartstock-core": "^1.0.1",
     "bfast": "^6.0.0-alpha.17",
     "bootstrap": "^4.5.3",
     "comlink": "^4.3.1",
