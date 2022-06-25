@@ -5,6 +5,7 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { ExpenseItemModel } from "../models/expense-item.model";
 import { ExpenseService } from "../services/expense.service";
 import { MatTableDataSource } from "@angular/material/table";
+import * as moment from "moment";
 
 @Injectable({
   providedIn: "any"
@@ -39,6 +40,8 @@ export class ExpenseState {
   ) {}
 
   async reloadReport(range: { start: any; end: any }): Promise<any> {
+    range.start = moment(range.start).format("YYYY-MM-DD");
+    range.end = moment(range.end).format("YYYY-MM-DD");
     this.reportStartDate.next(range.start);
     this.reportEndDate.next(range.end);
     this.expenseFrequencyGroupByTagWithTracking(range.start, range.end).catch(
@@ -54,6 +57,8 @@ export class ExpenseState {
     from: string,
     to: string
   ): Promise<any> {
+    from = moment(from).format("YYYY-MM-DD");
+    to = moment(to).format("YYYY-MM-DD");
     this.isFetchCategoryReport.next(true);
     return this.storeService
       .expenseFrequencyGroupByCategory(from, to)
@@ -74,6 +79,8 @@ export class ExpenseState {
   }
 
   async expenseFrequencyGroupByTag(from: string, to: string): Promise<any> {
+    from = moment(from).format("YYYY-MM-DD");
+    to = moment(to).format("YYYY-MM-DD");
     this.isFetchTagReport.next(true);
     return this.storeService
       .expenseFrequencyGroupByTag(from, to)
@@ -97,6 +104,8 @@ export class ExpenseState {
     from: string,
     to: string
   ): Promise<any> {
+    from = moment(from).format("YYYY-MM-DD");
+    to = moment(to).format("YYYY-MM-DD");
     this.isFetchTagWithTrackReport.next(true);
     return this.storeService
       .expenseFrequencyGroupByTagWithTracking(from, to)
@@ -152,8 +161,6 @@ export class ExpenseState {
     this.totalValueOfStores.next(total);
   }
 
-  getStoresSummary(): void {}
-
   getStoresFromRemote(): void {
     this.isFetchExpenseItems.next(true);
     this.storeService
@@ -177,13 +184,9 @@ export class ExpenseState {
   getStoreSummary(): Promise<any> {
     this.isFetchExpenseItems.next(true);
     return this.storeService
-      .getExpenseByDate(toSqlDate(new Date(new Date().setDate(4))))
+      .getExpenseByDate(toSqlDate(new Date()))
       .then((storeItems) => {
-        console.log(new Date(new Date().setDate(4)));
-        console.log(storeItems);
         return storeItems;
-        // this.expenseItems.next(expenseItems);
-        // return this.storageService.saveStore(expenseItems as any);
       })
       .catch((reason) => {
         this.messageService.showMobileInfoMessage(

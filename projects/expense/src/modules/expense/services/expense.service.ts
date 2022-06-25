@@ -246,12 +246,12 @@ export class ExpenseService {
     const total = await database(shop.projectId)
       .table("expenses")
       .query()
-      .count(true)
+      // .count(true)
       .find<number>();
     const cids: string[] = await database(shop.projectId)
       .collection("expenses")
       .query()
-      .cids(true)
+      // .cids(true)
       .size(total)
       .skip(0)
       .find();
@@ -285,6 +285,9 @@ export class ExpenseService {
   }
 
   async getExpenseByDate(date: string): Promise<ExpenseModel[]> {
+    if (date && typeof date === "string") {
+      date = date.split("T")[0];
+    }
     const shop = await this.userService.getCurrentShop();
     const total = await database(shop.projectId)
       .table("expenses")

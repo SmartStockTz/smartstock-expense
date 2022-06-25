@@ -133,6 +133,6 @@ export class IndexPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.stockState.getStoresSummary();
+    // this.stockState.getStoresSummary();
   }
 }
