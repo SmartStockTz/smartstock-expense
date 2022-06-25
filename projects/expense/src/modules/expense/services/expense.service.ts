@@ -1,35 +1,38 @@
-import {Injectable} from '@angular/core';
-import {database} from 'bfast';
-import {ExpenseModel} from '../models/expense.model';
-import {ExpenseItemModel} from '../models/expense-item.model';
-import {IpfsService, UserService} from '@smartstocktz/core-libs';
+import { Injectable } from "@angular/core";
+import { database } from "bfast";
+import { ExpenseModel } from "../models/expense.model";
+import { ExpenseItemModel } from "../models/expense-item.model";
+import { IpfsService, UserService } from "smartstock-core";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class ExpenseService {
-  constructor(private readonly userService: UserService) {
-  }
+  constructor(private readonly userService: UserService) {}
 
-  async expenseFrequencyGroupByCategory(from: string, to: string): Promise<any> {
+  async expenseFrequencyGroupByCategory(
+    from: string,
+    to: string
+  ): Promise<any> {
     const shop = await this.userService.getCurrentShop();
     const cids: string[] = await database(shop.projectId)
-      .table('expenses')
+      .table("expenses")
       .query()
-      .greaterThanOrEqual('date', from)
-      .lessThanOrEqual('date', to)
+      .greaterThanOrEqual("date", from)
+      .lessThanOrEqual("date", to)
       .cids(true)
       .find();
-    const expenses = await Promise.all(
-      cids.map(c => {
+    const expenses = (await Promise.all(
+      cids.map((c) => {
         return IpfsService.getDataFromCid(c);
       })
-    ) as any[];
+    )) as any[];
     return Object.values(
       expenses.reduce((previousValue, currentValue: ExpenseModel) => {
         const x = previousValue[currentValue.item.category];
         if (x) {
-          previousValue[currentValue.item.category].total += currentValue.amount;
+          previousValue[currentValue.item.category].total +=
+            currentValue.amount;
         } else {
           previousValue[currentValue.item.category] = {
             id: currentValue.item.category,
@@ -44,17 +47,17 @@ export class ExpenseService {
   async expenseFrequencyGroupByTag(from: string, to: string): Promise<any> {
     const shop = await this.userService.getCurrentShop();
     const cids: string[] = await database(shop.projectId)
-      .table('expenses')
+      .table("expenses")
       .query()
-      .greaterThanOrEqual('date', from)
-      .lessThanOrEqual('date', to)
+      .greaterThanOrEqual("date", from)
+      .lessThanOrEqual("date", to)
       .cids(true)
       .find();
-    const expenses = await Promise.all(
-      cids.map(c => {
+    const expenses = (await Promise.all(
+      cids.map((c) => {
         return IpfsService.getDataFromCid(c);
       })
-    ) as any[];
+    )) as any[];
     return Object.values(
       expenses.reduce((previousValue, currentValue: ExpenseModel) => {
         const x = previousValue[currentValue.item.name];
@@ -71,20 +74,23 @@ export class ExpenseService {
     );
   }
 
-  async expenseFrequencyGroupByTagWithTracking(from: string, to: string): Promise<any> {
+  async expenseFrequencyGroupByTagWithTracking(
+    from: string,
+    to: string
+  ): Promise<any> {
     const shop = await this.userService.getCurrentShop();
     const cids: string[] = await database(shop.projectId)
-      .table('expenses')
+      .table("expenses")
       .query()
-      .greaterThanOrEqual('date', from)
-      .lessThanOrEqual('date', to)
+      .greaterThanOrEqual("date", from)
+      .lessThanOrEqual("date", to)
       .cids(true)
       .find();
-    const expenses = await Promise.all(
-      cids.map(c => {
+    const expenses = (await Promise.all(
+      cids.map((c) => {
         return IpfsService.getDataFromCid(c);
       })
-    ) as any[];
+    )) as any[];
     return Object.values(
       expenses.reduce((previousValue, currentValue: ExpenseModel) => {
         const x = previousValue[currentValue.item.name];
@@ -94,17 +100,19 @@ export class ExpenseService {
             date: currentValue.date,
             amount: currentValue.amount,
             // @ts-ignore
-            time: currentValue.time,
+            time: currentValue.time
           });
         } else {
           previousValue[currentValue.item.name] = {
             id: currentValue.item.name,
-            track: [{
-              date: currentValue.date,
-              amount: currentValue.amount,
-              // @ts-ignore
-              time: currentValue.time,
-            }],
+            track: [
+              {
+                date: currentValue.date,
+                amount: currentValue.amount,
+                // @ts-ignore
+                time: currentValue.time
+              }
+            ],
             total: currentValue.amount
           };
         }
@@ -187,7 +195,10 @@ export class ExpenseService {
   //   return csv;
   // }
 
-  async addExpenseItem(expenseItem: ExpenseItemModel, inUpdateMode = false): Promise<any> {
+  async addExpenseItem(
+    expenseItem: ExpenseItemModel,
+    inUpdateMode = false
+  ): Promise<any> {
     const shop = await this.userService.getCurrentShop();
     if (inUpdateMode) {
       const stockId = expenseItem._id ? expenseItem._id : expenseItem.id;
@@ -195,7 +206,8 @@ export class ExpenseService {
       delete expenseItem._id;
       delete expenseItem.updatedAt;
       delete expenseItem.createdAt;
-      return database(shop.projectId).collection('expense_items')
+      return database(shop.projectId)
+        .collection("expense_items")
         .query()
         .byId(stockId)
         .updateBuilder()
@@ -203,8 +215,9 @@ export class ExpenseService {
         .update();
     } else {
       // tslint:disable-next-line:variable-name
-      const _store = {...expenseItem};
-      return database(shop.projectId).collection('expense_items')
+      const _store = { ...expenseItem };
+      return database(shop.projectId)
+        .collection("expense_items")
         .query()
         .byId(_store.name)
         .updateBuilder()
@@ -216,91 +229,95 @@ export class ExpenseService {
 
   async addExpenses(storeOutData: ExpenseModel[]): Promise<any> {
     const shop = await this.userService.getCurrentShop();
-    return database(shop.projectId).table('expenses').save(storeOutData);
+    return database(shop.projectId).table("expenses").save(storeOutData);
   }
 
   async deleteExpenseItem(expense: ExpenseItemModel): Promise<any> {
     const shop = await this.userService.getCurrentShop();
-    return database(shop.projectId).collection('expense_items')
-      .query().byId(expense._id ? expense._id : expense.id)
+    return database(shop.projectId)
+      .collection("expense_items")
+      .query()
+      .byId(expense._id ? expense._id : expense.id)
       .delete();
   }
 
   async getExpenses(): Promise<ExpenseModel[]> {
     const shop = await this.userService.getCurrentShop();
     const total = await database(shop.projectId)
-      .table('expenses')
+      .table("expenses")
       .query()
-      .count(true)
+      // .count(true)
       .find<number>();
     const cids: string[] = await database(shop.projectId)
-      .collection('expenses')
+      .collection("expenses")
       .query()
-      .cids(true)
+      // .cids(true)
       .size(total)
       .skip(0)
       .find();
-    return await Promise.all(
-      cids.map(c => {
+    return (await Promise.all(
+      cids.map((c) => {
         return IpfsService.getDataFromCid(c);
       })
-    ) as any[];
+    )) as any[];
   }
-
 
   async getExpenseItems(): Promise<ExpenseItemModel[]> {
     const shop = await this.userService.getCurrentShop();
     const total = await database(shop.projectId)
-      .table('expense_items')
+      .table("expense_items")
       .query()
       .count(true)
       .find<number>();
     const cids: string[] = await database(shop.projectId)
-      .collection('expense_items')
+      .collection("expense_items")
       .query()
       .cids(true)
       .size(total)
       .skip(0)
       // .orderBy('_updated_at', -1)
       .find();
-    return await Promise.all(
-      cids.map(c => {
+    return (await Promise.all(
+      cids.map((c) => {
         return IpfsService.getDataFromCid(c);
       })
-    ) as any[];
+    )) as any[];
   }
 
   async getExpenseByDate(date: string): Promise<ExpenseModel[]> {
+    if (date && typeof date === "string") {
+      date = date.split("T")[0];
+    }
     const shop = await this.userService.getCurrentShop();
     const total = await database(shop.projectId)
-      .table('expenses')
+      .table("expenses")
       .query()
-      .equalTo('date', date)
+      .equalTo("date", date)
       .count(true)
       .find<number>();
     const cids: string[] = await database(shop.projectId)
-      .collection('expense_items')
+      .collection("expense_items")
       .query()
       .cids(true)
-      .equalTo('date', date)
+      .equalTo("date", date)
       .size(total)
       .skip(0)
       .find();
-    return await Promise.all(
-      cids.map(c => {
+    return (await Promise.all(
+      cids.map((c) => {
         return IpfsService.getDataFromCid(c);
       })
-    ) as any[];
+    )) as any[];
   }
 
   async deleteManyExpenseItems(expenseItemsIds: string[]): Promise<any> {
     const activeShop = await this.userService.getCurrentShop();
     return database(activeShop.projectId)
       .bulk()
-      .delete('expense_items', {
+      .delete("expense_items", {
         query: {
           filter: {
-            $or: expenseItemsIds.map(x => {
+            $or: expenseItemsIds.map((x) => {
               return {
                 _id: x
               };
@@ -312,5 +329,4 @@ export class ExpenseService {
       })
       .commit();
   }
-
 }

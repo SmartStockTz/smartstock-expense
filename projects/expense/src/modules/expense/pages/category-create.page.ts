@@ -1,16 +1,20 @@
-import {Component} from '@angular/core';
-import {DeviceState} from '@smartstocktz/core-libs';
+import { Component } from "@angular/core";
+import { DeviceState } from "smartstock-core";
 
 @Component({
-  selector: 'app-store-category-create',
+  selector: "app-store-category-create",
   template: `
-    <app-layout-sidenav [leftDrawer]="drawer"
-                        [body]="body"
-                        [leftDrawerMode]="(deviceState.enoughWidth | async) === true?'side':'over'"
-                        heading="Create Category"
-                        [hasBackRoute]="true"
-                        backLink="/expense/categories"
-                        [leftDrawerOpened]="(deviceState.enoughWidth | async) === true">
+    <app-layout-sidenav
+      [leftDrawer]="drawer"
+      [body]="body"
+      [leftDrawerMode]="
+        (deviceState.enoughWidth | async) === true ? 'side' : 'over'
+      "
+      heading="Create Category"
+      [hasBackRoute]="true"
+      backLink="/expense/categories"
+      [leftDrawerOpened]="(deviceState.enoughWidth | async) === true"
+    >
       <ng-template #drawer>
         <app-drawer></app-drawer>
       </ng-template>
@@ -26,6 +30,6 @@ import {DeviceState} from '@smartstocktz/core-libs';
 })
 export class CategoryCreatePage {
   constructor(public readonly deviceState: DeviceState) {
-    document.title = 'SmartStore - Category Create';
+    document.title = "SmartStore - Category Create";
   }
 }

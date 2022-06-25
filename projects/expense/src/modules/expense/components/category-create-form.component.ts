@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CategoryService} from '../services/category.service';
 import {MatDialog} from '@angular/material/dialog';
-import {FilesService, UserService} from '@smartstocktz/core-libs';
+import {FilesService, UserService} from 'smartstock-core';
 import {CategoryModel} from '../models/category.model';
 import {MetasModel} from '../models/metas.model';
 import {Router} from '@angular/router';
