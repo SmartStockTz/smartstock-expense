@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {Observable, of} from 'rxjs';
 import {CategoryService} from '../services/category.service';
 import {CategoryCreateFormBottomSheetComponent} from './category-create-form-bottom-sheet.component';
@@ -36,7 +36,7 @@ import {MatBottomSheet} from '@angular/material/bottom-sheet';
   `
 })
 export class CategoryFormFieldComponent implements OnInit, OnDestroy {
-  @Input() formGroup: FormGroup;
+  @Input() formGroup: UntypedFormGroup;
   categoriesFetching = true;
   categories: Observable<any[]>;
 

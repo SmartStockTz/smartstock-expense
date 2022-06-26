@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatDialogRef} from '@angular/material/dialog';
 import {DialogCategoryDeleteComponent} from './dialog-category-delete.component';
@@ -40,11 +40,11 @@ import {CategoryService} from '../services/category.service';
   `
 })
 export class DialogCategoryCreateComponent implements OnInit {
-  newCategoryForm: FormGroup;
+  newCategoryForm: UntypedFormGroup;
   createCategoryProgress = false;
 
   constructor(
-    private readonly formBuilder: FormBuilder,
+    private readonly formBuilder: UntypedFormBuilder,
     private readonly snack: MatSnackBar,
     private readonly categoryService: CategoryService,
     public dialogRef: MatDialogRef<DialogCategoryDeleteComponent>) {

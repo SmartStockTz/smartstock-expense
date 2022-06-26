@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ExpenseState} from '../states/expense.state';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {debounceTime} from 'rxjs/operators';
 import {MatBottomSheetRef} from '@angular/material/bottom-sheet';
 
@@ -49,7 +49,7 @@ import {MatBottomSheetRef} from '@angular/material/bottom-sheet';
 })
 
 export class AddExpenseSearchBottomSheetComponent implements OnInit {
-  searchFormControl = new FormControl('');
+  searchFormControl = new UntypedFormControl('');
 
   constructor(public readonly dialogRef: MatBottomSheetRef<AddExpenseSearchBottomSheetComponent>,
               public readonly storeState: ExpenseState) {

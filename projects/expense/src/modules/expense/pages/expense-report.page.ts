@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { DeviceState } from "smartstock-core";
 import { ExpenseState } from "../states/expense.state";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 
 @Component({
   selector: "app-store-report",
@@ -108,12 +108,12 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
   styleUrls: ["../styles/store.style.scss"]
 })
 export class ExpenseReportPage implements OnInit {
-  dateRange: FormGroup;
+  dateRange: UntypedFormGroup;
 
   constructor(
     public readonly storeState: ExpenseState,
     public readonly deviceState: DeviceState,
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilder: UntypedFormBuilder
   ) {
     document.title = "SmartStock - Expense Report";
   }

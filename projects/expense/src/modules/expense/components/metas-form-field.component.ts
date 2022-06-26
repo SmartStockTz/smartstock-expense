@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {MetasModel} from '../models/metas.model';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-store-metas-form-field',
@@ -54,16 +54,16 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 export class MetasFormFieldComponent {
   @Input() formGroup;
   @Input() metas: BehaviorSubject<MetasModel[]>;
-  addMetaTypeFormControl = new FormControl('text', [Validators.nullValidator, Validators.required]);
-  addMetaNameFormControl = new FormControl('', [Validators.nullValidator, Validators.required]);
+  addMetaTypeFormControl = new UntypedFormControl('text', [Validators.nullValidator, Validators.required]);
+  addMetaNameFormControl = new UntypedFormControl('', [Validators.nullValidator, Validators.required]);
   @Input() flat = false;
 
-  constructor(private readonly formBuilder: FormBuilder) {
+  constructor(private readonly formBuilder: UntypedFormBuilder) {
   }
 
   addAttributeToMeta($event): void {
     $event.preventDefault();
-    (this.formGroup.get('metas') as FormGroup).addControl(
+    (this.formGroup.get('metas') as UntypedFormGroup).addControl(
       this.addMetaNameFormControl.value,
       this.formBuilder.control(null, [Validators.nullValidator, Validators.required])
     );
@@ -80,7 +80,7 @@ export class MetasFormFieldComponent {
   removeAttributeToMeta($event, index, name): void {
     $event.preventDefault();
     this.metas.next(this.metas.value.filter(value => value.name !== name));
-    (this.formGroup.get('metas') as FormGroup).removeControl(name);
+    (this.formGroup.get('metas') as UntypedFormGroup).removeControl(name);
   }
 
 

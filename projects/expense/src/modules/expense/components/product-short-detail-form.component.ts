@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ExpenseItemModel} from '../models/expense-item.model';
 
 @Component({
@@ -43,7 +43,7 @@ import {ExpenseItemModel} from '../models/expense-item.model';
   `
 })
 export class ProductShortDetailFormComponent implements OnInit {
-  @Input() parentForm: FormGroup;
+  @Input() parentForm: UntypedFormGroup;
   @Input() saleable = true;
   @Input() downloadAble = false;
   @Input() isUpdateMode = false;
@@ -55,7 +55,7 @@ export class ProductShortDetailFormComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  downloadsFormControl(): FormControl {
-    return this.parentForm.get('downloads') as FormControl;
+  downloadsFormControl(): UntypedFormControl {
+    return this.parentForm.get('downloads') as UntypedFormControl;
   }
 }
