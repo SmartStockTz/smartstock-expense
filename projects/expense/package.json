@@ -1,11 +1,10 @@
 {
   "name": "smartstock-expense",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "url": "git://github.com/smartstocktz/smartstock-expense.git"
   },
-  "peerDependencies": {
-  },
+  "peerDependencies": {},
   "dependencies": {
     "tslib": "^2.0.0"
   }
