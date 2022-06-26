@@ -1,2 +1,1 @@
-# SmartStock Stores Module
-
+# SmartStock Expense Module

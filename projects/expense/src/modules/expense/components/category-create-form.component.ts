@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CategoryService} from '../services/category.service';
 import {MatDialog} from '@angular/material/dialog';
@@ -58,14 +58,14 @@ import {MatBottomSheetRef} from '@angular/material/bottom-sheet';
   `
 })
 export class CategoryCreateFormComponent implements OnInit {
-  newCategoryForm: FormGroup;
+  newCategoryForm: UntypedFormGroup;
   createCategoryProgress = false;
   @Input() category: CategoryModel;
   @Input() bottomRef: MatBottomSheetRef;
   metasModel: BehaviorSubject<MetasModel[]> = new BehaviorSubject([]);
 
   constructor(
-    private readonly formBuilder: FormBuilder,
+    private readonly formBuilder: UntypedFormBuilder,
     private readonly snack: MatSnackBar,
     private readonly dialog: MatDialog,
     private readonly userService: UserService,
@@ -140,7 +140,7 @@ export class CategoryCreateFormComponent implements OnInit {
     });
   }
 
-  private getMetaFormGroup(metas: { [p: string]: any }): FormGroup {
+  private getMetaFormGroup(metas: { [p: string]: any }): UntypedFormGroup {
     const fg = this.formBuilder.group({});
     Object.keys(metas).forEach(key => {
       fg.setControl(key, this.formBuilder.control(metas[key]));

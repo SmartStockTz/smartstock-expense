@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {Observable} from 'rxjs';
 
 @Component({
@@ -57,7 +57,7 @@ export class GeneratedFormFieldComponent implements OnInit {
   @Input() label: string;
   @Input() name: string;
   @Input() selectOptions: Observable<any[]>;
-  @Input() formGroup: FormGroup;
+  @Input() formGroup: UntypedFormGroup;
 
   constructor() {
   }

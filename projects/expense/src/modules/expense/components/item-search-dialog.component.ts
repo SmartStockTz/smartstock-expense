@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {ExpenseState} from '../states/expense.state';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {ExpenseItemModel} from '../models/expense-item.model';
 import {debounceTime} from 'rxjs/operators';
 
@@ -49,7 +49,7 @@ import {debounceTime} from 'rxjs/operators';
 })
 
 export class ItemSearchDialogComponent implements OnInit {
-  searchFormControl = new FormControl('');
+  searchFormControl = new UntypedFormControl('');
 
   constructor(public readonly dialogRef: MatDialogRef<ItemSearchDialogComponent>,
               public readonly expenseState: ExpenseState) {

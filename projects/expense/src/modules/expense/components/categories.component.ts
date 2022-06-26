@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatTableDataSource } from "@angular/material/table";
-import { FormBuilder } from "@angular/forms";
+import { UntypedFormBuilder } from "@angular/forms";
 import { CategoryModel } from "../models/category.model";
 import { MatPaginator } from "@angular/material/paginator";
 import { DialogCategoryDeleteComponent } from "./dialog-category-delete.component";
@@ -122,7 +122,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly stockDatabase: CategoryService,
-    private readonly formBuilder: FormBuilder,
+    private readonly formBuilder: UntypedFormBuilder,
     private readonly dialog: MatDialog,
     private readonly categoryState: CategoryState,
     private readonly router: Router,

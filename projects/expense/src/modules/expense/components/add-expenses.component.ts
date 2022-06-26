@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { Observable } from "rxjs";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { MatTableDataSource } from "@angular/material/table";
 import { DeviceState, MessageService, toSqlDate } from "smartstock-core";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -149,7 +149,7 @@ export class AddExpensesComponent implements OnInit {
   private currentUser: any;
   creditors: Observable<any[]>;
   customers: Observable<any[]>;
-  storeOutFormGroup: FormGroup;
+  storeOutFormGroup: UntypedFormGroup;
   storeOutDataSource: MatTableDataSource<ExpenseModel> = new MatTableDataSource(
     []
   );
@@ -159,7 +159,7 @@ export class AddExpensesComponent implements OnInit {
   saveStoreOutFlag = false;
 
   constructor(
-    private readonly formBuilder: FormBuilder,
+    private readonly formBuilder: UntypedFormBuilder,
     private readonly message: MessageService,
     private readonly dialog: MatDialog,
     private readonly sheet: MatBottomSheet,

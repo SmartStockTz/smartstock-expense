@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from "@angular/core";
 import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   FormGroupDirective,
   Validators
 } from "@angular/forms";
@@ -106,7 +106,7 @@ export class AddExpenseItemPage implements OnInit {
   @Input() initialStore: any;
   @Input() isLoadingData = false;
   metasModel: BehaviorSubject<MetasModel[]> = new BehaviorSubject([]);
-  productForm: FormGroup;
+  productForm: UntypedFormGroup;
   metas: Observable<
     {
       type: string;
@@ -117,7 +117,7 @@ export class AddExpenseItemPage implements OnInit {
   mainProgress = false;
 
   constructor(
-    private readonly formBuilder: FormBuilder,
+    private readonly formBuilder: UntypedFormBuilder,
     private readonly snack: MatSnackBar,
     private readonly filesService: FilesService,
     private readonly dialog: MatDialog,
@@ -160,7 +160,7 @@ export class AddExpenseItemPage implements OnInit {
     });
   }
 
-  private getMetaFormGroup(metas: { [p: string]: any }): FormGroup {
+  private getMetaFormGroup(metas: { [p: string]: any }): UntypedFormGroup {
     const fg = this.formBuilder.group({});
     Object.keys(metas).forEach((key) => {
       fg.setControl(key, this.formBuilder.control(metas[key]));
@@ -168,28 +168,28 @@ export class AddExpenseItemPage implements OnInit {
     return fg;
   }
 
-  getSaleableFormControl(): FormControl {
-    return this.productForm.get("saleable") as FormControl;
+  getSaleableFormControl(): UntypedFormControl {
+    return this.productForm.get("saleable") as UntypedFormControl;
   }
 
-  getPurchasableFormControl(): FormControl {
-    return this.productForm.get("purchasable") as FormControl;
+  getPurchasableFormControl(): UntypedFormControl {
+    return this.productForm.get("purchasable") as UntypedFormControl;
   }
 
-  getStoreableFormControl(): FormControl {
-    return this.productForm.get("stockable") as FormControl;
+  getStoreableFormControl(): UntypedFormControl {
+    return this.productForm.get("stockable") as UntypedFormControl;
   }
 
-  getDownloadAbleFormControl(): FormControl {
-    return this.productForm.get("downloadable") as FormControl;
+  getDownloadAbleFormControl(): UntypedFormControl {
+    return this.productForm.get("downloadable") as UntypedFormControl;
   }
 
-  getDownloadsFormControl(): FormControl {
-    return this.productForm.get("downloads") as FormControl;
+  getDownloadsFormControl(): UntypedFormControl {
+    return this.productForm.get("downloads") as UntypedFormControl;
   }
 
-  getCanExpireFormControl(): FormControl {
-    return this.productForm.get("canExpire") as FormControl;
+  getCanExpireFormControl(): UntypedFormControl {
+    return this.productForm.get("canExpire") as UntypedFormControl;
   }
 
   addProduct(formElement: FormGroupDirective, inUpdateMode = false): void {
