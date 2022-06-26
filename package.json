@@ -1,6 +1,6 @@
 {
   "name": "smartstock-expense",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scripts": {
     "ng": "ng",
     "box": "yarn install && yarn start",
