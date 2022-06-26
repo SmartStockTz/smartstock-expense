@@ -5,7 +5,6 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { ExpenseItemModel } from "../models/expense-item.model";
 import { ExpenseService } from "../services/expense.service";
 import { MatTableDataSource } from "@angular/material/table";
-import * as moment from "moment";
 
 @Injectable({
   providedIn: "any"
@@ -39,9 +38,19 @@ export class ExpenseState {
     private readonly messageService: MessageService
   ) {}
 
+  stringDate(date: any) {
+    if (date && typeof date === "object" && date.toISOString) {
+      date = date.toISOString();
+    }
+    if (date && typeof date === "string") {
+      return date.split("T")[0];
+    }
+    return date;
+  }
+
   async reloadReport(range: { start: any; end: any }): Promise<any> {
-    range.start = moment(range.start).format("YYYY-MM-DD");
-    range.end = moment(range.end).format("YYYY-MM-DD");
+    range.start = this.stringDate(range.start);
+    range.end = this.stringDate(range.end);
     this.reportStartDate.next(range.start);
     this.reportEndDate.next(range.end);
     this.expenseFrequencyGroupByTagWithTracking(range.start, range.end).catch(
@@ -57,8 +66,8 @@ export class ExpenseState {
     from: string,
     to: string
   ): Promise<any> {
-    from = moment(from).format("YYYY-MM-DD");
-    to = moment(to).format("YYYY-MM-DD");
+    from = this.stringDate(from);
+    to = this.stringDate(to);
     this.isFetchCategoryReport.next(true);
     return this.storeService
       .expenseFrequencyGroupByCategory(from, to)
@@ -79,8 +88,8 @@ export class ExpenseState {
   }
 
   async expenseFrequencyGroupByTag(from: string, to: string): Promise<any> {
-    from = moment(from).format("YYYY-MM-DD");
-    to = moment(to).format("YYYY-MM-DD");
+    from = this.stringDate(from);
+    to = this.stringDate(to);
     this.isFetchTagReport.next(true);
     return this.storeService
       .expenseFrequencyGroupByTag(from, to)
@@ -104,8 +113,8 @@ export class ExpenseState {
     from: string,
     to: string
   ): Promise<any> {
-    from = moment(from).format("YYYY-MM-DD");
-    to = moment(to).format("YYYY-MM-DD");
+    from = this.stringDate(from);
+    to = this.stringDate(to);
     this.isFetchTagWithTrackReport.next(true);
     return this.storeService
       .expenseFrequencyGroupByTagWithTracking(from, to)
