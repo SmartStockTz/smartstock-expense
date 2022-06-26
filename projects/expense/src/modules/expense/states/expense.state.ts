@@ -39,6 +39,9 @@ export class ExpenseState {
   ) {}
 
   stringDate(date: any) {
+    if (date && typeof date === "object" && date.toISOString) {
+      date = date.toISOString();
+    }
     if (date && typeof date === "string") {
       return date.split("T")[0];
     }
